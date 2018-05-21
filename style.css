@@ -1,0 +1,11 @@
+.pilot-container {
+    padding: 10px;
+}
+
+#flood-risk, #sea-risk {
+    color: #fff;
+}
+
+label.radio-pill {
+    cursor: pointer;
+}
