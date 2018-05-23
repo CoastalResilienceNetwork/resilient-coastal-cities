@@ -5,10 +5,10 @@
 
 require([
       "esri/Map","esri/views/MapView","esri/layers/FeatureLayer","esri/renderers/UniqueValueRenderer","esri/symbols/SimpleFillSymbol",
-      "esri/Graphic","esri/tasks/QueryTask","esri/tasks/support/Query","esri/widgets/BasemapToggle","dojo/dom",
+      "esri/Graphic","esri/layers/GraphicsLayer","esri/tasks/QueryTask","esri/tasks/support/Query","esri/widgets/BasemapToggle","dojo/dom",
       "esri/widgets/Search","dojo/domReady!"
     ], function(
-      Map,MapView,FeatureLayer,UniqueValueRenderer,SimpleFillSymbol,Graphic,QueryTask,
+      Map,MapView,FeatureLayer,UniqueValueRenderer,SimpleFillSymbol,Graphic,GraphicsLayer,QueryTask,
       Query,BasemapToggle,dom, Search
     ) { 
         // global variables 
@@ -28,7 +28,7 @@ require([
             container: "map",
             map: map,
             center: [110.41, -7.0],
-            zoom: 11
+            zoom: 12
         });
         // search widget
         var searchWidget = new Search({
@@ -94,7 +94,7 @@ require([
                     .then(getGraphics);
             });
             function getGraphics(response){
-                view.graphics.removeAll();
+                view.graphics.removeAll(graphic);
                 var graphic = new Graphic({
                   //gotta set a defined geometry for the symbol to draw
                   geometry: response.results[0].graphic.geometry,
@@ -107,6 +107,12 @@ require([
                          }
                     })
                 });
+                // var graphicLayer = new GraphicsLayer({
+                //     graphics: [graphic]
+                // });
+                // graphicLayer.graphics.add(graphic)
+                // console.log(graphicLayer);
+                // map.addLayer(graphicLayer);
                view.graphics.add(graphic);
             }
         }

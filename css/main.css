@@ -27,7 +27,7 @@ html, body{
 	display:flex; flex-grow: 1; position: relative; height:90%; width:100%; color:#3C454A; font-size:12px; font-family:"Open Sans";
 }
 #cd_left{
-	flex:0 0 350px; padding:8px 0px 8px 8px; box-shadow: 0px 0px 16px 0px rgba(51, 51, 51, 0.42); z-index:10; 
+	flex:0 0 425px; padding:8px 0px 8px 8px; box-shadow: 0px 0px 16px 0px rgba(51, 51, 51, 0.42); z-index:10; 
 	overflow-y:auto; background:#f3f3f3; 
 }
 /*.contentWrapper{
@@ -55,6 +55,15 @@ html, body{
 .mainContentWrapper{
 	margin-top: 10px;
 }
+/* style for js 4x api text app for Resilient Coastal Cities ////////////////// */
+.mainToggleWrapper{
+	margin: 10px 0 5px 64px;
+}
+
+
+
+
+
 
 /* header styles /////////////////////////////////////////////////////////////////////////////////*/
 
