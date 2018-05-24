@@ -116,6 +116,19 @@ require([
                view.graphics.add(graphic);
             }
         }
+        // get js utm time
+        var dateObj = new Date();
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+
+        var newdate = year + "-" + month + "-" + day;
+
+        console.log(newdate);
+        var url = "https://api.floodtags.com/v1/tags/fews-world/geojson?until=" + newdate + "&since=2018-03-06&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
+        $.get( url, function( data ) {
+            console.log(data)
+        })
 }) // end of the require function /////////////////////////////////////
 
 
