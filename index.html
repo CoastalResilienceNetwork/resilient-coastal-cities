@@ -14,13 +14,15 @@
 	<!-- jquery code -->
 	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 	<script src="js/chosen.jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<!-- bring in main and make vars and ESRI api-->
 	<script src="https://js.arcgis.com/4.7/"></script>
-	<script src="js/makevariables.js"></script>
-	<script src="js/main.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
+	
+	
+	
 	<!-- <script src="js/cdcharts.js"></script>
 	<script src="js/cdclicks.js"></script>
 	<script src="js/cdinit.js"></script> -->
@@ -57,7 +59,7 @@
 			<!-- Main content wrapper ///////////////////////////////////////////////// -->
 			<div class="mainContentWrapper">
 				<div class="introTextWrapper blueFont">
-					<div>Hey This is intro text intro text intro text intro text intro text intro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro text</div>
+					<div>Hey hey This is intro text intro text intro text intro text intro text intro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro text</div>
 				</div>
 				<div class="mainToggleWrapper">
 					<div class="toggle-btn" style="width:300px;">
@@ -67,7 +69,7 @@
 						<label for="yn2">Adaptation Solutions</label>
 					</div>
 				</div>
-				<div class="floodRiskContentWrapper">
+				<div class="floodRiskContentWrapper" id="floodRiskContentWrapper">
 					<div class="floodAdminName">Semarang</div>
 					<div class="numOfTweetsLegendWrapper">
 						This is the loaction of the num of tweets graph
@@ -86,7 +88,11 @@
 					</div>
 					
 				</div>
-				<div class="adaptationContentWrapper">
+				<div class="adaptationContentWrapper" id="adaptationContentWrapper">
+					<div id="pieChartWrapper">
+						<canvas id="pieChart"></canvas>
+						<canvas id="myChart" width="1600" height="900"></canvas>
+					</div>
 					
 				</div>
 				
@@ -109,4 +115,12 @@
 		
 	</div>	
 </body>
+<script src="js/makevariables.js"></script>
+<!-- <script src="js/dist/Chart.js"></script> -->
+<!-- <script src="js/Chart.b.js"></script> -->
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/adminUnits.js"></script>
+<script src="js/main.js"></script>
+<script src="js/createCharts.js"></script>
 </html>

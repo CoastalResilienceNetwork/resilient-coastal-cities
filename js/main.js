@@ -2,27 +2,95 @@
 // // main js file for the Hudson River web mapping application
 // // ESRI api functions ///////////////////////////////////////////////////////////////////////////////////////////////////
 // // esri api calls
-
 require([
       "esri/Map","esri/views/MapView","esri/layers/FeatureLayer","esri/renderers/UniqueValueRenderer","esri/symbols/SimpleFillSymbol",
       "esri/Graphic","esri/layers/GraphicsLayer","esri/tasks/QueryTask","esri/tasks/support/Query","esri/widgets/BasemapToggle","dojo/dom",
-      "esri/widgets/Search","dojo/domReady!"
+      "esri/widgets/Search","esri/views/SceneView","dojo/domReady!"
     ], function(
       Map,MapView,FeatureLayer,UniqueValueRenderer,SimpleFillSymbol,Graphic,GraphicsLayer,QueryTask,
-      Query,BasemapToggle,dom, Search
+      Query,BasemapToggle,dom, Search, SceneView
     ) { 
         // global variables 
-        let app = {} // main object for the application
         // admin units feature layer
         var layer = new FeatureLayer({
             url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/70",
             outFields: ["*"]
         });
-        // create map object
+         // create map object
         var map = new Map({
             basemap: "streets",
             layers: [layer]
         });
+        let app = {} // main object for the application
+        // init config 
+        // app.config = {
+        //     mapView: null,
+        //     sceneView: null,
+        //     activeView: null,
+        //     container: "map" // use same container for views
+        // };
+        // // init params
+        // app.initialViewParams = {
+        //         zoom: 12,
+        //         center: [110.41, -7.0],
+        //         container: app.config.container,
+        //         map:map
+        // };
+        // // create 2D view and and set active
+        // app.config.mapView = createView(app.initialViewParams, "2d");
+        // // app.config.mapView.map = webmap;
+        // app.config.activeView = app.config.mapView;
+
+        // // create 3D view, won't initialize until container is set
+        // app.initialViewParams.container = null;
+        // // app.initialViewParams.map = scene;
+        // app.config.sceneView = createView(app.initialViewParams, "3d");
+        // // convenience function for creating a 2D or 3D view
+        // function createView(params, type) {
+        //     var view;
+        //     var is2D = type === "2d";
+        //     if (is2D) {
+        //       view = new MapView(params);
+        //       return view;
+        //     } else {
+        //       view = new SceneView(params);
+        //     }
+        //     return view;
+        // }
+        // apdaptaions solutions button click
+        $('#yn2').on('click', function(evt){
+            $('#adaptationContentWrapper').show()
+            $('#floodRiskContentWrapper').hide()
+            // switchView('3d')
+        })
+        // flood risk button click
+        $('#yn1').on('click', function(evt){
+            $('#floodRiskContentWrapper').show()
+            $('#adaptationContentWrapper').hide()
+            // switchView('2d')
+        })
+        // // swithc view from 2d to 3d and vice versa
+        // function switchView(type){
+        //     console.log(type);
+        //     // remove the reference to the container for the previous view
+        //     app.config.activeView.container = null;
+        //     if(type === '2d'){
+        //         app.config.mapView.viewpoint = app.config.activeView.viewpoint.clone();
+        //         app.config.mapView.container = app.config.container;
+        //         app.config.activeView = app.config.mapView;
+        //         app.viewMode = "2d";
+        //     }else{
+        //         app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
+        //         app.config.sceneView.container = app.config.container;
+        //         app.config.activeView = app.config.sceneView;
+        //         app.viewMode = "3d";
+        //     }
+        // }
+
+
+
+
+
         // map view, new in js 4x api
         var view = new MapView({
             container: "map",
@@ -30,7 +98,7 @@ require([
             center: [110.41, -7.0],
             zoom: 12
         });
-        // search widget
+        //search widget
         var searchWidget = new Search({
             view: view
         });
@@ -51,22 +119,24 @@ require([
         // query //////////////////////////////////////////////////////
         function query(){
              // query task
-            var qt = new QueryTask({
-                url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/70"
-            })
-            // query all the features in the admin units feature class
-            var query = new Query({
-                where: "OBJECTID > 0",
-                outFields: ["*"],
-                returnGeometry: true,
-            });
-            // execute function to return object of all admin units
-            qt.execute(query).then(function(result){
-                app.atts = result.features[13]["geometry"]
-                buildGraphic()
-            })
+            // var qt = new QueryTask({
+            //     url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/70"
+            // })
+            // // query all the features in the admin units feature class
+            // var query = new Query({
+            //     where: "OBJECTID > 0",
+            //     outFields: ["*"],
+            //     returnGeometry: true,
+            // });
+            // // execute function to return object of all admin units
+            // qt.execute(query).then(function(result){
+            //     app.allAdminAtts = result.features;
+            //     app.atts = result.features[13]["geometry"]
+            //     console.log(app.allAdminAtts)
+            //     console.log('done with query')
+            //     buildGraphic()
+            // })
             function buildGraphic(){
-                console.log(app.atts)
                 var graphic2 = new Graphic({
                 //gotta set a defined geometry for the symbol to draw
                 geometry: app.atts,
@@ -123,12 +193,140 @@ require([
         var year = dateObj.getUTCFullYear();
 
         var newdate = year + "-" + month + "-" + day;
-
-        console.log(newdate);
-        var url = "https://api.floodtags.com/v1/tags/fews-world/geojson?until=" + newdate + "&since=2018-03-06&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
-        $.get( url, function( data ) {
-            console.log(data)
+        // console.log(data);
+        // console.log(adminUnits)
+        app.eventsGeoId = [];
+        app.adminUnitId = [];
+        $.each(adminUnits, function(i,v){
+            let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
+            let n = id.includes(",");
+            if(n){
+                id = id.split(',')
+                $.each(id, function(i,v){
+                    id =v;
+                    app.adminUnitId.push(String(id));
+                })
+            }else{
+                app.adminUnitId.push(id)
+            }
         })
+
+        // $.each(data.events, function(i,v){
+        //     try{
+        //         // console.log(v.location.geonameid);
+        //         if(v.location.geonameid){
+        //             // console.log(String(v.location.geonameid))
+        //             console.log(typeof String(v.location.geonameid))
+        //             app.eventsGeoId.push(String(v.location.geonameid));
+        //         }
+        //     }catch(e){
+
+        //     }
+
+            
+        // })
+
+        // var url = "https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
+        var url = "https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
+        $.get( url, function( data ) {
+            var defer = $.Deferred(),
+                filtered = defer.then(function() {
+                    // return 2 * 2;
+                    // console.log('at start')
+                    // console.log(dat)
+                    $.each(data.features, function(i,v){
+                        // console.log(v);
+                        try{
+                            // console.log(v.location.geonameid);
+                            if(v.properties.geonameid){
+                                // console.log(String(v.location.geonameid))
+                                // console.log(typeof String(v.properties.geonameid))
+                                app.eventsGeoId.push(String(v.properties.geonameid));
+                            }
+                        }catch(e){
+
+                        }
+                    })
+                    return app.eventsGeoId
+                });
+                defer.resolve();
+            filtered.done(function( value ) {
+                // console.log(value)
+                var duplicates = app.adminUnitId.filter(function(val) {
+                  return app.eventsGeoId.indexOf(val) != -1;
+                });
+                // console.log(duplicates, 'yyyyy');
+            });
+        })
+
+
+        
+        
+        // // console.log(app.eventsGeoId);
+        // // console.log(app.adminUnitId);
+        // $.each(app.adminUnitId, function(i,v){
+        //     let index = app.eventsGeoId.indexOf(v)
+        //     // console.log(index, v);
+        //     if(index > 0){
+        //         // console.log('yes', v);
+        //     }
+        // })
+
+        // var duplicates = app.adminUnitId.filter(function(val) {
+        //   return app.eventsGeoId.indexOf(val) != -1;
+        // });
+
+        // console.log(duplicates, 'yyyyy');
+        // var duplicates = app.eventsGeoId.filter(function(val) {
+        //   return app.adminUnitId.indexOf(val) != -1;
+        // });
+
+        // console.log(duplicates, 'xxxxx');
+        // use this url with the parent id for tag querying
+        //var url = https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe
+        
+
+        // console.log(app.allAdminAtts);
+        // var url = "https://api.floodtags.com/v1/tags/fews-world/geojson?until=" + newdate + "&since=2018-03-06&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
+        var url = "https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
+        // $.get( url, function( data ) {
+        //     app.matchArray = [];
+
+        //     // loop through events
+        //     $.each(data.events, function(i,v){
+        //         // use filter source to only get data from norther-java, indo
+        //         let index = v.filterSources.indexOf('northern-java')
+        //         if (index>-1) {
+        //             app.matchArray.push(v.location.geonameid);
+        //         }
+        //     })
+        //     console.log(app.matchArray);
+
+        //     console.log(app.allAdminAtts);
+            
+        //     $.each(app.allAdminAtts, function(i,v){
+        //         // console.log(i,v.attributes.geonameid);
+        //         let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
+        //         console.log(id);
+        //         let index = app.matchArray.indexOf(id);
+        //         if(index > -1){
+        //             console.log(v);
+        //         }
+        //         // $.each(app.matchArray, function(i,v){
+        //         //     console.log(i,v);
+        //         // })
+        //     })
+        //         // if filter source matches add that geonameid to count array
+
+        //         // loop through all admin units
+
+        //             // if geonameid from admin units is in count array
+
+        //             // create a graphic and symbolize by number of tags
+
+
+
+        // })
 }) // end of the require function /////////////////////////////////////
 
 
