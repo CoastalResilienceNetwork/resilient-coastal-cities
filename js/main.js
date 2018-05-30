@@ -115,10 +115,111 @@ require([
         // call the other functions once the esri objects have been created
         query();
         onClick();
-       
+        https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java
+        var url = ' https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+        var startDate = '2018-02-01'
+        var endDate = '2018-05-20'
+        getFloodEvents(url, startDate, endDate);
+        function getFloodEvents(url,startDate, endDate){
+            $.get( url, function( data ) {
+                $.each(data.events, function(i,v){
+                    if(v.location.geonameid == '1627893'){
+                        // console.log(v);
+                        // var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+                    }
+                })
+            })
+        }
+        var tagsJson = getTagsFromEvents('1627893')
+        function getTagsFromEvents(parentGeonameid){
+            // console.log(parentGeonameid);
+            var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+            $.get(url, function(data) {
+                app.finalAdminUnitTags = []
+                var defer = $.Deferred(),
+                filtered = defer.then(function(){
+                    return data;
+                })
+                defer.resolve();
+                filtered.done(function(data){
+                    // loop through tags geojson and match to our admin unit ID's
+                    $.each(data.features, function(i,v){
+                        var id = v.properties.geonameid;
+                        var index = app.adminUnitId.indexOf(id);
+                        if(index > 0){
+                            pos = app.adminUnit.map(function(e) { return e.attributes.geonameid; }).indexOf("(1:" + id +")");
+                            if(pos > -1){
+                                // var geom = app.adminUnit[pos]['geometry']
+                                var geom = app.adminUnit[pos].geometry
+                                var atts = app.adminUnit[pos].attributes
+                                var total = v.properties.total
+                                buildGraphic(geom,atts, total)
+
+                            }else{
+                                ''
+                            }
+                            
+                        }else{
+                            // there was no match
+                        }
+
+                    })
+                })
+            })
+
+        }
+        // build polygon graphics of admin units symbolized by color based on the num of total tags
+        function buildGraphic(geom,atts, total){
+            console.log(atts)
+            atts.total = total;
+            geom.type = 'polygon'
+            var polygon = {
+                type: "polygon",
+                rings: geom.rings
+            }
+            var color;
+            var color1 = [115, 255, 222,0.6]
+            var color2 = [82, 227, 217,0.6]
+            var color3 = [54, 182, 199,0.6]
+            var color4 = [13, 80, 143,0.6]
+            if(total == 1){
+                color = color1
+            }else if(total > 1 && total <= 5){
+                color = color2
+            }else if(total > 5 && total <= 10){
+                color = color3
+            }else if(total > 10){
+                color = color4
+            }
+            // Create a symbol for rendering the graphic
+            var fillSymbol = {
+                type: "simple-fill", // autocasts as new SimpleFillSymbol()
+                color: color,
+                outline: { // autocasts as new SimpleLineSymbol()
+                  color: [13, 80, 143],
+                  width: .5
+                }
+            };
+            app.graphic2 = new Graphic({
+                //gotta set a defined geometry for the symbol to draw
+                geometry: geom,
+                symbol: fillSymbol,
+                attributes: atts
+            });
+            app.layer = new GraphicsLayer({
+                graphics: [app.graphic2]
+            });
+            console.log(app.layer)
+
+            map.add(app.layer);
+            app.layer.on('click', function(evt){
+                console.log(evt);
+            })
+            // view.graphics.add(app.graphic2);
+        }
         // query //////////////////////////////////////////////////////
         function query(){
-             // query task
+            //  // query task
             // var qt = new QueryTask({
             //     url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/70"
             // })
@@ -130,27 +231,26 @@ require([
             // });
             // // execute function to return object of all admin units
             // qt.execute(query).then(function(result){
+            //     console.log(result)
             //     app.allAdminAtts = result.features;
             //     app.atts = result.features[13]["geometry"]
-            //     console.log(app.allAdminAtts)
-            //     console.log('done with query')
             //     buildGraphic()
             // })
-            function buildGraphic(){
-                var graphic2 = new Graphic({
-                //gotta set a defined geometry for the symbol to draw
-                geometry: app.atts,
-                symbol: new SimpleFillSymbol({
-                    color: [255,255,0,0.3],
-                    style: "solid",
-                    outline: {
-                        color: [102,0,204],
-                        width: 4
-                        }
-                    })
-                });
-                view.graphics.add(graphic2);
-            }
+            // function buildGraphic(){
+            //     var graphic = new Graphic({
+            //     //gotta set a defined geometry for the symbol to draw
+            //     geometry: app.atts,
+            //     symbol: new SimpleFillSymbol({
+            //         color: [255,255,0,0.3],
+            //         style: "solid",
+            //         outline: {
+            //             color: [102,0,204],
+            //             width: 4
+            //             }
+            //         })
+            //     });
+            //     view.graphics.add(graphic);
+            // }
         }
         // on map/view click function ////////////////////////////////////////////////
         function onClick(){
@@ -173,19 +273,14 @@ require([
                      style: "solid",
                      outline: {
                           color: [102,0,204],
-                          width: 5
+                          width: 2
                          }
                     })
                 });
-                // var graphicLayer = new GraphicsLayer({
-                //     graphics: [graphic]
-                // });
-                // graphicLayer.graphics.add(graphic)
-                // console.log(graphicLayer);
-                // map.addLayer(graphicLayer);
                view.graphics.add(graphic);
             }
         }
+
         // get js utm time
         var dateObj = new Date();
         var month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -193,11 +288,11 @@ require([
         var year = dateObj.getUTCFullYear();
 
         var newdate = year + "-" + month + "-" + day;
-        // console.log(data);
-        // console.log(adminUnits)
         app.eventsGeoId = [];
         app.adminUnitId = [];
+        app.adminUnit = [];
         $.each(adminUnits, function(i,v){
+            app.adminUnit.push(v);
             let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
             let n = id.includes(",");
             if(n){
@@ -211,51 +306,26 @@ require([
             }
         })
 
-        // $.each(data.events, function(i,v){
-        //     try{
-        //         // console.log(v.location.geonameid);
-        //         if(v.location.geonameid){
-        //             // console.log(String(v.location.geonameid))
-        //             console.log(typeof String(v.location.geonameid))
-        //             app.eventsGeoId.push(String(v.location.geonameid));
-        //         }
-        //     }catch(e){
-
-        //     }
-
-            
-        // })
-
         // var url = "https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
         var url = "https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
         $.get( url, function( data ) {
             var defer = $.Deferred(),
                 filtered = defer.then(function() {
-                    // return 2 * 2;
-                    // console.log('at start')
-                    // console.log(dat)
                     $.each(data.features, function(i,v){
-                        // console.log(v);
                         try{
-                            // console.log(v.location.geonameid);
                             if(v.properties.geonameid){
-                                // console.log(String(v.location.geonameid))
-                                // console.log(typeof String(v.properties.geonameid))
                                 app.eventsGeoId.push(String(v.properties.geonameid));
                             }
                         }catch(e){
-
                         }
                     })
                     return app.eventsGeoId
                 });
                 defer.resolve();
             filtered.done(function( value ) {
-                // console.log(value)
                 var duplicates = app.adminUnitId.filter(function(val) {
                   return app.eventsGeoId.indexOf(val) != -1;
                 });
-                // console.log(duplicates, 'yyyyy');
             });
         })
 
@@ -300,33 +370,7 @@ require([
         //             app.matchArray.push(v.location.geonameid);
         //         }
         //     })
-        //     console.log(app.matchArray);
-
-        //     console.log(app.allAdminAtts);
-            
-        //     $.each(app.allAdminAtts, function(i,v){
-        //         // console.log(i,v.attributes.geonameid);
-        //         let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
-        //         console.log(id);
-        //         let index = app.matchArray.indexOf(id);
-        //         if(index > -1){
-        //             console.log(v);
-        //         }
-        //         // $.each(app.matchArray, function(i,v){
-        //         //     console.log(i,v);
-        //         // })
-        //     })
-        //         // if filter source matches add that geonameid to count array
-
-        //         // loop through all admin units
-
-        //             // if geonameid from admin units is in count array
-
-        //             // create a graphic and symbolize by number of tags
-
-
-
-        // })
+      
 }) // end of the require function /////////////////////////////////////
 
 
