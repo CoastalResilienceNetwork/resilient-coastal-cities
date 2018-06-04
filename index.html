@@ -70,22 +70,69 @@
 					</div>
 				</div>
 				<div class="floodRiskContentWrapper" id="floodRiskContentWrapper">
-					<div class="floodAdminName">Semarang</div>
-					<div class="numOfTweetsLegendWrapper">
-						This is the loaction of the num of tweets graph
+					<!-- time frame toggle wrapper -->
+					<!-- <div class="timeFrameWrapper">
+						<h3>Pick an option below to analyze flood events in Semarang:</h3>
+						<div class="toggle-btn" style="width:350px;">
+							<input type="radio" id="time4" name="time" value="7" checked/>
+							<label for="time4">Past Week</label>
+							<input type="radio" id="time3" name="time" value="30"/>
+							<label for="time3">Past Month</label>
+							<input type="radio" id="time2" name="time" value="180"/>
+							<label for="time2">Past 6 Months</label>
+							<input type="radio" id="time1" name="time" value="365"/>
+							<label for="time1">Past Year</label>
+						</div>
+					</div> -->
+					<!-- events wrapper -->
+					<div class="eventsWrapper">
+						<!-- This is the events wrapper -->
+						<h3>Flooding Events for the past year in Semarang:</h3>
+						<!-- <div class="event"></div> -->
+						<!-- <h4>Click on an event below to explore the data.</h4> -->
+						
 					</div>
-					<div class="dateFilterWrapper">
-						this is the location of teh date filter
+					<div class="floodTagsWrapper">
+						<div style="display: flex;">
+							
+							<!-- <div class="floodAdminName">In <span id="adminName">Semarang</span>:</div> -->
+							<h1 class="floodTagsMainHeader">In <span>Semarang</span>:</h1>
+							<button class="button button-primary backToEvents" style="padding: 4px; margin-left: 165px; height: 30px;">Back to <br>events</button>
+							<!-- <div class="backToEvents">Back to events</div> -->
+						</div>
+						
+							
+						<div class="numOfTweetsLegendWrapper">
+							<h3 class="floodWrapperHeaders" style="margin-top: 3px;"><span id="numOfTweetsInAdmin">25</span> Flood related tweets. <!-- for event: <span>date</span> --></h3>
+							<!-- This is the loaction of the num of tweets graph -->
+							<!-- <div id="chart2Legend" class="chart2Legend"></div> -->
+							<canvas class="Chart2" id="Chart2" width="425" height="75"></canvas>
+						</div>
+						
+						<!-- <div class="dateFilterWrapper">
+							this is the location of teh date filter
+						</div> -->
+						<hr>
+						<div class="peopleAffectedWrapper">
+							<h3 class="floodWrapperHeaders"><span>200</span> People Affected</h3>
+							<canvas class="Chart1" id="Chart1" width="400" height="150"></canvas>
+						</div>
+						<hr style="margin-top: -14px;">
+						<div class="placesAffectedWrapper">
+							<h3 class="floodWrapperHeaders"><span>56</span> Places Affected</h3>
+							<canvas class="Chart3" id="Chart3" width="425" height="150"></canvas>
+						</div>
+						<hr style="margin-top: 20px;">
+						
+						<div class="liveAffectedWrapper">
+							<h3 class="floodWrapperHeaders" style="margin-bottom: 7px;">Livelihoods Affected</h3>
+							<div class="livelihoodsItems"><span>12 </span>Tourism & Cultural Sites.</div>
+							<div class="livelihoodsItems"><span>256 km </span>of Roads.</div>
+							<div class="livelihoodsItems"><span>175 ha </span>of Agricultural Land.</div>
+							<div class="livelihoodsItems"><span>129 ha </span>of Rice Fields.</div>
+						</div>
 					</div>
-					<div class="peopleAffectedWrapper">
-						Thsi is the location for people affcted graph
-					</div>
-					<div class="placesAffectedWrapper">
-						Thsi is the location for places affcted graph
-					</div>
-					<div class="liveAffectedWrapper">
-						Thsi is the location for livelihoods affcted graph
-					</div>
+					
 					
 				</div>
 				<div class="adaptationContentWrapper" id="adaptationContentWrapper">
@@ -120,6 +167,7 @@
 <script src="js/makevariables.js"></script>
 <!-- <script src="js/dist/Chart.js"></script> -->
 <!-- <script src="js/Chart.b.js"></script> -->
+<script type="text/javascript"> var app = {}</script>
 <script src="js/data.js"></script>
 <script src="js/data2.js"></script>
 <script src="js/adminUnits.js"></script>

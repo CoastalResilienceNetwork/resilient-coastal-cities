@@ -21,6 +21,12 @@ html, body{
     font-family: "Lato-Bold";
     src: url(fonts/Lato-Bold.woff);
 }
+h3{
+	font-size: 20px;
+}
+hr{
+	width: 95%; margin-left: 5px;
+}
 
 /* main div with left/app div and right/map div ///////////////////////////////////////////////////////////////////*/
 #cd_wrap{
@@ -59,11 +65,92 @@ html, body{
 .mainToggleWrapper{
 	margin: 10px 0 5px 64px;
 }
+.adaptationContentWrapper{
+	display: none;
+}
+.floodTagsWrapper{
+	display: none;
+}
+.floodAdminName{
+	font-size: 20px; font-weight: bold;
+}
+.event{
+	width: 350px; margin-left: 28px; border: 1pt solid #cdd5d5; padding: 5px;box-shadow: 0 1px 1px rgba(16,22,26,.2);position: relative;display: flex;
+}
+.event:hover{
+	cursor: pointer; background-color: rgba(16,22,26,.05);
+}
+.floodEventText{
+	margin-right: 5px; font-weight: bold;
+}
+.numOfTags{
+	margin-left: 58px;
+}
+.floodTagsMainHeader{
+	width: 190px;
+}
+.backToEvents{
+	padding: 4px;margin-left: 165px;height: 30px;margin-top: 16px;
+}
+.peopleAffectedWrapper{
+	margin-top: -13px; text-align: center;
+}
+.numOfTweetsLegendWrapper{
+	text-align: center;
+}
+.placesAffectedWrapper{
+	text-align: center; margin-top: -9px;
+}
+.floodWrapperHeaders{
+	color: #2F6384;
+}
+.liveAffectedWrapper{
+	text-align: center; margin-top: -6px;
+}
+.livelihoodsItems{
+	font-size: 18px; font-weight: bold; 
+}
+.livelihoodsItems span{
+	color: #2F6384; font-size: 22px;
+}
 
+/* chart styling /////////////////////*/
+.Chart2{
+	margin-top: -31px; margin-left: -4px;
+}
+.Chart1{
+	margin-top: -50px; margin-left: 13px;
+}
 
+/*.Chart2:hover{
+	cursor: pointer;
+}*/
+/* chart 2 legend styles */
+/*.chart2Legend {
+    font-family: Roboto;
+    display: inline-block;
 
+    ul {
+        list-style: none;
+    }
 
+    li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
 
+        span {
+            display: inline-block;
+            position: absolute;
+        }
+
+        span.3-legend {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
+    }
+}*/
 
 /* header styles /////////////////////////////////////////////////////////////////////////////////*/
 
