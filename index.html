@@ -103,10 +103,29 @@
 						
 							
 						<div class="numOfTweetsLegendWrapper">
+							<!-- <h3 class="floodWrapperHeaders" style="margin-top: 3px; margin-bottom: 3px;"><span id="mainDate"></span>  </h3> -->
 							<h3 class="floodWrapperHeaders" style="margin-top: 3px;"><span id="numOfTweetsInAdmin">25</span> Flood related tweets. <!-- for event: <span>date</span> --></h3>
+							<div class="legendWrapper">
+								<div class="legendItemsWrapper">
+									<div class="itemPatch" style="background-color: rgba(115, 255, 222,0.6)"></div>
+									<div class="itemLabel">0-2 Tweets</div>
+								</div>
+								<div class="legendItemsWrapper">
+									<div class="itemPatch" style="background-color: rgba(82, 227, 217,0.6)"></div>
+									<div class="itemLabel">3-5 Tweets</div>
+								</div>
+								<div class="legendItemsWrapper">
+									<div class="itemPatch" style="background-color: rgba(54, 182, 199,0.6)"></div>
+									<div class="itemLabel">5-10 Tweets</div>
+								</div>
+								<div class="legendItemsWrapper">
+									<div class="itemPatch" style="background-color: rgba(13, 80, 143,0.6)"></div>
+									<div class="itemLabel">10+ Tweets</div>
+								</div>
+							</div>
+							
 							<!-- This is the loaction of the num of tweets graph -->
-							<!-- <div id="chart2Legend" class="chart2Legend"></div> -->
-							<canvas class="Chart2" id="Chart2" width="425" height="75"></canvas>
+							<canvas style="display: none;" class="Chart2" id="Chart2" width="425" height="75"></canvas>
 						</div>
 						
 						<!-- <div class="dateFilterWrapper">
@@ -130,6 +149,46 @@
 							<div class="livelihoodsItems"><span>256 km </span>of Roads.</div>
 							<div class="livelihoodsItems"><span>175 ha </span>of Agricultural Land.</div>
 							<div class="livelihoodsItems"><span>129 ha </span>of Rice Fields.</div>
+						</div>
+						<hr style="margin-top: 20px;">
+						<div class="refFloodLayersWrapper">
+							<h3 class="floodWrapperHeaders" style="margin-bottom: 7px;">Reference Layers</h3>
+							<div class="floodCBWrappers">
+								<div>
+									<label class="form-component" for="hospitals">
+										<input type="checkbox" id="hospitals" name="food">
+										<div class="check"></div>
+										<span class="form-text">Hospitals</span>
+									</label>
+									<br>
+									<label class="form-component disabled" for="schools">
+										<input type="checkbox" id="schools" name="food">
+										<div class="check"></div>
+										<span class="form-text">Schools</span>
+									</label>
+									<br>
+									<!-- <label class="form-component" for="roads">
+										<input type="checkbox" id="roads" name="food">
+										<div class="check"></div>
+										<span class="form-text">Roads</span>
+									</label> -->
+								</div>
+								<div>
+									<label class="form-component" for="buildings">
+										<input type="checkbox" id="buildings" name="food">
+										<div class="check"></div>
+										<span class="form-text">Government Buildings</span>
+									</label>
+									<br>
+									<label class="form-component" for="worship">
+										<input type="checkbox" id="worship" name="food">
+										<div class="check"></div>
+										<span class="form-text">Places of Worship</span>
+									</label>
+								</div>
+								
+							</div>
+							
 						</div>
 					</div>
 					

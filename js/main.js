@@ -23,74 +23,69 @@ require([
         });
         var app = {} // main object for the application
         // init config 
-        app.config = {
-            mapView: null,
-            sceneView: null,
-            activeView: null,
-            container: "map" // use same container for views
-        };
-        // init params
-        app.initialViewParams = {
-                zoom: 12,
-                center: [110.41, -7.0],
-                container: app.config.container,
-                map:map
-        };
-        // create 2D view and and set active
-        app.config.mapView = createView(app.initialViewParams, "2d");
-        // app.config.mapView.map = webmap;
-        app.config.activeView = app.config.mapView;
+        // app.config = {
+        //     mapView: null,
+        //     sceneView: null,
+        //     activeView: null,
+        //     container: "map" // use same container for views
+        // };
+        // // init params
+        // app.initialViewParams = {
+        //         zoom: 12,
+        //         center: [110.41, -7.0],
+        //         container: app.config.container,
+        //         map:map
+        // };
+        // // create 2D view and and set active
+        // app.config.mapView = createView(app.initialViewParams, "2d");
+        // // app.config.mapView.map = webmap;
+        // app.config.activeView = app.config.mapView;
 
-        // create 3D view, won't initialize until container is set
-        app.initialViewParams.container = null;
-        // app.initialViewParams.map = scene;
-        app.config.sceneView = createView(app.initialViewParams, "3d");
-        // convenience function for creating a 2D or 3D view
-        function createView(params, type) {
-            var view;
-            var is2D = type === "2d";
-            if (is2D) {
-              view = new MapView(params);
-              return view;
-            } else {
-              view = new SceneView(params);
-            }
-            return view;
-        }
-        // apdaptaions solutions button click
-        $('#yn2').on('click', function(evt){
-            $('#adaptationContentWrapper').show()
-            $('#floodRiskContentWrapper').hide()
-            // switchView('3d')
-        })
-        // flood risk button click
-        $('#yn1').on('click', function(evt){
-            $('#floodRiskContentWrapper').show()
-            $('#adaptationContentWrapper').hide()
-            // switchView('2d')
-        })
-        // // swithc view from 2d to 3d and vice versa
-        function switchView(type){
-            console.log(type);
-            // remove the reference to the container for the previous view
-            app.config.activeView.container = null;
-            if(type === '2d'){
-                app.config.mapView.viewpoint = app.config.activeView.viewpoint.clone();
-                app.config.mapView.container = app.config.container;
-                app.config.activeView = app.config.mapView;
-                app.viewMode = "2d";
-            }else{
-                app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
-                app.config.sceneView.container = app.config.container;
-                app.config.activeView = app.config.sceneView;
-                app.viewMode = "3d";
-            }
-        }
-
-
-
-
-
+        // // create 3D view, won't initialize until container is set
+        // app.initialViewParams.container = null;
+        // // app.initialViewParams.map = scene;
+        // app.config.sceneView = createView(app.initialViewParams, "3d");
+        // // convenience function for creating a 2D or 3D view
+        // function createView(params, type) {
+        //     var view;
+        //     var is2D = type === "2d";
+        //     if (is2D) {
+        //       view = new MapView(params);
+        //       return view;
+        //     } else {
+        //       view = new SceneView(params);
+        //     }
+        //     return view;
+        // }
+        // // apdaptaions solutions button click
+        // $('#yn2').on('click', function(evt){
+        //     $('#adaptationContentWrapper').show()
+        //     $('#floodRiskContentWrapper').hide()
+        //     // switchView('3d')
+        // })
+        // // flood risk button click
+        // $('#yn1').on('click', function(evt){
+        //     $('#floodRiskContentWrapper').show()
+        //     $('#adaptationContentWrapper').hide()
+        //     // switchView('2d')
+        // })
+        // // // swithc view from 2d to 3d and vice versa
+        // function switchView(type){
+        //     console.log(type);
+        //     // remove the reference to the container for the previous view
+        //     app.config.activeView.container = null;
+        //     if(type === '2d'){
+        //         app.config.mapView.viewpoint = app.config.activeView.viewpoint.clone();
+        //         app.config.mapView.container = app.config.container;
+        //         app.config.activeView = app.config.mapView;
+        //         app.viewMode = "2d";
+        //     }else{
+        //         app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
+        //         app.config.sceneView.container = app.config.container;
+        //         app.config.activeView = app.config.sceneView;
+        //         app.viewMode = "3d";
+        //     }
+        // }
         // map view, new in js 4x api
         var view = new MapView({
             container: "map",
@@ -364,9 +359,15 @@ require([
                 // divide up array into past 7 days, 30, 180 and 365
                 var pastYearEvents = array;
                 $.each(array, function(i,v){
-                    var html = "<div class='event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div>  " 
-                    + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div>'
-                    +'<div class="numOfTags"><span class="floodEventText">Num. of tags: </span>' +v.tags+'</div></div>'
+                    // let end = v.end.split('T')[0]
+                    // let start = v.start.split('T')[0]
+                    let date = v.start.split('T')[0] + ' - ' + v.end.split('T')[0]
+                    console.log(date)
+                    // var html = "<div class='event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div>  " 
+                    // + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div>'
+                    // +'<div class="numOfTags"><span class="floodEventText">Num. of tags: </span>' +v.tags+'</div></div>' 
+                    var html = "<div data-date='"+ date +"' class='event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div>  " 
+                    + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div></div>'
                     // append html to events wrapper
                     $('.eventsWrapper').append(html);
                     onEventClick();
@@ -377,6 +378,9 @@ require([
         // on event click function
         function onEventClick(){
             $('.event').on('click', function(evt){
+                // set the html of the date field
+                // $('#mainDate').html(evt.currentTarget.dataset.date)
+                // create vars with a count of 0
                 app.popWomen =0;
                 app.popMen =0;
                 app.popTotal =0;
@@ -407,17 +411,25 @@ require([
                                 var id = v.properties.geonameid;
                                 var index = app.adminUnitId.indexOf(id);
                                 if(index > 0){
-                                    pos = app.adminUnit.map(function(e) { return e.attributes.geonameid; }).indexOf("(1:" + id +")");
+                                    pos = app.adminUnit.map(function(e) { return e.attributes.id1; }).indexOf(id);
                                     if(pos > -1){
                                         app.totalTweets += v.properties.total;
-                                        // var geom = app.adminUnit[pos]['geometry']
                                         var geom = app.adminUnit[pos].geometry
                                         var atts = app.adminUnit[pos].attributes
                                         var total = v.properties.total
                                         buildGraphic(geom,atts, total);
                                         buildStats(atts);
+                                        // console.log(atts.POP_TOTAL)
                                     }else{
                                         ''
+                                         pos = app.adminUnit.map(function(e) { return e.attributes.id2; }).indexOf(id);
+                                         if (pos > -1) {
+                                            var geom = app.adminUnit[pos].geometry
+                                            var atts = app.adminUnit[pos].attributes
+                                            var total = v.properties.total
+                                            buildGraphic(geom,atts, total);
+                                            buildStats(atts);
+                                         }
                                     }
                                     
                                 }else{
@@ -431,11 +443,18 @@ require([
                             $('.eventsWrapper').slideUp();
                             // slide down the flood tags wrapper
                             $('.floodTagsWrapper').slideDown();
+                            // slide up the header sections
+                            $('.introTextWrapper').slideUp()
+                            $('.mainToggleWrapper').slideUp()
+
                             // back button to get back to the events section
                             // also some dom manipulation
                             $('.backToEvents').on('click', function(evt){
                                 // slide up the flooding events wrapper
                                 $('.eventsWrapper').slideDown();
+                                 // slide down the header sections
+                                $('.introTextWrapper').slideDown()
+                                $('.mainToggleWrapper').slideDown()
                                 // slide down the flood tags wrapper
                                 $('.floodTagsWrapper').slideUp();
                                 map.removeAll()
@@ -449,7 +468,7 @@ require([
                 // build polygon graphics of admin units symbolized by color based on the num of total tags
                 // create graphics for each match admin unit
                 function buildGraphic(geom,atts, total){
-                    console.log(atts, 'mmmmmmmmmmmmmmmmm')
+                    // console.log(atts, 'mmmmmmmmmmmmmmmmm')
                     // app.layer ='';
                     // app.layer.removeAll();
                     atts.total = total;
@@ -463,9 +482,9 @@ require([
                     var color2 = [82, 227, 217,0.6]
                     var color3 = [54, 182, 199,0.6]
                     var color4 = [13, 80, 143,0.6]
-                    if(total == 1){
+                    if(total <= 2){
                         color = color1
-                    }else if(total > 1 && total <= 5){
+                    }else if(total > 2 && total <= 5){
                         color = color2
                     }else if(total > 5 && total <= 10){
                         color = color3
@@ -521,17 +540,60 @@ require([
         app.adminUnitId = [];
         app.adminUnit = [];
         $.each(adminUnits, function(i,v){
-            app.adminUnit.push(v);
             let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
             let n = id.includes(",");
             if(n){
                 id = id.split(',')
+                v.attributes.id1 = id[0]
+                v.attributes.id2 = id[1]
+                app.adminUnit.push(v);
                 $.each(id, function(i,v){
                     id =v;
                     app.adminUnitId.push(String(id));
                 })
             }else{
                 app.adminUnitId.push(id)
+                v.attributes.id1 = String(v.attributes.geonameid.split(':')[1].split(')')[0])
+                app.adminUnit.push(v);
+            }
+        })
+
+        var url = "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer"
+        var hospital = new FeatureLayer({url: url + '/38'});
+        var schools = new FeatureLayer({url: url+ '/36'});
+        var worship = new FeatureLayer({url: url+ '/53'});
+        var roads = new FeatureLayer({url: url+ '/46'});
+        var govBuildings = new FeatureLayer({url: url+ '/37'});
+        // on ref layers cb click
+        $('.floodCBWrappers input').on('click', function(evt){
+            var id  = evt.currentTarget.id
+            console.log(id)
+            // check if the cb was checked or unchecked
+            // if checked turn on that layer
+            if (evt.currentTarget.checked) {
+                if (id == 'schools') {
+                    map.add(schools);
+                }else if(id == 'worship'){
+                    map.add(worship);
+                }else if(id == 'hospitals'){
+                    map.add(hospital);
+                }else if(id == 'buildings'){
+                    map.add(govBuildings);
+                }else if(id == 'roads'){
+                    map.add(roads);
+                }
+            }else{// if unchecked turn off that layer 
+                 if (id == 'schools') {
+                    map.remove(schools);
+                }else if(id == 'worship'){
+                    map.remove(worship);
+                }else if(id == 'hospitals'){
+                    map.remove(hospital);
+                }else if(id == 'buildings'){
+                    map.remove(govBuildings);
+                }else if(id == 'roads'){
+                    map.remove(roads);
+                }
             }
         })
 
