@@ -292,6 +292,7 @@ require([
                     $($('.liveAffectedWrapper').find('span')[3]).html(atts.LIVE_RICE_HA + ' ha ')
 
                     view.graphics.removeAll(app.graphic); // remove all current graphics
+                    app.config.activeView.graphics.removeAll(app.graphic); // remove all current graphics
                     // create and add a selection graphic on flooded admin unit click
                     app.graphic = new Graphic({
                           //gotta set a defined geometry for the symbol to draw
@@ -305,8 +306,10 @@ require([
                                  }
                             })
                         });
+                       app.config.activeView.graphics.add(app.graphic);
                        view.graphics.add(app.graphic);
                 }else{
+                    app.config.activeView.graphics.removeAll(app.graphic); // remove all current graphics
                     view.graphics.removeAll(app.graphic); // remove all current graphics
                     // reset back to semarang when any specific admin unit is unselected
                     // update the header text with the name of the admin unit
