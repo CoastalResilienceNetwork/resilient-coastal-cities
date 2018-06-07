@@ -246,15 +246,21 @@ require([
         }
         // on map/view click function ////////////////////////////////////////////////
         function onClick(){
-
             //on view click
             view.on("click", function(evt) {
-                console.log(evt)
                 var screenPoint = {
                     x: evt.x,
                     y: evt.y
                 };
                 view.hitTest(screenPoint)
+                    .then(getGraphics);
+            });
+            app.config.activeView.on("click", function(evt) {
+                var screenPoint = {
+                    x: evt.x,
+                    y: evt.y
+                };
+                app.config.activeView.hitTest(screenPoint)
                     .then(getGraphics);
             });
             function getGraphics(response){
