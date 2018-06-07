@@ -10,6 +10,7 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jQuery-ui-Slider-Pips/1.11.4/jquery-ui-slider-pips.min.css">
 	<link rel="stylesheet" href="css/main.css">
 	<!-- jquery code -->
 	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
@@ -17,15 +18,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 	<script src="js/chosen.jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-ui-Slider-Pips/1.11.4/jquery-ui-slider-pips.min.js"></script>
+
 	<!-- bring in main and make vars and ESRI api-->
 	<script src="https://js.arcgis.com/4.7/"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
-	
-	
-	
-	<!-- <script src="js/cdcharts.js"></script>
-	<script src="js/cdclicks.js"></script>
-	<script src="js/cdinit.js"></script> -->
 </head>
 
 <body>
@@ -87,74 +83,71 @@
 					<!-- events wrapper -->
 					<div class="eventsWrapper">
 						<!-- This is the events wrapper -->
-						<h3>Flooding Events for the past year in Semarang:</h3>
+						<h3>Semerang Flood Events in Last 12 Months:</h3>
 						<!-- <div class="event"></div> -->
 						<!-- <h4>Click on an event below to explore the data.</h4> -->
 						
 					</div>
 					<div class="floodTagsWrapper">
-						<div style="display: flex;">
-							
-							<!-- <div class="floodAdminName">In <span id="adminName">Semarang</span>:</div> -->
-							<h1 class="floodTagsMainHeader">In <span>Semarang</span>:</h1>
-							<button class="button button-primary backToEvents" style="padding: 4px; margin-left: 165px; height: 30px;">Back to <br>events</button>
-							<!-- <div class="backToEvents">Back to events</div> -->
-						</div>
 						
-							
-						<div class="numOfTweetsLegendWrapper">
-							<!-- <h3 class="floodWrapperHeaders" style="margin-top: 3px; margin-bottom: 3px;"><span id="mainDate"></span>  </h3> -->
-							<h3 class="floodWrapperHeaders" style="margin-top: 3px;"><span id="numOfTweetsInAdmin">25</span> Flood related tweets. <!-- for event: <span>date</span> --></h3>
-							<div class="legendWrapper">
-								<div class="legendItemsWrapper">
-									<div class="itemPatch" style="background-color: rgba(115, 255, 222,0.6)"></div>
-									<div class="itemLabel">0-2 Tweets</div>
-								</div>
-								<div class="legendItemsWrapper">
-									<div class="itemPatch" style="background-color: rgba(82, 227, 217,0.6)"></div>
-									<div class="itemLabel">3-5 Tweets</div>
-								</div>
-								<div class="legendItemsWrapper">
-									<div class="itemPatch" style="background-color: rgba(54, 182, 199,0.6)"></div>
-									<div class="itemLabel">5-10 Tweets</div>
-								</div>
-								<div class="legendItemsWrapper">
-									<div class="itemPatch" style="background-color: rgba(13, 80, 143,0.6)"></div>
-									<div class="itemLabel">10+ Tweets</div>
+							<h1 class="floodTagsMainHeader">In <span>Semarang</span>:</h1>
+							<button class="button button-primary backToEvents" style="">Back to events</button>
+						
+						<!--  num of tweets section ///////////////////////// -->
+						<section>
+							<div class="numOfTweetsLegendWrapper">
+								<!-- <h3 class="floodWrapperHeaders" style="margin-top: 3px; margin-bottom: 3px;"><span id="mainDate"></span>  </h3> -->
+								<h3 class="floodWrapperHeaders" style="margin-top: 3px;"><span id="numOfTweetsInAdmin">25</span> Flood Related Tweets <!-- for event: <span>date</span> --></h3>
+									
+								<div class="legendWrapper">
+									<div class="legendItemsWrapper">
+										<div class="itemPatch" style="background-color: rgba(115, 255, 222,0.6)">1-2</div>
+										<!-- <div class="itemLabel">1-2 Tweets</div> -->
+									</div>
+									<div class="legendItemsWrapper">
+										<div class="itemPatch" style="background-color: rgba(82, 227, 217,0.6)">3-5</div>
+										<!-- <div class="itemLabel">3-5 Tweets</div> -->
+									</div>
+									<div class="legendItemsWrapper">
+										<div class="itemPatch" style="background-color: rgba(54, 182, 199,0.6)">5-10</div>
+										<!-- <div class="itemLabel">5-10 Tweets</div> -->
+									</div>
+									<div class="legendItemsWrapper">
+										<div class="itemPatch" style="background-color: rgba(13, 80, 143,0.6)">10+</div>
+										<!-- <div class="itemLabel">10+ Tweets</div> -->
+									</div>
 								</div>
 							</div>
-							
-							<!-- This is the loaction of the num of tweets graph -->
-							<canvas style="display: none;" class="Chart2" id="Chart2" width="425" height="75"></canvas>
-						</div>
-						
-						<!-- <div class="dateFilterWrapper">
-							this is the location of teh date filter
-						</div> -->
-						<hr>
-						<div class="peopleAffectedWrapper">
-							<h3 class="floodWrapperHeaders"><span>200</span> People Affected</h3>
-							<canvas class="Chart1" id="Chart1" width="400" height="150"></canvas>
-						</div>
-						<hr style="margin-top: -14px;">
-						<div class="placesAffectedWrapper">
-							<h3 class="floodWrapperHeaders"><span>56</span> Places Affected</h3>
-							<canvas class="Chart3" id="Chart3" width="425" height="150"></canvas>
-						</div>
-						<hr style="margin-top: 20px;">
-						
-						<div class="liveAffectedWrapper">
-							<h3 class="floodWrapperHeaders" style="margin-bottom: 7px;">Livelihoods Affected</h3>
-							<div class="livelihoodsItems"><span>12 </span>Tourism & Cultural Sites.</div>
-							<div class="livelihoodsItems"><span>256 km </span>of Roads.</div>
-							<div class="livelihoodsItems"><span>175 ha </span>of Agricultural Land.</div>
-							<div class="livelihoodsItems"><span>129 ha </span>of Rice Fields.</div>
-						</div>
-						<hr style="margin-top: 20px;">
-						<div class="refFloodLayersWrapper">
-							<h3 class="floodWrapperHeaders" style="margin-bottom: 7px;">Reference Layers</h3>
+						</section>
+						<!-- peopel affected section wrapper -->
+						<section>
+							<div class="peopleAffectedWrapper">
+								<h3><span>200</span> People Affected</h3>
+								<canvas class="Chart1" id="Chart1" width="400" height="70" style="margin-top: -15px;"></canvas>
+							</div>
+						</section>	
+						<!-- places affected section wrapper  -->
+						<section>
+							<div class="placesAffectedWrapper">
+								<h3><span>56</span> Places in Affected Admin Unit</h3>
+								<canvas class="Chart3" id="Chart3" width="425" height="150"></canvas>
+							</div>
+						</section>
+						<!-- Live affected section wrapper -->
+						<section>
+							<div class="liveAffectedWrapper">
+								<h3 style="margin-bottom: 7px; text-align: left;">Livelihoods Affected</h3>
+								<div class="livelihoodsItems"><span>12 </span>Tourism & Cultural Sites</div>
+								<div class="livelihoodsItems"><span>256 km </span>of Roads</div>
+								<div class="livelihoodsItems"><span>175 ha </span>of Agricultural Land</div>
+								<div class="livelihoodsItems"><span>129 ha </span>of Rice Fields</div>
+							</div>
+						</section>
+						<!-- flood area ref layers section wrapper  -->
+						<section>
+							<h3 style="margin-bottom: 7px;">Reference Layers</h3>
 							<div class="floodCBWrappers">
-								<div>
+								<div style="flex: .5">
 									<label class="form-component" for="hospitals">
 										<input type="checkbox" id="hospitals" name="food">
 										<div class="check"></div>
@@ -186,24 +179,56 @@
 										<span class="form-text">Places of Worship</span>
 									</label>
 								</div>
-								
 							</div>
-							
+						</section>
+					</div>
+				</div>
+				<div class="adaptationContentWrapper" id="adaptationContentWrapper">
+					<!-- <h1>Explore 3D Mangrove Restoration Simulations</h1> -->
+					<h1>In Semarang in Flooded Areas:</h1>
+					<section>
+						<div class="manResPotenWrapper">
+							<h3>2,381 Hectares</h3>
+							<h2>Mangrove Restoration Potential</h2>
+						</div>
+					</section>
+					<section>
+						<div class="ricePotenWrapper">
+							<h3>1,429 Hectares</h3>
+							<h2>Convertible Rice Fields</h2>
+						</div>
+					</section>
+					<section>
+						<div class="lowRicePotenWrapper">
+							<h3>1</h3>
+							<h2>Low Production Rice Fields</h2>
+						</div>
+					</section>
+					<h2>Explore 3D Mangrove Restoration Simulations</h2>
+					<h4>Height of Sediment from Top of Barrier (meters)</h4>
+					<div class="slider-container" style="width:250px; margin: auto;">
+						<div id="sldr" class="slider"></div>
+						<div style="display: flex;">
+							<div style="padding-right: 115px;">1</div>
+							<div style="padding-right: 115px;">2</div>
+							<div>3</div>
+						</div>	
+					</div>
+					<h4>Orientation from Shore (degrees)</h4>
+					<div class="slider-container" style="width:250px; margin: auto;">
+						<div id="sldr2" class="slider"></div>	
+						<div style="display: flex;">
+							<div style="padding-right: 115px;">1</div>
+							<div style="padding-right: 115px;">2</div>
+							<div>3</div>
 						</div>
 					</div>
 					
 					
-				</div>
-				<div class="adaptationContentWrapper" id="adaptationContentWrapper">
-					<div id="pieChartWrapper">
-						<canvas id="pieChart"></canvas>
-						<canvas id="Chart1" width="1600" height="900"></canvas>
-						<canvas id="myChart" width="1600" height="900"></canvas>
-						
-					</div>
 					
+					
+
 				</div>
-				
 			</div> <!-- this is the end of the main content wrapper div -->
 		</div> 
 		
@@ -211,16 +236,6 @@
 			<!-- map div ///////////////////////////////////////////////////// -->
 			<div id="map"></div>
 		</div>
-		
-		<!-- legend div ///////////////////////////////////////// -->
-		<!-- <div class="dummyLegendHeader"><span id="popupHeaderTitle" style="padding-right: 50px;">Legend</span><span class="popupMinWrapper popupMinLeg"><span class="popupMin" style="top: 1px;">&#9650;</span></span></div>
-
-
-		<div class="legendDivWrapper">
-			<div class="legendPopupHeader"><span id="popupHeaderTitle" style="padding-right: 50px;">Legend</span><span class="popupMinWrapper popupMinLeg"><span class="popupMin">&#x25BC;</span></span></div>
-			<div id="legendDiv" class="legendDiv"></div>
-		</div> -->
-		
 	</div>	
 </body>
 <script src="js/makevariables.js"></script>

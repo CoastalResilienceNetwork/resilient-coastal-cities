@@ -23,69 +23,69 @@ require([
         });
         var app = {} // main object for the application
         // init config 
-        // app.config = {
-        //     mapView: null,
-        //     sceneView: null,
-        //     activeView: null,
-        //     container: "map" // use same container for views
-        // };
-        // // init params
-        // app.initialViewParams = {
-        //         zoom: 12,
-        //         center: [110.41, -7.0],
-        //         container: app.config.container,
-        //         map:map
-        // };
-        // // create 2D view and and set active
-        // app.config.mapView = createView(app.initialViewParams, "2d");
-        // // app.config.mapView.map = webmap;
-        // app.config.activeView = app.config.mapView;
+        app.config = {
+            mapView: null,
+            sceneView: null,
+            activeView: null,
+            container: "map" // use same container for views
+        };
+        // init params
+        app.initialViewParams = {
+                zoom: 12,
+                center: [110.41, -7.0],
+                container: app.config.container,
+                map:map
+        };
+        // create 2D view and and set active
+        app.config.mapView = createView(app.initialViewParams, "2d");
+        // app.config.mapView.map = webmap;
+        app.config.activeView = app.config.mapView;
 
-        // // create 3D view, won't initialize until container is set
-        // app.initialViewParams.container = null;
-        // // app.initialViewParams.map = scene;
-        // app.config.sceneView = createView(app.initialViewParams, "3d");
-        // // convenience function for creating a 2D or 3D view
-        // function createView(params, type) {
-        //     var view;
-        //     var is2D = type === "2d";
-        //     if (is2D) {
-        //       view = new MapView(params);
-        //       return view;
-        //     } else {
-        //       view = new SceneView(params);
-        //     }
-        //     return view;
-        // }
-        // // apdaptaions solutions button click
-        // $('#yn2').on('click', function(evt){
-        //     $('#adaptationContentWrapper').show()
-        //     $('#floodRiskContentWrapper').hide()
-        //     // switchView('3d')
-        // })
-        // // flood risk button click
-        // $('#yn1').on('click', function(evt){
-        //     $('#floodRiskContentWrapper').show()
-        //     $('#adaptationContentWrapper').hide()
-        //     // switchView('2d')
-        // })
-        // // // swithc view from 2d to 3d and vice versa
-        // function switchView(type){
-        //     console.log(type);
-        //     // remove the reference to the container for the previous view
-        //     app.config.activeView.container = null;
-        //     if(type === '2d'){
-        //         app.config.mapView.viewpoint = app.config.activeView.viewpoint.clone();
-        //         app.config.mapView.container = app.config.container;
-        //         app.config.activeView = app.config.mapView;
-        //         app.viewMode = "2d";
-        //     }else{
-        //         app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
-        //         app.config.sceneView.container = app.config.container;
-        //         app.config.activeView = app.config.sceneView;
-        //         app.viewMode = "3d";
-        //     }
-        // }
+        // create 3D view, won't initialize until container is set
+        app.initialViewParams.container = null;
+        // app.initialViewParams.map = scene;
+        app.config.sceneView = createView(app.initialViewParams, "3d");
+        // convenience function for creating a 2D or 3D view
+        function createView(params, type) {
+            var view;
+            var is2D = type === "2d";
+            if (is2D) {
+              view = new MapView(params);
+              return view;
+            } else {
+              view = new SceneView(params);
+            }
+            return view;
+        }
+        // apdaptaions solutions button click
+        $('#yn2').on('click', function(evt){
+            $('#adaptationContentWrapper').show()
+            $('#floodRiskContentWrapper').hide()
+            switchView('3d')
+        })
+        // flood risk button click
+        $('#yn1').on('click', function(evt){
+            $('#floodRiskContentWrapper').show()
+            $('#adaptationContentWrapper').hide()
+            switchView('2d')
+        })
+        // // swithc view from 2d to 3d and vice versa
+        function switchView(type){
+            console.log(type);
+            // remove the reference to the container for the previous view
+            app.config.activeView.container = null;
+            if(type === '2d'){
+                app.config.mapView.viewpoint = app.config.activeView.viewpoint.clone();
+                app.config.mapView.container = app.config.container;
+                app.config.activeView = app.config.mapView;
+                app.viewMode = "2d";
+            }else{
+                app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
+                app.config.sceneView.container = app.config.container;
+                app.config.activeView = app.config.sceneView;
+                app.viewMode = "3d";
+            }
+        }
         // map view, new in js 4x api
         var view = new MapView({
             container: "map",
@@ -114,108 +114,7 @@ require([
         // onEventClick();
 
         
-        // https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java
-        // var url = ' https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-        // var startDate = '2018-02-01'
-        // var endDate = '2018-05-20'
-        // getFloodEvents(url, startDate, endDate);
-        // function getFloodEvents(url,startDate, endDate){
-        //     $.get( url, function( data ) {
-        //         $.each(data.events, function(i,v){
-        //             if(v.location.geonameid == '1627893'){
-        //                 // console.log(v);
-        //                 // var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-        //             }
-        //         })
-        //     })
-        // }
-
-
-        // var tagsJson = getTagsFromEvents('1627893')
-        // function getTagsFromEvents(parentGeonameid){
-        //     // console.log(parentGeonameid);
-        //     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-        //     $.get(url, function(data) {
-        //         app.finalAdminUnitTags = []
-        //         var defer = $.Deferred(),
-        //         filtered = defer.then(function(){
-        //             return data;
-        //         })
-        //         defer.resolve();
-        //         filtered.done(function(data){
-        //             // loop through tags geojson and match to our admin unit ID's
-        //             $.each(data.features, function(i,v){
-        //                 var id = v.properties.geonameid;
-        //                 var index = app.adminUnitId.indexOf(id);
-        //                 if(index > 0){
-        //                     pos = app.adminUnit.map(function(e) { return e.attributes.geonameid; }).indexOf("(1:" + id +")");
-        //                     if(pos > -1){
-        //                         // var geom = app.adminUnit[pos]['geometry']
-        //                         var geom = app.adminUnit[pos].geometry
-        //                         var atts = app.adminUnit[pos].attributes
-        //                         var total = v.properties.total
-        //                         buildGraphic(geom,atts, total)
-
-        //                     }else{
-        //                         ''
-        //                     }
-                            
-        //                 }else{
-        //                     // there was no match
-        //                 }
-
-        //             })
-        //         })
-        //     })
-
-        // }
-        // // build polygon graphics of admin units symbolized by color based on the num of total tags
-        // function buildGraphic(geom,atts, total){
-        //     atts.total = total;
-        //     geom.type = 'polygon'
-        //     var polygon = {
-        //         type: "polygon",
-        //         rings: geom.rings
-        //     }
-        //     var color;
-        //     var color1 = [115, 255, 222,0.6]
-        //     var color2 = [82, 227, 217,0.6]
-        //     var color3 = [54, 182, 199,0.6]
-        //     var color4 = [13, 80, 143,0.6]
-        //     if(total == 1){
-        //         color = color1
-        //     }else if(total > 1 && total <= 5){
-        //         color = color2
-        //     }else if(total > 5 && total <= 10){
-        //         color = color3
-        //     }else if(total > 10){
-        //         color = color4
-        //     }
-        //     // Create a symbol for rendering the graphic
-        //     var fillSymbol = {
-        //         type: "simple-fill", // autocasts as new SimpleFillSymbol()
-        //         color: color,
-        //         outline: { // autocasts as new SimpleLineSymbol()
-        //           color: [13, 80, 143],
-        //           width: .5
-        //         }
-        //     };
-        //     app.graphic2 = new Graphic({
-        //         //gotta set a defined geometry for the symbol to draw
-        //         geometry: geom,
-        //         symbol: fillSymbol,
-        //         attributes: atts
-        //     });
-        //     app.layer = new GraphicsLayer({
-        //         graphics: [app.graphic2]
-        //     });
-
-        //     map.add(app.layer);
-        //     app.layer.on('click', function(evt){
-        //         console.log(evt);
-        //     })
-        //     // view.graphics.add(app.graphic2);
-        // }
+        
         // query //////////////////////////////////////////////////////
         function query(){
             //  // query task
@@ -254,18 +153,8 @@ require([
         // on map/view click function ////////////////////////////////////////////////
         function onClick(){
 
-            //let's get a popup graphic on click:'
+            //on view click
             view.on("click", function(evt) {
-                // buildCharts(app);
-                // console.log(app.myChart3.data.datasets);
-                app.myChart3.data.datasets.forEach((dataset) => {
-                    console.log(dataset);
-                    console.log(dataset.data[0]);
-                    dataset.data[0] = dataset.data[0] + 10;
-                    // dataset.data.pop();
-                });
-                app.myChart3.update();
-
                 var screenPoint = {
                     x: evt.x,
                     y: evt.y
@@ -274,20 +163,72 @@ require([
                     .then(getGraphics);
             });
             function getGraphics(response){
-                view.graphics.removeAll(graphic);
-                var graphic = new Graphic({
-                  //gotta set a defined geometry for the symbol to draw
-                  geometry: response.results[0].graphic.geometry,
-                  symbol: new SimpleFillSymbol({
-                     color: [255,255,0,0.0],
-                     style: "solid",
-                     outline: {
-                          color: [102,0,204],
-                          width: 2
-                         }
-                    })
-                });
-               view.graphics.add(graphic);
+                if(response.results.length > 1){
+                    var atts = response.results[0].graphic.attributes;
+                    // update all the charts and text on app pane when click on admin unit
+                    // update the header text with the name of the admin unit
+                    String.prototype.toProperCase = function () {
+                        return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+                    };
+                    $('.floodTagsMainHeader span').html(atts.name.toProperCase());
+                    // update the number of flood related tweets
+                    $('#numOfTweetsInAdmin').html(atts.total)
+                    // update the number of people affected chart
+                    $('.peopleAffectedWrapper span').html(numberWithCommas(atts.POP_TOTAL))
+                    app.myChart.data.datasets[0].data[0] = atts.POP_MEN
+                    app.myChart.data.datasets[0].data[1] = atts.POP_WOMEN
+                    app.myChart.update();
+                    // update tje number of places affected chart
+                    $('.placesAffectedWrapper span').html(numberWithCommas(atts.PLACE_EDU + atts.PLACE_HOSP + atts.PLACE_WSHP))
+                    app.myChart3.data.datasets[0].data[0] = atts.PLACE_EDU;
+                    app.myChart3.data.datasets[1].data[0] = atts.PLACE_HOSP;
+                    app.myChart3.data.datasets[2].data[0] = atts.PLACE_WSHP;
+                    app.myChart3.update();
+                    // update the livelihoods affected chart
+                    $($('.liveAffectedWrapper').find('span')[0]).html(atts.LIVE_TOUR + ' ')
+                    $($('.liveAffectedWrapper').find('span')[1]).html(atts.LIVE_RDS_KM + ' km ')
+                    $($('.liveAffectedWrapper').find('span')[2]).html(atts.LIVE_AG_HA + ' ha ')
+                    $($('.liveAffectedWrapper').find('span')[3]).html(atts.LIVE_RICE_HA + ' ha ')
+
+                    view.graphics.removeAll(app.graphic); // remove all current graphics
+                    // create and add a selection graphic on flooded admin unit click
+                    app.graphic = new Graphic({
+                          //gotta set a defined geometry for the symbol to draw
+                          geometry: response.results[0].graphic.geometry,
+                          symbol: new SimpleFillSymbol({
+                             color: [255,255,0,0.0],
+                             style: "solid",
+                             outline: {
+                                  color: [102,0,204],
+                                  width: 2
+                                 }
+                            })
+                        });
+                       view.graphics.add(app.graphic);
+                }else{
+                    view.graphics.removeAll(app.graphic); // remove all current graphics
+                    // reset back to semarang when any specific admin unit is unselected
+                    // update the header text with the name of the admin unit
+                    $('.floodTagsMainHeader span').html("Semarang")
+                     // update the number of flood related tweets
+                    $('#numOfTweetsInAdmin').html(app.totalTweets)
+                    // update the number of people affected chart
+                    $('.peopleAffectedWrapper span').html(numberWithCommas(app.popTotal))
+                    app.myChart.data.datasets[0].data[0] = app.popMen
+                    app.myChart.data.datasets[0].data[1] = app.popWomen
+                    app.myChart.update();
+                    // update tje number of places affected chart
+                    $('.placesAffectedWrapper span').html(numberWithCommas(app.eduTotal + app.hospTotal + app.worshipTotal))
+                    app.myChart3.data.datasets[0].data[0] = app.eduTotal;
+                    app.myChart3.data.datasets[1].data[0] = app.hospTotal;
+                    app.myChart3.data.datasets[2].data[0] = app.worshipTotal;
+                    app.myChart3.update();
+                     // update the livelihoods affected chart
+                    $($('.liveAffectedWrapper').find('span')[0]).html(app.tourTotal + ' ')
+                    $($('.liveAffectedWrapper').find('span')[1]).html(app.roadsTotal + ' km ')
+                    $($('.liveAffectedWrapper').find('span')[2]).html(app.agTotal + ' ha ')
+                    $($('.liveAffectedWrapper').find('span')[3]).html(app.riceTotal + ' ha ')
+                }
             }
         }
         function getEvents(){
@@ -332,7 +273,7 @@ require([
             // call get flood events for the past year
             getFloodEvents(getDate(d, 365))
             function getFloodEvents(endDate){
-                var url = ' https://api.floodtags.com/v1/events/index?until='+ todaysDate + '&since=' + endDate +'&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+                var url = 'https://api.floodtags.com/v1/events/index?until='+ todaysDate + '&since=' + endDate +'&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
                 app.eventList = []
                 $.get( url, function( data ) {
                      var defer = $.Deferred(),
@@ -349,7 +290,6 @@ require([
                    if(app.eventList.length > 0){
                         // call create event button function
                         buildEventButtons(app.eventList)
-
                    }
                 });
             })
@@ -457,13 +397,17 @@ require([
                                 $('.mainToggleWrapper').slideDown()
                                 // slide down the flood tags wrapper
                                 $('.floodTagsWrapper').slideUp();
+                                // remove the selection graphics
+                                view.graphics.removeAll(app.graphic); // remove all current graphics
+                                // uncheck all ref layers
+                                $.each($('.floodCBWrappers').find('input'), function(i,v){
+                                    $(v).prop('checked', false);
+                                })
                                 map.removeAll()
                                 map.add(layer)
                             })
-
                         })
                     })
-
                 }
                 // build polygon graphics of admin units symbolized by color based on the num of total tags
                 // create graphics for each match admin unit
@@ -596,6 +540,130 @@ require([
                 }
             }
         })
+
+        // setup some jquery ui items
+        // $("#sldr").slider({ min: 3, max: 1, range: false, step:1, values: [1] })
+        //     .slider("pips", { rest: "label"})
+        //     .slider("float");
+        $(function() {
+            console.log('hey')
+          $("#sldr").slider({ min: 1, max: 3, range: false, values: [1] })
+            // .slider("pips", { rest: "label"})
+            // .slider("float");
+           $("#sldr2").slider({ min: 1, max: 3, range: false, values: [1] })
+            // .slider("pips", { rest: "label"})
+            // .slider("float");
+        });
+
+
+
+
+// https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java
+        // var url = ' https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+        // var startDate = '2018-02-01'
+        // var endDate = '2018-05-20'
+        // getFloodEvents(url, startDate, endDate);
+        // function getFloodEvents(url,startDate, endDate){
+        //     $.get( url, function( data ) {
+        //         $.each(data.events, function(i,v){
+        //             if(v.location.geonameid == '1627893'){
+        //                 // console.log(v);
+        //                 // var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+        //             }
+        //         })
+        //     })
+        // }
+
+
+        // var tagsJson = getTagsFromEvents('1627893')
+        // function getTagsFromEvents(parentGeonameid){
+        //     // console.log(parentGeonameid);
+        //     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+        //     $.get(url, function(data) {
+        //         app.finalAdminUnitTags = []
+        //         var defer = $.Deferred(),
+        //         filtered = defer.then(function(){
+        //             return data;
+        //         })
+        //         defer.resolve();
+        //         filtered.done(function(data){
+        //             // loop through tags geojson and match to our admin unit ID's
+        //             $.each(data.features, function(i,v){
+        //                 var id = v.properties.geonameid;
+        //                 var index = app.adminUnitId.indexOf(id);
+        //                 if(index > 0){
+        //                     pos = app.adminUnit.map(function(e) { return e.attributes.geonameid; }).indexOf("(1:" + id +")");
+        //                     if(pos > -1){
+        //                         // var geom = app.adminUnit[pos]['geometry']
+        //                         var geom = app.adminUnit[pos].geometry
+        //                         var atts = app.adminUnit[pos].attributes
+        //                         var total = v.properties.total
+        //                         buildGraphic(geom,atts, total)
+
+        //                     }else{
+        //                         ''
+        //                     }
+                            
+        //                 }else{
+        //                     // there was no match
+        //                 }
+
+        //             })
+        //         })
+        //     })
+
+        // }
+        // // build polygon graphics of admin units symbolized by color based on the num of total tags
+        // function buildGraphic(geom,atts, total){
+        //     atts.total = total;
+        //     geom.type = 'polygon'
+        //     var polygon = {
+        //         type: "polygon",
+        //         rings: geom.rings
+        //     }
+        //     var color;
+        //     var color1 = [115, 255, 222,0.6]
+        //     var color2 = [82, 227, 217,0.6]
+        //     var color3 = [54, 182, 199,0.6]
+        //     var color4 = [13, 80, 143,0.6]
+        //     if(total == 1){
+        //         color = color1
+        //     }else if(total > 1 && total <= 5){
+        //         color = color2
+        //     }else if(total > 5 && total <= 10){
+        //         color = color3
+        //     }else if(total > 10){
+        //         color = color4
+        //     }
+        //     // Create a symbol for rendering the graphic
+        //     var fillSymbol = {
+        //         type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        //         color: color,
+        //         outline: { // autocasts as new SimpleLineSymbol()
+        //           color: [13, 80, 143],
+        //           width: .5
+        //         }
+        //     };
+        //     app.graphic2 = new Graphic({
+        //         //gotta set a defined geometry for the symbol to draw
+        //         geometry: geom,
+        //         symbol: fillSymbol,
+        //         attributes: atts
+        //     });
+        //     app.layer = new GraphicsLayer({
+        //         graphics: [app.graphic2]
+        //     });
+
+        //     map.add(app.layer);
+        //     app.layer.on('click', function(evt){
+        //         console.log(evt);
+        //     })
+        //     // view.graphics.add(app.graphic2);
+        // }
+
+
+
+
 
         // // var url = "https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
         // var url = "https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"

@@ -27,232 +27,313 @@ $('.placesAffectedWrapper').children().find('span').html(app.hospTotal + app.wor
 $('.peopleAffectedWrapper').children().find('span').html(numberWithCommas(app.popTotal))
 // build charts below ////////////////////
 // chart 1 code ////////////////////////////////////////////////////////////////////////////////////////////////
-  var barOptions_stacked = {
-      responsive: false,
-      tooltips: {
-          enabled: false
-      },
-      label:{
-        fontSize:20
-      },
-      hover :{
-          animationDuration:0
-      },
-      scales: {
-          xAxes: [{
-              display: false,
-              barThickness:75,
-              ticks: {
-                  beginAtZero:true,
-                  fontFamily: "'Open Sans Bold', sans-serif",
-                  fontSize:20,
-                   max: (app.popTotal*.05) + app.popTotal,
-              },
-              scaleLabel:{
-                  display:true
-              },
-              gridLines: {
-                display: false
-              }, 
-              stacked: true
-          }],
-          yAxes: [{
-              barThickness:55,
-              gridLines: {
-                  display:false,
-                  color: "#f3f3f3",
-                  zeroLineColor: "#f3f3f3",
-                  zeroLineWidth: 0
-              },
-              ticks: {
-                  fontFamily: "'Open Sans Bold', sans-serif",
-                  fontSize:20,
 
-              },
-              stacked: true
-          }]
-      },
-      legend:{
+
+ var popData = {
+        labels: [
+            "Men",
+            "Women"
+        ],
+        datasets: [
+            {
+                label: "Test",
+                data: [app.popMen, app.popWomen],
+                backgroundColor: ["#669911", "#119966" ],
+                hoverBackgroundColor: ["#66A2EB", "#FCCE56"]
+            }]
+    };
+
+var ctx = document.getElementById("Chart1");
+app.myChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: popData,
+      options: {
+        scales: {
+            yAxes: [{
+                barThickness:17,
+                stacked: true
+            }],
+            xAxes: [{
+              display: false,
+              ticks:{
+                min: 0
+              }
+            }]
+
+        },
+        responsive: false,
+        tooltips: {
+            enabled: false
+        },
+      //   scales: {
+      //     xAxes: [{
+      //         display: false,
+      //         barThickness:75,
+      //         ticks: {
+      //             beginAtZero:true,
+      //             fontFamily: "'Open Sans Bold', sans-serif",
+      //             fontSize:15,
+      //              max: (app.popTotal*.05) + app.popTotal,
+      //         },
+      //         scaleLabel:{
+      //             display:true
+      //         },
+      //         gridLines: {
+      //           display: false
+      //         }, 
+      //         stacked: false
+      //     }],
+      //     yAxes: [{
+      //         barThickness:35,
+      //         gridLines: {
+      //             display:false,
+      //             color: "#f3f3f3",
+      //             zeroLineColor: "#f3f3f3",
+      //             zeroLineWidth: 0
+      //         },
+      //         ticks: {
+      //             fontFamily: "'Open Sans Bold', sans-serif",
+      //             fontSize:15,
+
+      //         },
+      //         stacked: true
+      //     }]
+      // },
+        legend:{
           display:false,
       },
+
+    }
+})
+
+
+
+  // var barOptions_stacked = {
+  //     responsive: false,
+  //     tooltips: {
+  //         enabled: false
+  //     },
+  //     label:{
+  //       fontSize:20
+  //     },
+  //     hover :{
+  //         animationDuration:0
+  //     },
+  //     scales: {
+  //         xAxes: [{
+  //             display: false,
+  //             barThickness:75,
+  //             ticks: {
+  //                 beginAtZero:true,
+  //                 fontFamily: "'Open Sans Bold', sans-serif",
+  //                 fontSize:20,
+  //                  max: (app.popTotal*.05) + app.popTotal,
+  //             },
+  //             scaleLabel:{
+  //                 display:true
+  //             },
+  //             gridLines: {
+  //               display: false
+  //             }, 
+  //             stacked: true
+  //         }],
+  //         yAxes: [{
+  //             barThickness:35,
+  //             gridLines: {
+  //                 display:false,
+  //                 color: "#f3f3f3",
+  //                 zeroLineColor: "#f3f3f3",
+  //                 zeroLineWidth: 0
+  //             },
+  //             ticks: {
+  //                 fontFamily: "'Open Sans Bold', sans-serif",
+  //                 fontSize:20,
+
+  //             },
+  //             stacked: true
+  //         }]
+  //     },
+  //     legend:{
+  //         display:false,
+  //     },
       
-      animation: {
-          onComplete: function () {
-              var chartInstance = this.chart;
-              var ctx = chartInstance.ctx;
-              ctx.textAlign = "center";
-              ctx.font = "20px Open Sans";
-              ctx.fillStyle = "black";
+  //     animation: {
+  //         onComplete: function () {
+  //             var chartInstance = this.chart;
+  //             var ctx = chartInstance.ctx;
+  //             ctx.textAlign = "center";
+  //             ctx.font = "20px Open Sans";
+  //             ctx.fillStyle = "black";
 
-              Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
-                  var meta = chartInstance.controller.getDatasetMeta(i);
-                  Chart.helpers.each(meta.data.forEach(function (bar, index) {
-                      data = dataset.data[index];
-                      data = numberWithCommas(data)
-                      if(i==0){
-                          ctx.fillText(data + ' Men', 80, bar._model.y+5);
-                      } else {
-                          ctx.fillText(data + ' Women', bar._model.x-75, bar._model.y+5);
-                      }
-                  }),this)
-              }),this);
-          }
-      },
-      pointLabelFontFamily : "Quadon Extra Bold",
-      scaleFontFamily : "Quadon Extra Bold",
-  };
-  var ctx = document.getElementById("Chart1");
-  var myChart = new Chart(ctx, {
-      type: 'horizontalBar',
-      data: {
-          // labels: ["Men", "Women"],
+  //             Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
+  //                 var meta = chartInstance.controller.getDatasetMeta(i);
+  //                 Chart.helpers.each(meta.data.forEach(function (bar, index) {
+  //                     data = dataset.data[index];
+  //                     data = numberWithCommas(data)
+  //                     if(i==0){
+  //                         ctx.fillText(data + ' Men', 80, bar._model.y+5);
+  //                     } else {
+  //                         ctx.fillText(data + ' Women', bar._model.x-75, bar._model.y+5);
+  //                     }
+  //                 }),this)
+  //             }),this);
+  //         }
+  //     },
+  //     pointLabelFontFamily : "Quadon Extra Bold",
+  //     scaleFontFamily : "Quadon Extra Bold",
+  // };
+  // var ctx = document.getElementById("Chart1");
+  // var myChart = new Chart(ctx, {
+  //     type: 'horizontalBar',
+  //     data: {
+  //         // labels: ["Men", "Women"],
           
-          datasets: [{
-              label: 'men',
-              data: [app.popMen],
-              backgroundColor: "rgba(163,103,126,1)",
-              hoverBackgroundColor: "rgba(140,85,100,1)",
-              borderWidth: 1,
-              // borderColor: 'black',
-          },{
-               label: 'women',
-              data: [app.popWomen],
-              backgroundColor: "rgba(63,203,226,1)",
-              hoverBackgroundColor: "rgba(46,185,235,1)",
-              borderWidth: 1,
-              // borderColor: 'black',
-          }]
-      },
+  //         datasets: [{
+  //             label: 'men',
+  //             data: [app.popMen],
+  //             backgroundColor: "rgba(163,103,126,1)",
+  //             hoverBackgroundColor: "rgba(140,85,100,1)",
+  //             borderWidth: 1,
+  //             // borderColor: 'black',
+  //         },{
+  //              label: 'women',
+  //             data: [app.popWomen],
+  //             backgroundColor: "rgba(63,203,226,1)",
+  //             hoverBackgroundColor: "rgba(46,185,235,1)",
+  //             borderWidth: 1,
+  //             // borderColor: 'black',
+  //         }]
+  //     },
 
-      options: barOptions_stacked,
-  });
+  //     options: barOptions_stacked,
+  // });
 // chart 2 code ///////////////////////////////////////////////////////////////////////////////////////////////
-  var numTweetChartOptions = {
-      responsive: false,
-      tooltips: {
-          enabled: false
-      },
-      label:{
-        fontSize:20
-      },
-      hover :{
-          animationDuration:0
-      },
-      scales: {
-          xAxes: [{
-              display: false,
-              barThickness:35,
-              ticks: {
-                  beginAtZero:true,
-                  fontFamily: "'Open Sans Bold', sans-serif",
-                  fontSize:20
-              },
-              scaleLabel:{
-                  display:false
-              },
-              gridLines: {
-                display: false,
-                color: "#fff",
-                zeroLineColor: "#fff",
-                zeroLineWidth: 0
-              }, 
-              stacked: true
-          }],
-          yAxes: [{
-              barThickness:25,
-              gridLines: {
-                  display:false,
-                  color: "#f3f3f3",
-                  zeroLineColor: "#f3f3f3",
-                  zeroLineWidth: 0
-              },
-              ticks: {
-                  fontFamily: "'Open Sans Bold', sans-serif",
-                  fontSize:20
-              },
-              stacked: true
-          }]
-      },
-      legend:{
-          display:false,
-      },
+  // var numTweetChartOptions = {
+  //     responsive: false,
+  //     tooltips: {
+  //         enabled: false
+  //     },
+  //     label:{
+  //       fontSize:20
+  //     },
+  //     hover :{
+  //         animationDuration:0
+  //     },
+  //     scales: {
+  //         xAxes: [{
+  //             display: false,
+  //             barThickness:35,
+  //             ticks: {
+  //                 beginAtZero:true,
+  //                 fontFamily: "'Open Sans Bold', sans-serif",
+  //                 fontSize:20
+  //             },
+  //             scaleLabel:{
+  //                 display:false
+  //             },
+  //             gridLines: {
+  //               display: false,
+  //               color: "#fff",
+  //               zeroLineColor: "#fff",
+  //               zeroLineWidth: 0
+  //             }, 
+  //             stacked: true
+  //         }],
+  //         yAxes: [{
+  //             barThickness:25,
+  //             gridLines: {
+  //                 display:false,
+  //                 color: "#f3f3f3",
+  //                 zeroLineColor: "#f3f3f3",
+  //                 zeroLineWidth: 0
+  //             },
+  //             ticks: {
+  //                 fontFamily: "'Open Sans Bold', sans-serif",
+  //                 fontSize:20
+  //             },
+  //             stacked: true
+  //         }]
+  //     },
+  //     legend:{
+  //         display:false,
+  //     },
 
       
-      animation: {
-          onComplete: function () {
-              var chartInstance = this.chart;
-              var ctx = chartInstance.ctx;
-              ctx.textAlign = "center";
-              ctx.font = "20px Open Sans";
-              ctx.fillStyle = "black";
-              ctx.fontColor= "black";
+  //     animation: {
+  //         onComplete: function () {
+  //             var chartInstance = this.chart;
+  //             var ctx = chartInstance.ctx;
+  //             ctx.textAlign = "center";
+  //             ctx.font = "20px Open Sans";
+  //             ctx.fillStyle = "black";
+  //             ctx.fontColor= "black";
 
-              Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
-                  var meta = chartInstance.controller.getDatasetMeta(i);
-                  Chart.helpers.each(meta.data.forEach(function (bar, index) {
-                      data = dataset.data[index];
-                      data = numberWithCommas(data)
-                      // data = data + ' Admin Units'
-                      if(i==0){
-                          ctx.fillText(data, 50, bar._model.y+4);
-                      } else {
-                          if(data == 1){
-                            ctx.fillText(data, bar._model.x-10, bar._model.y+5);
-                          }else{
-                            // console.log(bar._model.x)
-                            ctx.fillText(data, bar._model.x-40, bar._model.y+5);
-                          }
-                      }
-                  }),this)
-              }),this);
-          }
-      },
-      pointLabelFontFamily : "Quadon Extra Bold",
-      scaleFontFamily : "Quadon Extra Bold",
-  };
-  var ctx2 = document.getElementById("Chart2");
-  var myChart2 = new Chart(ctx2, {
-      type: 'horizontalBar',
-      data: {
-          // labels: ["Men", "Women"],
+  //             Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
+  //                 var meta = chartInstance.controller.getDatasetMeta(i);
+  //                 Chart.helpers.each(meta.data.forEach(function (bar, index) {
+  //                     data = dataset.data[index];
+  //                     data = numberWithCommas(data)
+  //                     // data = data + ' Admin Units'
+  //                     if(i==0){
+  //                         ctx.fillText(data, 50, bar._model.y+4);
+  //                     } else {
+  //                         if(data == 1){
+  //                           ctx.fillText(data, bar._model.x-10, bar._model.y+5);
+  //                         }else{
+  //                           // console.log(bar._model.x)
+  //                           ctx.fillText(data, bar._model.x-40, bar._model.y+5);
+  //                         }
+  //                     }
+  //                 }),this)
+  //             }),this);
+  //         }
+  //     },
+  //     pointLabelFontFamily : "Quadon Extra Bold",
+  //     scaleFontFamily : "Quadon Extra Bold",
+  // };
+  // var ctx2 = document.getElementById("Chart2");
+  // var myChart2 = new Chart(ctx2, {
+  //     type: 'horizontalBar',
+  //     data: {
+  //         // labels: ["Men", "Women"],
           
-          datasets: [{
-              label: 'men',
-              data: [7],
-              backgroundColor: "rgba(115, 255, 222,0.6)",
-              borderWidth: 1,
-              // borderColor: 'black',
-              // hoverBackgroundColor: "rgba(140,85,100,1)"
-          },{
-              label: 'women',
-              data: [5],
-              backgroundColor: "rgba(82, 227, 217,0.6)",
-              borderWidth: 1,
-              // borderColor: 'black',
-              // hoverBackgroundColor: "rgba(46,185,235,1)"
-          },
-          {
-              label: 'men',
-              data: [4],
-              backgroundColor: "rgba(54, 182, 199,0.6)",
-              borderWidth: 1,
-              // borderColor: 'black',
-              // hoverBackgroundColor: "rgba(140,85,100,1)"
-          },
-          {
-              label: 'men',
-              data: [1],
-              backgroundColor: "rgba(13, 80, 143,0.6)",
-              borderWidth: 1,
-              // borderColor: 'black',
-              // hoverBackgroundColor: "rgba(140,85,100,1)"
-          }
+  //         datasets: [{
+  //             label: 'men',
+  //             data: [7],
+  //             backgroundColor: "rgba(115, 255, 222,0.6)",
+  //             borderWidth: 1,
+  //             // borderColor: 'black',
+  //             // hoverBackgroundColor: "rgba(140,85,100,1)"
+  //         },{
+  //             label: 'women',
+  //             data: [5],
+  //             backgroundColor: "rgba(82, 227, 217,0.6)",
+  //             borderWidth: 1,
+  //             // borderColor: 'black',
+  //             // hoverBackgroundColor: "rgba(46,185,235,1)"
+  //         },
+  //         {
+  //             label: 'men',
+  //             data: [4],
+  //             backgroundColor: "rgba(54, 182, 199,0.6)",
+  //             borderWidth: 1,
+  //             // borderColor: 'black',
+  //             // hoverBackgroundColor: "rgba(140,85,100,1)"
+  //         },
+  //         {
+  //             label: 'men',
+  //             data: [1],
+  //             backgroundColor: "rgba(13, 80, 143,0.6)",
+  //             borderWidth: 1,
+  //             // borderColor: 'black',
+  //             // hoverBackgroundColor: "rgba(140,85,100,1)"
+  //         }
 
-          ]
-      },
+  //         ]
+  //     },
 
-      options: numTweetChartOptions,
-  });
+  //     options: numTweetChartOptions,
+  // });
 // chart 3 code ////////////////////////////////////////////////////////////////////////////////
 var placesChartOption = {
       responsive: false,
