@@ -39,7 +39,7 @@ $('.peopleAffectedWrapper').children().find('span').html(numberWithCommas(app.po
                 label: "Test",
                 data: [app.popMen, app.popWomen],
                 backgroundColor: ["#669911", "#119966" ],
-                hoverBackgroundColor: ["#66A2EB", "#FCCE56"]
+                // hoverBackgroundColor: ["#66A2EB", "#FCCE56"]
             }]
     };
 
@@ -367,6 +367,7 @@ var placesChartOption = {
       legend:{
           display:true,
           position:'bottom',
+          onClick: null,
       },
       animation: {
           onComplete: function () {

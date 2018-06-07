@@ -406,10 +406,22 @@ require([
                     app.myChart.update();
                     // update tje number of places affected chart
                     $('.placesAffectedWrapper span').html(numberWithCommas(atts.PLACE_EDU + atts.PLACE_HOSP + atts.PLACE_WSHP))
-                    app.myChart3.data.datasets[0].data[0] = atts.PLACE_EDU;
-                    app.myChart3.data.datasets[1].data[0] = atts.PLACE_HOSP;
-                    app.myChart3.data.datasets[2].data[0] = atts.PLACE_WSHP;
-                    app.myChart3.update();
+                    // slide down text area instead of chart
+                    $('.placesText').slideDown()
+
+                    // slide up chart area
+                    $('#Chart3').slideUp();
+                    // populate each span with the appriate value
+                     $($('.placesText').find('span')[0]).html(atts.PLACE_EDU + ' ')
+                     $($('.placesText').find('span')[1]).html(atts.PLACE_HOSP + ' ')
+                     $($('.placesText').find('span')[2]).html(atts.PLACE_WSHP + ' ')
+                     $('.placesAffectedWrapper h3').css('text-align', 'left')
+
+                    // app.myChart3.data.datasets[0].data[0] = atts.PLACE_EDU;
+                    // app.myChart3.data.datasets[1].data[0] = atts.PLACE_HOSP;
+                    // app.myChart3.data.datasets[2].data[0] = atts.PLACE_WSHP;
+                    // app.myChart3.update();
+
                     // update the livelihoods affected chart
                     $($('.liveAffectedWrapper').find('span')[0]).html(atts.LIVE_TOUR + ' ')
                     $($('.liveAffectedWrapper').find('span')[1]).html(atts.LIVE_RDS_KM + ' km ')
@@ -443,11 +455,17 @@ require([
                     $('#numOfTweetsInAdmin').html(app.totalTweets)
                     // update the number of people affected chart
                     $('.peopleAffectedWrapper span').html(numberWithCommas(app.popTotal))
+                    // slide down text area instead of chart
+                    $('.placesText').slideUp()
+                    // slide up chart area
+                    $('#Chart3').slideDown();
+                    // update chart
                     app.myChart.data.datasets[0].data[0] = app.popMen
                     app.myChart.data.datasets[0].data[1] = app.popWomen
                     app.myChart.update();
                     // update tje number of places affected chart
                     $('.placesAffectedWrapper span').html(numberWithCommas(app.eduTotal + app.hospTotal + app.worshipTotal))
+                    $('.placesAffectedWrapper h3').css('text-align', 'center')
                     app.myChart3.data.datasets[0].data[0] = app.eduTotal;
                     app.myChart3.data.datasets[1].data[0] = app.hospTotal;
                     app.myChart3.data.datasets[2].data[0] = app.worshipTotal;
