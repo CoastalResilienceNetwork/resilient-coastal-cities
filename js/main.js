@@ -84,7 +84,7 @@ require([
                 app.config.mapView.container = app.config.container;
                 app.config.activeView = app.config.mapView;
                 app.viewMode = "2d";
-
+                map.remove(app.adminFeature)
                 app.config.activeView.when(function(){
                     // console.log(app.config.activeView)
                     // if(app.config.activeView){
@@ -221,16 +221,23 @@ require([
                               }]
                         }],
                     }
-
-
-
-
-
-                    var adminFeature = new FeatureLayer({
+                    app.adminFeature = new FeatureLayer({
                         url:adminUrl,
                         renderer: renderer,
+                        popupTemplate: { // autocasts as new PopupTemplate()
+                          title: "Resilient Coastal Cities",
+                          content: "{MNG_COMBINED_HA} ha of Potentially Restorable Mangrove Areas or Rice Fields that can be Converted to Mangroves",
+                          fieldInfos: [
+                          {
+                            fieldName: "MNG_COMBINED_HA",
+                            format: {
+                              digitSeparator: true,
+                              places: 0
+                            }
+                          }]
+                        },
                     })
-                    map.add(adminFeature);
+                    map.add(app.adminFeature);
 
 
                     app.config.activeView.goTo({
