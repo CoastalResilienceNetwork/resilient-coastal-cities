@@ -5,10 +5,10 @@
 require([
       "esri/Map","esri/views/MapView","esri/layers/FeatureLayer","esri/renderers/UniqueValueRenderer","esri/symbols/SimpleFillSymbol",
       "esri/Graphic","esri/layers/GraphicsLayer","esri/tasks/QueryTask","esri/tasks/support/Query","esri/widgets/BasemapToggle","dojo/dom",
-      "esri/widgets/Search","esri/views/SceneView","dojo/domReady!"
+      "esri/widgets/Search","esri/views/SceneView","esri/WebScene","esri/layers/SceneLayer","esri/Camera","esri/geometry/Point","dojo/domReady!"
     ], function(
       Map,MapView,FeatureLayer,UniqueValueRenderer,SimpleFillSymbol,Graphic,GraphicsLayer,QueryTask,
-      Query,BasemapToggle,dom, Search, SceneView
+      Query,BasemapToggle,dom, Search, SceneView, WebScene, SceneLayer, Camera, Point
     ) { 
         // global variables 
         // admin units feature layer
@@ -18,10 +18,13 @@ require([
         });
          // create map object
         var map = new Map({
-            basemap: "streets",
+            basemap: "hybrid",
+            ground: "world-elevation",
             layers: [layer]
         });
         var app = {} // main object for the application
+        app.sedVal = 3
+        app.orVal = 120
         // init config 
         app.config = {
             mapView: null,
@@ -62,16 +65,17 @@ require([
             $('#adaptationContentWrapper').show()
             $('#floodRiskContentWrapper').hide()
             switchView('3d')
+            
         })
         // flood risk button click
         $('#yn1').on('click', function(evt){
             $('#floodRiskContentWrapper').show()
             $('#adaptationContentWrapper').hide()
             switchView('2d')
+
         })
         // // swithc view from 2d to 3d and vice versa
         function switchView(type){
-            console.log(type);
             // remove the reference to the container for the previous view
             app.config.activeView.container = null;
             if(type === '2d'){
@@ -79,13 +83,102 @@ require([
                 app.config.mapView.container = app.config.container;
                 app.config.activeView = app.config.mapView;
                 app.viewMode = "2d";
+
+                app.config.activeView.when(function(){
+                    // console.log(app.config.activeView)
+                    // if(app.config.activeView){
+                    //     var pt = new Point({
+                    //       latitude: 49,
+                    //       longitude: -126
+                    //     });
+
+                    //     // // go to the given point
+                    //     // view.goTo(pt);
+                    //     console.log('done')
+                    //     app.config.activeView.goTo({
+                    //         pt
+                    //     })
+                    // }
+                    
+                })
             }else{
                 app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
                 app.config.sceneView.container = app.config.container;
                 app.config.activeView = app.config.sceneView;
                 app.viewMode = "3d";
+                // Create SceneLayer and add to the map
+                app.sceneLayer = new SceneLayer({
+                    portalItem: {
+                      id: "e9ae17b00a914b7ab00b65c9e8caa358"
+                    },
+                });
+                map.add(app.sceneLayer);
+                // on scene view click
+                app.config.activeView.when(function(){
+                    app.config.activeView.goTo({
+                        position: {
+                          x: 110.39623509996582,
+                          y: -6.940453915619568,
+                          z: 231,
+                          spatialReference: {
+                            wkid: 4326
+                          }
+                        },
+                        heading: 160,
+                        tilt: 58.33
+                        // tilt: 0
+                      })
+                })
+                // based on slider change show the approriate scene
+                var sceneIds = {
+                    h1or120:"2a051943782546dda70750bdad76e1f9",
+                    h2or120:"59d3783d77ef40dfaaa818ed0e05d0ee",
+                    h3or120:"e9ae17b00a914b7ab00b65c9e8caa358",
+                    h1or200:"64a4c31bb53642d9bf738c6a903bc872",
+                    h2or200:"14b32cc9c296496dafa5c24e5bcb84ec",
+                    h3or200:"539b141d34d342d48ecf0e5b0f47d3f6",
+                    h1or250:"cff4b49a71344e029ce123d880a3a14a",
+                    h2or250:"93faac0e1c284b20a4b892da7954e1c7",
+                    h3or250:"72b102ebd30c4aeabab4d9bf10e507cf"
+                }
+                app.sldr.on('slidechange', function(evt, ui){
+                    var val;
+                    if(ui.value == 1){
+                        val = 3;
+                    }else if(ui.value == 3){
+                        val = 1;
+                    }else{
+                        val = 2;
+                    }
+                    app.sedVal = val;
+                    sliderBarChange()
+                })
+                app.sldr2.on('slidechange', function(evt, ui){
+                    if(ui.value == 1){
+                        val = 120;
+                    }else if(ui.value == 3){
+                        val = 250;
+                    }else{
+                        val = 200;
+                    }
+                    app.orVal = val
+                    sliderBarChange()
+                })
+
+                function sliderBarChange(){
+                    var id = 'h' + app.sedVal + 'or' + app.orVal;
+                     map.remove(app.sceneLayer)
+                     app.sceneLayer = new SceneLayer({
+                        portalItem: {
+                          id: sceneIds[id]
+                        },
+                      });
+                      map.add(app.sceneLayer);
+                }
             }
         }
+   
+      
         // map view, new in js 4x api
         var view = new MapView({
             container: "map",
@@ -93,6 +186,7 @@ require([
             center: [110.41, -7.0],
             zoom: 12
         });
+  
         //search widget
         var searchWidget = new Search({
             view: view
@@ -104,7 +198,7 @@ require([
          // basemap toggle
         var basemapToggle = new BasemapToggle({
           view: view,  // The view that provides access to the map's "streets" basemap
-          nextBasemap: "hybrid"  // Allows for toggling to the "hybrid" basemap
+          nextBasemap: "streets"  // Allows for toggling to the "hybrid" basemap
         });
         view.ui.add(basemapToggle, "top-right");
         // call the other functions once the esri objects have been created
@@ -155,6 +249,7 @@ require([
 
             //on view click
             view.on("click", function(evt) {
+                console.log(evt)
                 var screenPoint = {
                     x: evt.x,
                     y: evt.y
@@ -547,10 +642,11 @@ require([
         //     .slider("float");
         $(function() {
             console.log('hey')
-          $("#sldr").slider({ min: 1, max: 3, range: false, values: [1] })
+          app.sldr = $("#sldr").slider({ min: 1, max: 3, range: false, values: [1] })
+          
             // .slider("pips", { rest: "label"})
             // .slider("float");
-           $("#sldr2").slider({ min: 1, max: 3, range: false, values: [1] })
+           app.sldr2 = $("#sldr2").slider({ min: 1, max: 3, range: false, values: [1] })
             // .slider("pips", { rest: "label"})
             // .slider("float");
         });

@@ -54,9 +54,9 @@
 		<div id="cd_left" class="appWrapper">
 			<!-- Main content wrapper ///////////////////////////////////////////////// -->
 			<div class="mainContentWrapper">
-				<div class="introTextWrapper blueFont">
+				<!-- <div class="introTextWrapper blueFont">
 					<div>Hey hey This is intro text intro text intro text intro text intro text intro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro textintro text</div>
-				</div>
+				</div> -->
 				<div class="mainToggleWrapper">
 					<div class="toggle-btn" style="width:300px;">
 						<input type="radio" id="yn1" name="yesno" value="yes" checked/>
@@ -82,6 +82,7 @@
 					</div> -->
 					<!-- events wrapper -->
 					<div class="eventsWrapper">
+						<div class="blueFont">Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk. Click on a flood event below:</div>
 						<!-- This is the events wrapper -->
 						<h3>Semerang Flood Events in Last 12 Months:</h3>
 						<!-- <div class="event"></div> -->
@@ -184,6 +185,7 @@
 					</div>
 				</div>
 				<div class="adaptationContentWrapper" id="adaptationContentWrapper">
+					<div class="blueFont">Click on a simulated mangrove restoration scenario below (NOTE: while based on coastal engineering parameters from Wetlands International and Deltares, these scenarios are hypothetical and should be used for visualization purposes only):</div>
 					<!-- <h1>Explore 3D Mangrove Restoration Simulations</h1> -->
 					<h1>In Semarang in Flooded Areas:</h1>
 					<section>
@@ -204,23 +206,24 @@
 							<h2>Low Production Rice Fields</h2>
 						</div>
 					</section>
-					<h2>Explore 3D Mangrove Restoration Simulations</h2>
-					<h4>Height of Sediment from Top of Barrier (meters)</h4>
+					<h2 style="margin-left: 10px;">Explore 3D Mangrove Restoration Simulations</h2>
 					<div class="slider-container" style="width:250px; margin: auto;">
+						<h4 style="width: 300px; margin-left: -10px;">Height of Sediment from Top of Barrier (meters)</h4>
 						<div id="sldr" class="slider"></div>
-						<div style="display: flex;">
+						<div style="display: flex; margin-top: 5px;">
 							<div style="padding-right: 115px;">1</div>
 							<div style="padding-right: 115px;">2</div>
 							<div>3</div>
 						</div>	
 					</div>
-					<h4>Orientation from Shore (degrees)</h4>
-					<div class="slider-container" style="width:250px; margin: auto;">
+					
+					<div class="slider-container" style="width:250px; margin: auto; ">
+						<h4 style="margin-left: 22px;">Orientation from Shore (degrees)</h4>
 						<div id="sldr2" class="slider"></div>	
-						<div style="display: flex;">
-							<div style="padding-right: 115px;">1</div>
-							<div style="padding-right: 115px;">2</div>
-							<div>3</div>
+						<div style="display: flex; margin-top: 5px;">
+							<div style="padding-right: 100px;">120</div>
+							<div style="padding-right: 100px;">200</div>
+							<div>250</div>
 						</div>
 					</div>
 					
@@ -235,6 +238,7 @@
 		<div id="cd_right" class="mapWrapper">
 			<!-- map div ///////////////////////////////////////////////////// -->
 			<div id="map"></div>
+			<!-- <div id="view1"></div> -->
 		</div>
 	</div>	
 </body>
