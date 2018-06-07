@@ -60,6 +60,7 @@ require([
             }
             return view;
         }
+
         // apdaptaions solutions button click
         $('#yn2').on('click', function(evt){
             $('#adaptationContentWrapper').show()
@@ -113,8 +114,125 @@ require([
                     },
                 });
                 map.add(app.sceneLayer);
+                
                 // on scene view click
                 app.config.activeView.when(function(){
+                    // create feature layer with admin extruding based on a val
+                    var adminUrl = "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/74"
+                    var renderer = {
+                        type: "simple", // autocasts as new SimpleRenderer()
+                        symbol: {
+                          type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+                          symbolLayers: [{
+                            type: "extrude" // autocasts as new ExtrudeSymbol3DLayer()
+                          }]
+                        },
+                        visualVariables: [{
+                          type: "size",
+                          field: "MNG_COMBINED_HA",
+                          stops: [
+                          {
+                            value: 1,
+                            size: 0,
+                            label: "1,000"
+                          },
+                          {
+                            value: 60,
+                            size: 500,
+                            label: "1,000"
+                          },
+                          {
+                            value: 140,
+                            size: 1000,
+                            label: "1,000"
+                          },
+                          {
+                            value: 280,
+                            size: 1500,
+                            label: ">150,000"
+                          },
+                          {
+                            value: 445,
+                            size: 3000,
+                            label: ">150,000"
+                          }]
+                        },
+                        {
+                            type: "color",
+                            field: "MNG_COMBINED_HA",
+                            // normalizationField: "TOTPOP_CY",
+                            legendOptions: {
+                                title: "% population with income below poverty level"
+                            },
+                            stops: [
+                               {
+                                value: 0,
+                                color: [0,0,0,0],
+                                outline: {
+                                  width: 0.5,
+                                  color: "white"
+                                },
+                                label: "<15%"
+                              },
+                              {
+                                value: 1,
+                                color: [220,245,233,.7],
+                                outline: {
+                                  width: 0.5,
+                                  color: "white"
+                                },
+                                label: "<15%"
+                              },
+                              {
+                                value: 60,
+                                color: [162,207,180,.7],
+                                outline: {
+                                  width: 0.5,
+                                  color: "black"
+                                },
+                                label: "<15%"
+                              },
+                              {
+                                value: 140,
+                                color: [118,168,130,.7],
+                                outline: {
+                                  width: 0.5,
+                                  color: "black"
+                                },
+                                label: "<15%"
+                              },
+                              {
+                                value: 280,
+                                color: [74,135,88,.7],
+                                outline: {
+                                  width: 0.5,
+                                  color: "black"
+                                },
+                                label: "<15%"
+                              },
+                              {
+                                value: 445,
+                                color: [34, 102, 51, .7],
+                                outline: {
+                                  width: 0.5,
+                                  color: "white"
+                                },
+                                label: ">35%"
+                              }]
+                        }],
+                    }
+
+
+
+
+
+                    var adminFeature = new FeatureLayer({
+                        url:adminUrl,
+                        renderer: renderer,
+                    })
+                    map.add(adminFeature);
+
+
                     app.config.activeView.goTo({
                         position: {
                           x: 110.39623509996582,
