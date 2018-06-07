@@ -644,6 +644,11 @@ require([
                                 $('.mainToggleWrapper').slideDown()
                                 // slide down the flood tags wrapper
                                 $('.floodTagsWrapper').slideUp();
+                                // slide down text area instead of chart
+                                $('.placesText').slideUp()
+                                $('.placesAffectedWrapper h3').css('text-align', 'center')
+                                // slide up chart area
+                                $('#Chart3').slideDown();
                                 // remove the selection graphics
                                 view.graphics.removeAll(app.graphic); // remove all current graphics
                                 // uncheck all ref layers
