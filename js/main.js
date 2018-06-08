@@ -10,9 +10,10 @@ require([
       Map,MapView,FeatureLayer,UniqueValueRenderer,SimpleFillSymbol,Graphic,GraphicsLayer,QueryTask,
       Query,BasemapToggle,dom, Search, SceneView, WebScene, SceneLayer, Camera, Point
     ) { 
+         var app = {} // main object for the application
         // global variables 
         // admin units feature layer
-        var layer = new FeatureLayer({
+        app.layer1 = new FeatureLayer({
             url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/73",
             outFields: ["*"]
         });
@@ -20,9 +21,9 @@ require([
         var map = new Map({
             basemap: "hybrid",
             ground: "world-elevation",
-            layers: [layer]
+            layers: [app.layer1]
         });
-        var app = {} // main object for the application
+       
         app.sedVal = 3
         app.orVal = 120
         // init config 
@@ -47,7 +48,7 @@ require([
         // create 3D view, won't initialize until container is set
         app.initialViewParams.container = null;
         // app.initialViewParams.map = scene;
-        app.config.sceneView = createView(app.initialViewParams, "3d");
+        // app.config.sceneView = createView(app.initialViewParams, "3d");
         // convenience function for creating a 2D or 3D view
         function createView(params, type) {
             var view;
@@ -63,6 +64,7 @@ require([
 
         // apdaptaions solutions button click
         $('#yn2').on('click', function(evt){
+            app.config.sceneView = createView(app.initialViewParams, "3d");
             $('#adaptationContentWrapper').show()
             $('#floodRiskContentWrapper').hide()
             switchView('3d')
@@ -711,7 +713,7 @@ require([
                                     $(v).prop('checked', false);
                                 })
                                 map.removeAll()
-                                map.add(layer)
+                                map.add(app.layer1)
                             })
                         })
                     })
@@ -792,8 +794,9 @@ require([
         app.adminUnit = [];
         $.each(adminUnits, function(i,v){
             let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
-            let n = id.includes(",");
-            if(n){
+            // let n = id.includes(",");
+            let n = id.indexOf(',')
+            if(n> -1){
                 id = id.split(',')
                 v.attributes.id1 = id[0]
                 v.attributes.id2 = id[1]
