@@ -66,14 +66,37 @@ require([
             $('#adaptationContentWrapper').show()
             $('#floodRiskContentWrapper').hide()
             switchView('3d')
+            setTimeout(function(){
+                app.config.activeView.goTo({
+                    position: {
+                          x: 110.3033337334543,
+                          y: -6.726709643797069,
+                          z: 14693,
+                          spatialReference: {
+                            wkid: 4326
+                          }
+                        },
+                        heading: 160,
+                        tilt: 58.33
+                        // tilt: 0
+                 })
+            },200);
             
         })
         // flood risk button click
         $('#yn1').on('click', function(evt){
+            map.remove(app.adminFeature)
+            map.remove(app.sceneLayer)
             $('#floodRiskContentWrapper').show()
             $('#adaptationContentWrapper').hide()
             switchView('2d')
-
+            setTimeout(function(){
+                app.config.activeView.goTo({
+                    center:[110.41, -7.0],
+                    zoom: 12,
+                    rotation: 0
+                 })
+            },200);
         })
         // // swithc view from 2d to 3d and vice versa
         function switchView(type){
@@ -84,24 +107,6 @@ require([
                 app.config.mapView.container = app.config.container;
                 app.config.activeView = app.config.mapView;
                 app.viewMode = "2d";
-                map.remove(app.adminFeature)
-                app.config.activeView.when(function(){
-                    // console.log(app.config.activeView)
-                    // if(app.config.activeView){
-                    //     var pt = new Point({
-                    //       latitude: 49,
-                    //       longitude: -126
-                    //     });
-
-                    //     // // go to the given point
-                    //     // view.goTo(pt);
-                    //     console.log('done')
-                    //     app.config.activeView.goTo({
-                    //         pt
-                    //     })
-                    // }
-                    
-                })
             }else{
                 app.config.sceneView.viewpoint = app.config.activeView.viewpoint.clone();
                 app.config.sceneView.container = app.config.container;
@@ -114,9 +119,14 @@ require([
                     },
                 });
                 map.add(app.sceneLayer);
-                
+
                 // on scene view click
                 app.config.activeView.when(function(){
+
+                    //  app.config.activeView.on('click', function(evt){
+                    //     console.log(evt)
+                    //     console.log(app.config.activeView)
+                    // })
                     // create feature layer with admin extruding based on a val
                     var adminUrl = "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/74"
                     var renderer = {
@@ -237,14 +247,14 @@ require([
                           }]
                         },
                     })
+                    console.log('before')
                     map.add(app.adminFeature);
-
 
                     app.config.activeView.goTo({
                         position: {
-                          x: 110.39623509996582,
-                          y: -6.940453915619568,
-                          z: 231,
+                          x: 110.3033337334543,
+                          y: -6.726709643797069,
+                          z: 14693,
                           spatialReference: {
                             wkid: 4326
                           }
@@ -252,7 +262,44 @@ require([
                         heading: 160,
                         tilt: 58.33
                         // tilt: 0
-                      })
+                    })
+                    // $('#fullExtent').delay( 800 ).click();
+                    $('#exploreMangBtn').on('click', function(evt){
+                        console.log(evt)
+                        app.config.activeView.goTo({
+                            position: {
+                              x: 110.39623509996582,
+                              y: -6.940453915619568,
+                              z: 231,
+                              spatialReference: {
+                                wkid: 4326
+                              }
+                            },
+                            heading: 160,
+                            tilt: 58.33
+                            // tilt: 0
+                        })
+                    })
+                    $('#fullExtent').on('click', function(evt){
+                        console.log(evt)
+                        app.config.activeView.goTo({
+                            position: {
+                              x: 110.3033337334543,
+                              y: -6.726709643797069,
+                              z: 14693,
+                              spatialReference: {
+                                wkid: 4326
+                              }
+                            },
+                            heading: 160,
+                            tilt: 58.33
+                            // tilt: 0
+                        })
+                    })
+                    $('#fullExtent').trigger('click')
+
+                    
+
                 })
                 // based on slider change show the approriate scene
                 var sceneIds = {
@@ -565,6 +612,14 @@ require([
         // on event click function
         function onEventClick(){
             $('.event').on('click', function(evt){
+                    console.log(app.config.activeView)
+                  app.config.activeView.goTo({
+                        center:[110.41, -7.0],
+                        zoom: 12,
+                        rotation: 0
+                     })
+                  // app.config.activeView.rotation = 0;
+                  console.log(app.config.activeView)
                 // set the html of the date field
                 // $('#mainDate').html(evt.currentTarget.dataset.date)
                 // create vars with a count of 0
@@ -792,20 +847,10 @@ require([
                 }
             }
         })
-
         // setup some jquery ui items
-        // $("#sldr").slider({ min: 3, max: 1, range: false, step:1, values: [1] })
-        //     .slider("pips", { rest: "label"})
-        //     .slider("float");
         $(function() {
-            console.log('hey')
-          app.sldr = $("#sldr").slider({ min: 1, max: 3, range: false, values: [1] })
-          
-            // .slider("pips", { rest: "label"})
-            // .slider("float");
-           app.sldr2 = $("#sldr2").slider({ min: 1, max: 3, range: false, values: [1] })
-            // .slider("pips", { rest: "label"})
-            // .slider("float");
+            app.sldr = $("#sldr").slider({ min: 1, max: 3, range: false, values: [1] })
+            app.sldr2 = $("#sldr2").slider({ min: 1, max: 3, range: false, values: [1] })
         });
 
 
