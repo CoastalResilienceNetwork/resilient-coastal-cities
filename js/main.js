@@ -5,12 +5,12 @@
 require([
       "esri/Map","esri/views/MapView","esri/layers/FeatureLayer","esri/renderers/UniqueValueRenderer","esri/symbols/SimpleFillSymbol",
       "esri/Graphic","esri/layers/GraphicsLayer","esri/tasks/QueryTask","esri/tasks/support/Query","esri/widgets/BasemapToggle","dojo/dom",
-      "esri/widgets/Search","esri/views/SceneView","esri/WebScene","esri/layers/SceneLayer","esri/Camera","esri/geometry/Point","dojo/domReady!"
+      "esri/widgets/Search","esri/views/SceneView","esri/WebScene","esri/layers/SceneLayer","esri/Camera","esri/geometry/Point","esri/widgets/Legend","dojo/domReady!"
     ], function(
       Map,MapView,FeatureLayer,UniqueValueRenderer,SimpleFillSymbol,Graphic,GraphicsLayer,QueryTask,
-      Query,BasemapToggle,dom, Search, SceneView, WebScene, SceneLayer, Camera, Point
+      Query,BasemapToggle,dom, Search, SceneView, WebScene, SceneLayer, Camera, Point, Legend
     ) { 
-         var app = {} // main object for the application
+         // var app = {} // main object for the application
         // // global variables 
         // // admin units feature layer
         app.layer1 = new FeatureLayer({
@@ -82,6 +82,29 @@ require([
                         tilt: 58.33
                         // tilt: 0
                  })
+                // console.log(app.adminFeature)
+                // var legend = new Legend({
+                //     view: app.config.activeView,
+                //     layerInfos: [{
+                //         layer: app.adminFeature,
+                //         title: "Legend"
+                //     }]
+                // });
+                // app.config.activeView.ui.add(legend, "bottom-right");
+                 //search widget
+                var searchWidget = new Search({
+                    view: app.config.activeView
+                });
+                // Add the search widget to the top right corner of the view
+                app.config.activeView.ui.add(searchWidget, {
+                    position: "top-right"
+                });
+                 // basemap toggle
+                var basemapToggle = new BasemapToggle({
+                  view: app.config.activeView,  // The view that provides access to the map's "streets" basemap
+                  nextBasemap: "streets"  // Allows for toggling to the "hybrid" basemap
+                });
+                app.config.activeView.ui.add(basemapToggle, "top-right");
             },200);
             
         })
@@ -98,6 +121,21 @@ require([
                     zoom: 12,
                     rotation: 0
                  })
+                 //search widget
+                var searchWidget = new Search({
+                    view: app.config.activeView
+                });
+                // Add the search widget to the top right corner of the view
+                app.config.activeView.ui.add(searchWidget, {
+                    position: "top-right"
+                });
+                 // basemap toggle
+                var basemapToggle = new BasemapToggle({
+                  view: app.config.activeView,  // The view that provides access to the map's "streets" basemap
+                  nextBasemap: "streets"  // Allows for toggling to the "hybrid" basemap
+                });
+                app.config.activeView.ui.add(basemapToggle, "top-right");
+
             },200);
         })
         // // swithc view from 2d to 3d and vice versa
@@ -124,118 +162,11 @@ require([
 
                 // on scene view click
                 app.config.activeView.when(function(){
-
-                    //  app.config.activeView.on('click', function(evt){
-                    //     console.log(evt)
-                    //     console.log(app.config.activeView)
-                    // })
                     // create feature layer with admin extruding based on a val
                     var adminUrl = "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/74"
-                    var renderer = {
-                        type: "simple", // autocasts as new SimpleRenderer()
-                        symbol: {
-                          type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-                          symbolLayers: [{
-                            type: "extrude" // autocasts as new ExtrudeSymbol3DLayer()
-                          }]
-                        },
-                        visualVariables: [{
-                          type: "size",
-                          field: "MNG_COMBINED_HA",
-                          stops: [
-                          {
-                            value: 1,
-                            size: 0,
-                            label: "1,000"
-                          },
-                          {
-                            value: 60,
-                            size: 500,
-                            label: "1,000"
-                          },
-                          {
-                            value: 140,
-                            size: 1000,
-                            label: "1,000"
-                          },
-                          {
-                            value: 280,
-                            size: 1500,
-                            label: ">150,000"
-                          },
-                          {
-                            value: 445,
-                            size: 3000,
-                            label: ">150,000"
-                          }]
-                        },
-                        {
-                            type: "color",
-                            field: "MNG_COMBINED_HA",
-                            // normalizationField: "TOTPOP_CY",
-                            legendOptions: {
-                                title: "% population with income below poverty level"
-                            },
-                            stops: [
-                               {
-                                value: 0,
-                                color: [0,0,0,0],
-                                outline: {
-                                  width: 0.5,
-                                  color: "white"
-                                },
-                                label: "<15%"
-                              },
-                              {
-                                value: 1,
-                                color: [220,245,233,.7],
-                                outline: {
-                                  width: 0.5,
-                                  color: "white"
-                                },
-                                label: "<15%"
-                              },
-                              {
-                                value: 60,
-                                color: [162,207,180,.7],
-                                outline: {
-                                  width: 0.5,
-                                  color: "black"
-                                },
-                                label: "<15%"
-                              },
-                              {
-                                value: 140,
-                                color: [118,168,130,.7],
-                                outline: {
-                                  width: 0.5,
-                                  color: "black"
-                                },
-                                label: "<15%"
-                              },
-                              {
-                                value: 280,
-                                color: [74,135,88,.7],
-                                outline: {
-                                  width: 0.5,
-                                  color: "black"
-                                },
-                                label: "<15%"
-                              },
-                              {
-                                value: 445,
-                                color: [34, 102, 51, .7],
-                                outline: {
-                                  width: 0.5,
-                                  color: "white"
-                                },
-                                label: ">35%"
-                              }]
-                        }],
-                    }
                     app.adminFeature = new FeatureLayer({
                         url:adminUrl,
-                        renderer: renderer,
+                        renderer: app.renderer,
                         popupTemplate: { // autocasts as new PopupTemplate()
                           title: "Resilient Coastal Cities",
                           content: "{MNG_COMBINED_HA} ha of Potentially Restorable Mangrove Areas or Rice Fields that can be Converted to Mangroves",
@@ -249,9 +180,18 @@ require([
                           }]
                         },
                     })
-                    console.log('before')
-                    map.add(app.adminFeature);
+                    
 
+                    map.add(app.adminFeature);
+                    // console.log(app.adminFeature)
+                    // var legend = new Legend({
+                    //     view: app.config.activeView,
+                    //     layerInfos: [{
+                    //         layer: app.adminFeature,
+                    //         title: "Legend"
+                    //     }]
+                    // });
+                    // app.config.activeView.ui.add(legend, "bottom-right");
                     app.config.activeView.goTo({
                         position: {
                           x: 110.3033337334543,
@@ -263,11 +203,8 @@ require([
                         },
                         heading: 160,
                         tilt: 58.33
-                        // tilt: 0
                     })
-                    // $('#fullExtent').delay( 800 ).click();
                     $('#exploreMangBtn').on('click', function(evt){
-                        console.log(evt)
                         app.config.activeView.goTo({
                             position: {
                               x: 110.39623509996582,
@@ -279,11 +216,9 @@ require([
                             },
                             heading: 160,
                             tilt: 58.33
-                            // tilt: 0
                         })
                     })
                     $('#fullExtent').on('click', function(evt){
-                        console.log(evt)
                         app.config.activeView.goTo({
                             position: {
                               x: 110.3033337334543,
@@ -295,13 +230,9 @@ require([
                             },
                             heading: 160,
                             tilt: 58.33
-                            // tilt: 0
                         })
                     })
-                    $('#fullExtent').trigger('click')
-
-                    
-
+                    // $('#fullExtent').trigger('click')
                 })
                 // based on slider change show the approriate scene
                 var sceneIds = {
@@ -377,47 +308,8 @@ require([
         view.ui.add(basemapToggle, "top-right");
         // call the other functions once the esri objects have been created
         getEvents();
-        query();
         onClick();
-        // onEventClick();
 
-        
-        
-        // query //////////////////////////////////////////////////////
-        function query(){
-            //  // query task
-            // var qt = new QueryTask({
-            //     url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/70"
-            // })
-            // // query all the features in the admin units feature class
-            // var query = new Query({
-            //     where: "OBJECTID > 0",
-            //     outFields: ["*"],
-            //     returnGeometry: true,
-            // });
-            // // execute function to return object of all admin units
-            // qt.execute(query).then(function(result){
-            //     console.log(result)
-            //     app.allAdminAtts = result.features;
-            //     app.atts = result.features[13]["geometry"]
-            //     buildGraphic()
-            // })
-            // function buildGraphic(){
-            //     var graphic = new Graphic({
-            //     //gotta set a defined geometry for the symbol to draw
-            //     geometry: app.atts,
-            //     symbol: new SimpleFillSymbol({
-            //         color: [255,255,0,0.3],
-            //         style: "solid",
-            //         outline: {
-            //             color: [102,0,204],
-            //             width: 4
-            //             }
-            //         })
-            //     });
-            //     view.graphics.add(graphic);
-            // }
-        }
         // on map/view click function ////////////////////////////////////////////////
         function onClick(){
             //on view click
@@ -465,12 +357,6 @@ require([
                      $($('.placesText').find('span')[1]).html(atts.PLACE_HOSP + ' ')
                      $($('.placesText').find('span')[2]).html(atts.PLACE_WSHP + ' ')
                      $('.placesAffectedWrapper h3').css('text-align', 'left')
-
-                    // app.myChart3.data.datasets[0].data[0] = atts.PLACE_EDU;
-                    // app.myChart3.data.datasets[1].data[0] = atts.PLACE_HOSP;
-                    // app.myChart3.data.datasets[2].data[0] = atts.PLACE_WSHP;
-                    // app.myChart3.update();
-
                     // update the livelihoods affected chart
                     $($('.liveAffectedWrapper').find('span')[0]).html(atts.LIVE_TOUR + ' ')
                     $($('.liveAffectedWrapper').find('span')[1]).html(atts.LIVE_RDS_KM + ' km ')
@@ -602,13 +488,12 @@ require([
                     $('.eventsWrapper').append(html);
                     onEventClick();
                 })
-
            }
         }
         // on event click function
         function onEventClick(){
             $('.event').on('click', function(evt){
-                // create vars with a count of 0
+                // create vars with a count of 0 to be used for counts
                 app.popWomen =0;
                 app.popMen =0;
                 app.popTotal =0;
@@ -659,7 +544,6 @@ require([
                                             buildStats(atts);
                                          }
                                     }
-                                    
                                 }else{
                                     // there was no match
                                 }
@@ -706,9 +590,6 @@ require([
                 // build polygon graphics of admin units symbolized by color based on the num of total tags
                 // create graphics for each match admin unit
                 function buildGraphic(geom,atts, total){
-                    // console.log(atts, 'mmmmmmmmmmmmmmmmm')
-                    // app.layer ='';
-                    // app.layer.removeAll();
                     atts.total = total;
                     geom.type = 'polygon'
                     var polygon = {
@@ -840,181 +721,6 @@ require([
             app.sldr = $("#sldr").slider({ min: 1, max: 3, range: false, values: [1] })
             app.sldr2 = $("#sldr2").slider({ min: 1, max: 3, range: false, values: [1] })
         });
-
-
-
-
-// https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java
-        // var url = ' https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-        // var startDate = '2018-02-01'
-        // var endDate = '2018-05-20'
-        // getFloodEvents(url, startDate, endDate);
-        // function getFloodEvents(url,startDate, endDate){
-        //     $.get( url, function( data ) {
-        //         $.each(data.events, function(i,v){
-        //             if(v.location.geonameid == '1627893'){
-        //                 // console.log(v);
-        //                 // var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-        //             }
-        //         })
-        //     })
-        // }
-
-
-        // var tagsJson = getTagsFromEvents('1627893')
-        // function getTagsFromEvents(parentGeonameid){
-        //     // console.log(parentGeonameid);
-        //     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-        //     $.get(url, function(data) {
-        //         app.finalAdminUnitTags = []
-        //         var defer = $.Deferred(),
-        //         filtered = defer.then(function(){
-        //             return data;
-        //         })
-        //         defer.resolve();
-        //         filtered.done(function(data){
-        //             // loop through tags geojson and match to our admin unit ID's
-        //             $.each(data.features, function(i,v){
-        //                 var id = v.properties.geonameid;
-        //                 var index = app.adminUnitId.indexOf(id);
-        //                 if(index > 0){
-        //                     pos = app.adminUnit.map(function(e) { return e.attributes.geonameid; }).indexOf("(1:" + id +")");
-        //                     if(pos > -1){
-        //                         // var geom = app.adminUnit[pos]['geometry']
-        //                         var geom = app.adminUnit[pos].geometry
-        //                         var atts = app.adminUnit[pos].attributes
-        //                         var total = v.properties.total
-        //                         buildGraphic(geom,atts, total)
-
-        //                     }else{
-        //                         ''
-        //                     }
-                            
-        //                 }else{
-        //                     // there was no match
-        //                 }
-
-        //             })
-        //         })
-        //     })
-
-        // }
-        // // build polygon graphics of admin units symbolized by color based on the num of total tags
-        // function buildGraphic(geom,atts, total){
-        //     atts.total = total;
-        //     geom.type = 'polygon'
-        //     var polygon = {
-        //         type: "polygon",
-        //         rings: geom.rings
-        //     }
-        //     var color;
-        //     var color1 = [115, 255, 222,0.6]
-        //     var color2 = [82, 227, 217,0.6]
-        //     var color3 = [54, 182, 199,0.6]
-        //     var color4 = [13, 80, 143,0.6]
-        //     if(total == 1){
-        //         color = color1
-        //     }else if(total > 1 && total <= 5){
-        //         color = color2
-        //     }else if(total > 5 && total <= 10){
-        //         color = color3
-        //     }else if(total > 10){
-        //         color = color4
-        //     }
-        //     // Create a symbol for rendering the graphic
-        //     var fillSymbol = {
-        //         type: "simple-fill", // autocasts as new SimpleFillSymbol()
-        //         color: color,
-        //         outline: { // autocasts as new SimpleLineSymbol()
-        //           color: [13, 80, 143],
-        //           width: .5
-        //         }
-        //     };
-        //     app.graphic2 = new Graphic({
-        //         //gotta set a defined geometry for the symbol to draw
-        //         geometry: geom,
-        //         symbol: fillSymbol,
-        //         attributes: atts
-        //     });
-        //     app.layer = new GraphicsLayer({
-        //         graphics: [app.graphic2]
-        //     });
-
-        //     map.add(app.layer);
-        //     app.layer.on('click', function(evt){
-        //         console.log(evt);
-        //     })
-        //     // view.graphics.add(app.graphic2);
-        // }
-
-
-
-
-
-        // // var url = "https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
-        // var url = "https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
-        // $.get( url, function( data ) {
-        //     var defer = $.Deferred(),
-        //         filtered = defer.then(function() {
-        //             $.each(data.features, function(i,v){
-        //                 try{
-        //                     if(v.properties.geonameid){
-        //                         app.eventsGeoId.push(String(v.properties.geonameid));
-        //                     }
-        //                 }catch(e){
-        //                 }
-        //             })
-        //             return app.eventsGeoId
-        //         });
-        //         defer.resolve();
-        //     filtered.done(function( value ) {
-        //         var duplicates = app.adminUnitId.filter(function(val) {
-        //           return app.eventsGeoId.indexOf(val) != -1;
-        //         });
-        //     });
-        // })
-
-
-        
-        
-        // // console.log(app.eventsGeoId);
-        // // console.log(app.adminUnitId);
-        // $.each(app.adminUnitId, function(i,v){
-        //     let index = app.eventsGeoId.indexOf(v)
-        //     // console.log(index, v);
-        //     if(index > 0){
-        //         // console.log('yes', v);
-        //     }
-        // })
-
-        // var duplicates = app.adminUnitId.filter(function(val) {
-        //   return app.eventsGeoId.indexOf(val) != -1;
-        // });
-
-        // console.log(duplicates, 'yyyyy');
-        // var duplicates = app.eventsGeoId.filter(function(val) {
-        //   return app.adminUnitId.indexOf(val) != -1;
-        // });
-
-        // console.log(duplicates, 'xxxxx');
-        // use this url with the parent id for tag querying
-        //var url = https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=2018-02-01T11:31:22.000Z&until=2018-04-28T14:50:28.000Z&parentGeonameid=1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe
-        
-
-        // console.log(app.allAdminAtts);
-        // var url = "https://api.floodtags.com/v1/tags/fews-world/geojson?until=" + newdate + "&since=2018-03-06&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
-        // var url = "https://api.floodtags.com/v1/events/index?until=2018-05-20&since=2018-02-01&upperLimit=10000&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe"
-        // $.get( url, function( data ) {
-        //     app.matchArray = [];
-
-        //     // loop through events
-        //     $.each(data.events, function(i,v){
-        //         // use filter source to only get data from norther-java, indo
-        //         let index = v.filterSources.indexOf('northern-java')
-        //         if (index>-1) {
-        //             app.matchArray.push(v.location.geonameid);
-        //         }
-        //     })
       
 }) // end of the require function /////////////////////////////////////
 
@@ -1022,10 +728,3 @@ require([
 function numberWithCommas(x){
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-
-
-
-
-
-
-
