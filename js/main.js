@@ -11,8 +11,8 @@ require([
       Query,BasemapToggle,dom, Search, SceneView, WebScene, SceneLayer, Camera, Point
     ) { 
          var app = {} // main object for the application
-        // global variables 
-        // admin units feature layer
+        // // global variables 
+        // // admin units feature layer
         app.layer1 = new FeatureLayer({
             url: "http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer/73",
             outFields: ["*"]
@@ -595,13 +595,7 @@ require([
                 // divide up array into past 7 days, 30, 180 and 365
                 var pastYearEvents = array;
                 $.each(array, function(i,v){
-                    // let end = v.end.split('T')[0]
-                    // let start = v.start.split('T')[0]
                     let date = v.start.split('T')[0] + ' - ' + v.end.split('T')[0]
-                    console.log(date)
-                    // var html = "<div class='event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div>  " 
-                    // + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div>'
-                    // +'<div class="numOfTags"><span class="floodEventText">Num. of tags: </span>' +v.tags+'</div></div>' 
                     var html = "<div data-date='"+ date +"' class='event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div>  " 
                     + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div></div>'
                     // append html to events wrapper
@@ -614,16 +608,6 @@ require([
         // on event click function
         function onEventClick(){
             $('.event').on('click', function(evt){
-                    console.log(app.config.activeView)
-                  app.config.activeView.goTo({
-                        center:[110.41, -7.0],
-                        zoom: 12,
-                        rotation: 0
-                     })
-                  // app.config.activeView.rotation = 0;
-                  console.log(app.config.activeView)
-                // set the html of the date field
-                // $('#mainDate').html(evt.currentTarget.dataset.date)
                 // create vars with a count of 0
                 app.popWomen =0;
                 app.popMen =0;
@@ -708,6 +692,7 @@ require([
                                 $('#Chart3').slideDown();
                                 // remove the selection graphics
                                 view.graphics.removeAll(app.graphic); // remove all current graphics
+                                app.config.activeView.graphics.removeAll(app.graphic); // remove all current graphics
                                 // uncheck all ref layers
                                 $.each($('.floodCBWrappers').find('input'), function(i,v){
                                     $(v).prop('checked', false);
