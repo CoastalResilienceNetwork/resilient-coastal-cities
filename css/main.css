@@ -1,5 +1,6 @@
 /*  Main CSS file for the resilient coastal cities app */
 
-h1{
-	color: blue;
+
+.rc-appWrapper{
+	color: orange;
 }
