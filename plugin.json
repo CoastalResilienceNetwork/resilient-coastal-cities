@@ -1,6 +1,7 @@
 {
     "css": [
-		"plugins/resilient-coastal-cities/css/main.css"
+		"plugins/resilient-coastal-cities/css/main.css",
+		"plugins/resilient-coastal-cities/css/daterangepicker.css"
     ],
     "use": {
         "underscore": { "attach": "_" },

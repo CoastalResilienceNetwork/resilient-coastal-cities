@@ -1,4 +1,6 @@
 /*  Main CSS file for the resilient coastal cities app */
+/**/
+
 
 .rc-appWrapper{
 	padding: 5px;
@@ -10,5 +12,22 @@
 	width: 200px;
 }
 .rc-floodTimeframeWrapper{
-	margin-left: 54px;
+	margin-left: 10px;
+}
+.rc-rangeLabels{
+	font-size: 14px; padding-left: 5px; padding-right: 3px;
+}
+.rc-rangeWrapper{
+	display: none;
+}
+
+
+
+
+/* Jquery UI styling */
+.ui-datepicker.ui-datepicker-multi{
+	z-index: 1000 !important;
+}
+.ui-datepicker{
+	z-index: 1000 !important;
 }
