@@ -1,5 +1,14 @@
 /*  Main CSS file for the resilient coastal cities app */
 
-h1{
-	color: blue;
+.rc-appWrapper{
+	padding: 5px;
+}
+.rc-introText{
+	margin-top: 15px;
+}
+.rc-timeButton{
+	width: 200px;
+}
+.rc-floodTimeframeWrapper{
+	margin-left: 54px;
 }

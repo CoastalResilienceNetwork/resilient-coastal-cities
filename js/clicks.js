@@ -1,7 +1,7 @@
 define([
-	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer" 
+	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer",  "./app/plugins/resilient-coastal-cities/js/moment.min.js"
 ],
-function ( declare, Query, QueryTask, FeatureLayer ) {
+function ( declare, Query, QueryTask, FeatureLayer,  moment ) {
         "use strict";
 
         return declare(null, { 
