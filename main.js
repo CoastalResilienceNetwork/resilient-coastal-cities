@@ -1,184 +1,123 @@
-define(["dojo/_base/declare",
-        "framework/PluginBase",
-        "dojo/text!./templates.html",
-        "esri/layers/MapImageLayer"],
-    function (declare, PluginBase, templates, MapImageLayer) {
-        return declare(PluginBase, {
-            toolbarName: "Pilot Flood Demo",
-            fullName: "Exploring capabilities of JSAPI 4.0",
-            allowIdentifyWhenActive: false,
-            size: 'small',
-            currentLayer: null,
-            locations: {
-                pgSound: {
-                    zoom: 12,
-                    center: [-122.13, 47.87],
-                    tilt: 60
-                },
-                nisqually: {
-                    zoom: 13,
-                    center: [-122.70, 47.052],
-                    tilt: 55,
-                    heading: 15
-                },
-                usa: {
-                    zoom: 3,
-                    center: [-98.486, 38.69]
-                }
-            },
+// Bring in dojo and javascript api classes as well as varObject.json, js files, and content.html
+define([
+	"dojo/_base/declare", "framework/PluginBase", "dijit/layout/ContentPane", "dojo/dom", "dojo/dom-style", "dojo/dom-geometry", "dojo/text!./obj.json", 
+	"dojo/text!./html/content.html", './js/esriapi', './js/clicks', './js/future', './js/parcels', 'dojo/_base/lang'	
+],
+function ( 	declare, PluginBase, ContentPane, dom, domStyle, domGeom, obj, content, esriapi, clicks, future, parcels, lang ) {
+	return declare(PluginBase, {
+		// The height and width are set here when an infographic is defined. When the user click Continue it rebuilds the app window with whatever you put in.
+		toolbarName: "Community Rating System", showServiceLayersInLegend: true, allowIdentifyWhenActive: false, rendered: false, resizable: false,
+		hasCustomPrint: false, size:'custom', width:430, hasHelp:false,
+		
+		// First function called when the user clicks the pluging icon. 
+		initialize: function (frameworkParameters) {
+			// Access framework parameters
+			declare.safeMixin(this, frameworkParameters);
+			// Define object to access global variables from JSON object. Only add variables to varObject.json that are needed by Save and Share. 
+			this.obj = dojo.eval("[" + obj + "]")[0];	
+			this.url = "http://dev.services.coastalresilience.org:6080/arcgis/rest/services/North_Carolina/NC_CRS_New/MapServer";
+			this.layerDefs = [];
+		},
+		// Called after initialize at plugin startup (why the tests for undefined). Also called after deactivate when user closes app by clicking X. 
+		hibernate: function () {
+			this.map.__proto__._params.maxZoom = 23;
+			if (this.appDiv != undefined){
+				this.dynamicLayer.setVisibleLayers([-1])
+				this.dynamicLayer1.setVisibleLayers([-1])
+			}
+			this.open = "no";
+		},
+		// Called after hibernate at app startup. Calls the render function which builds the plugins elements and functions.   
+		activate: function (showHelpOnStart) {
+			$('.sidebar-nav .nav-title').css("margin-left", "25px");
+			this.map.__proto__._params.maxZoom = 19;
+			if (this.rendered == false) {	
+				this.rendered = true;							
+				this.render();
+				$(this.printButton).hide();
+			}else{
+				if (this.dynamicLayer){
+					this.dynamicLayer.setVisibleLayers(this.obj.visibleLayers);
+					this.dynamicLayer1.setVisibleLayers(this.obj.visibleLayers1);
+				}
+				$('#' + this.id).parent().parent().css('display', 'flex');
+			}
+			this.open = "yes";
+		},
+		showHelp: function(h){
 
-            initialize: function(args) {
-                declare.safeMixin(this, args);
-                this.$container = $(this.container);
-            },
-
-            hibernate: function() {
-                this.scene = this.app.activate2d();
-            },
-
-            activate: function(showHelpOnStart) {
-                var el = this.getTemplateById('pilot-plugin'),
-                    self = this;
-
-                this.$container.empty().append(el);
-                this.$floodRisk = this.$container.find('#flood-risk');
-                this.$floodRisk.on('click', $.proxy(this.showFloodRisk, this));
-
-                this.$nisqually = this.$container.find('#sea-risk');
-                this.$nisqually.on('click', $.proxy(this.showNisqually, this));
-
-                this.scene = this.app.activate3d();
-                this.map.ground = 'world-elevation';
-
-                this.scene.then(function() {
-                    self.zoomTo(self.locations.usa);
-                });
-            },
-
-            zoomTo: function(location) {
-                return this.scene.goTo(location);
-            },
-
-            getTemplateById: function(id) {
-                return $('<div>').append(templates)
-                    .find('#' + id)
-                    .html().trim();
-            },
-
-            showFloodRisk: function() {
-                var self = this,
-                    $stepLabel = this.$container.find('#flood-step-label'),
-                    chance = this.$container.find('input[name=flood-percent]:checked').val(),
-                    scenario = this.$container.find('input[name=flood-scenario]:checked').val(),
-                    // Layer Ids for the permutations of high/low scenarios in 1% or 10% chances
-                    desc = [
-                        'Current Flood Depth (10% chance)',
-                        'Current Flood Depth (1% chance)',
-                        '2040 Flood Depth (10% chance, Low Scenario)',
-                        '2040 Flood Depth (10% chance, High Scenario)',
-                        '2040 Flood Depth (1% chance, Low Scenario)',
-                        '2040 Flood Depth (1% chance, High Scenario)',
-                        '2080 Flood Depth (10% chance, Low Scenario)',
-                        '2080 Flood Depth (10% chance, High Scenario)',
-                        '2080 Flood Depth (1% chance, Low Scenario)',
-                        '2080 Flood Depth (1% chance, High Scenario)',
-                    ],
-                    profile = {
-                        one: { low: [1, 4, 8], high: [1, 5, 9] },
-                        ten: { low: [0, 2, 6], high: [0, 3, 7] }
-                    },
-                    layerIds = profile[chance][scenario],
-                    labels = layerIds.map(function(id) { return desc[id]; }),
-                    baseUrl = 'http://dev.services.coastalresilience.org/arcgis/rest/services/Puget_Sound/Flood_Level_Rise/MapServer/';
-
-                self.$floodRisk.prop('disabled', true);
-                this.animateLayers(this.locations.pgSound, baseUrl, layerIds, labels, $stepLabel)
-                    .then(function() {
-                        self.$floodRisk.prop('disabled', false);
-                    });
-            },
-
-            showNisqually: function() {
-                var self = this,
-                    $stepLabel = this.$container.find('#sea-step-label'),
-                    sea = this.$container.find('input[name=sea-level]:checked').val(),
-                    tidal = this.$container.find('input[name=tidal-level]:checked').val(),
-                    // Layer Ids for the permutations of high/low scenarios in 1% or 10% chances
-                    desc = [
-                        '2100 Mean Higher High Water (MHHW) Max',
-                        '2100 Mean Higher High Water (MHHW) Mean',
-                        '2050 Mean Higher High Water (MHHW) Max',
-                        '2050 Mean Higher High Water (MHHW) Mean',
-                        '2010 Mean Higher High Water (MHHW)',
-                        '2100 Highest Observed Water (HOW) Max',
-                        '2100 Highest Observed Water (HOW) Mean',
-                        '2050 Highest Observed Water (HOW) Max',
-                        '2050 Highest Observed Water (HOW) Mean',
-                        '2010 Highest Observed Water (HOW)'
-                    ],
-                    profile = {
-                        how:  { mean: [0, 8, 6], max: [0, 7, 5] },
-                        mhhw: { mean: [4, 3, 1], max: [4, 2, 0] }
-                    },
-                    layerIds = profile[tidal][sea],
-                    labels = layerIds.map(function(id) { return desc[id]; }),
-                    baseUrl = 'http://dev.services.coastalresilience.org/arcgis/rest/services/Puget_Sound/Nisqually_Flood_and_SLR/MapServer/';
-
-                self.$nisqually.prop('disabled', true);
-                self.animateLayers(this.locations.nisqually, baseUrl, layerIds, labels, $stepLabel)
-                    .then(function() {
-                        self.$nisqually.prop('disabled', false);
-                    });
-            },
-
-            animateLayers: function(location, baseUrl, layerIds, labels, $display) {
-                var self = this,
-                    step = 0,
-                    pauseTime = 6000,
-                    showLayer = function(id) {
-                        return function() {
-                            var newLayer = new MapImageLayer({
-                                url: baseUrl,
-                                sublayers: [{id: id}]
-                            });
-
-                            transitionLayers(self.currentLayer, newLayer);
-                            $display.text(labels[step++]);
-                        };
-                    },
-                    transitionLayers= function(oldLayer, newLayer) {
-                            self.map.addLayer(newLayer);
-                            setTimeout(function() {
-                                removeLayer(oldLayer);
-                                // Keep a reference to the most recent layer
-                                self.currentLayer = newLayer;
-                            }, 1500);
-                    },
-                    removeLayer = function(layer) {
-                        if (layer) {
-                            self.map.removeLayer(layer);
-                        }
-                    },
-                    pause = function(time) {
-                        var defer = $.Deferred();
-                        return function() {
-                            setTimeout(function() {
-                                defer.resolve();
-                            }, time);
-                            return defer;
-                        };
-                    };
-
-                $display.empty();
-                removeLayer(self.currentLayer);
-                var animationStep = this.zoomTo(location);
-                layerIds.forEach(function(id) {
-                    animationStep = animationStep
-                        .then(showLayer(id))
-                        .then(pause(pauseTime));
-                });
-                return animationStep;
-            }
-
-    });
+		},
+		// Called when user hits the minimize '_' icon on the pluging. Also called before hibernate when users closes app by clicking 'X'.
+		deactivate: function () {
+			this.open = "no";	
+			$('.sidebar-nav .nav-title').css("margin-left", "0px");
+		},	
+		// Called when user hits 'Save and Share' button. This creates the url that builds the app at a given state using JSON. 
+		// Write anything to you varObject.json file you have tracked during user activity.		
+		getState: function () {
+			// remove this conditional statement when minimize is added
+			if ( $('#' + this.id ).is(":visible") ){
+				//extent
+				this.obj.extent = this.map.geographicExtent;
+				this.obj.stateSet = "yes";	
+				var state = new Object();
+				state = this.obj;
+				return state;	
+			}
+		},
+		// Called before activate only when plugin is started from a getState url. 
+		//It's overwrites the default JSON definfed in initialize with the saved stae JSON.
+		setState: function (state) {
+			this.obj = state;
+		},
+		// Called when the user hits the print icon
+		beforePrint: function(printDeferred, $printArea, mapObject) {
+			printDeferred.resolve();
+		},	
+		// Called by activate and builds the plugins elements and functions
+		render: function() {
+			this.mapScale  = this.map.getScale();
+			// BRING IN OTHER JS FILES
+			this.esriapi = new esriapi();
+			this.clicks = new clicks();
+			this.future = new future();
+			this.parcels = new parcels();
+			// ADD HTML TO APP
+			$(this.container).parent().append('<button id="viewCrsInfoGraphicIcon" class="button button-default ig-icon"><img src="plugins/community-rating-system/images/InfographicIcon_v1_23x23.png" alt="show overview graphic"></button>')
+			$(this.container).parent().find("#viewCrsInfoGraphicIcon").on('click',function(c){
+				TINY.box.show({
+					animate: true,
+					url: 'plugins/community-rating-system/html/info-graphic.html',
+					fixed: true,
+					width: 660,
+					height: 570
+				});
+			})
+			// Define Content Pane as HTML parent		
+			this.appDiv = new ContentPane({style:'padding:0; min-height:500px;}'});
+			this.id = this.appDiv.id
+			dom.byId(this.container).appendChild(this.appDiv.domNode);		
+			// Get html from content.html, prepend appDiv.id to html element id's, and add to appDiv
+			var idUpdate0 = content.replace(/for="/g, 'for="' + this.id);	
+			var idUpdate = idUpdate0.replace(/id="/g, 'id="' + this.id);
+			$('#' + this.id).html(idUpdate);
+			// Set up app and listeners
+			this.clicks.appSetup(this);
+			this.clicks.eventListeners(this);
+			this.future.eventListeners(this);
+			this.parcels.eventListeners(this);
+			// Create ESRI objects and event listeners	
+			this.esriapi.esriApiFunctions(this);
+			this.esriapi.featureLayerListeners(this);
+			this.future.featureLayerListeners(this);
+			this.rendered = true;	
+			$("#viewCrsInfoGraphicIcon").animate({backgroundColor:"rgba(243,243,21,0.3)"}, 1050, function(){
+				$("#viewCrsInfoGraphicIcon").animate({backgroundColor:"#ffffff"}, 1050, function(){
+					$("#viewCrsInfoGraphicIcon").animate({backgroundColor:"rgba(243,243,21,0.3)"}, 1050, function(){
+						$("#viewCrsInfoGraphicIcon").animate({backgroundColor:"#ffffff"}, 1000)
+					});
+				});
+			});
+		},
+	});
 });

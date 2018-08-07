@@ -1,6 +1,10 @@
 {
     "css": [
-        "plugins/3d-sample/style.css",
+		"plugins/community-rating-system/css/main.css"
     ],
-    "use": {}
+    "use": {
+        "underscore": { "attach": "_" },
+        "tv4": { "attach": "tv4" },
+        "extjs": { "attach": "Ext" }
+    }
 }
