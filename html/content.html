@@ -7,34 +7,47 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 <div class="rc-appWrapper" id="appWrapper">
 	<div class="rc-mainToggleWrapper">
 		<div class="toggle-btn" style="width:306px; margin: auto;">
-			<input type="radio" id="yn1" name="yesno" value="yes" checked/>
+			<input type="radio" id="yn1" name="yesno" value="floodrisk" checked/>
 			<label for="yn1">Flood Risk</label>
 			<br>
-			<input type="radio" id="yn2" name="yesno" value="no"/>
+			<input type="radio" id="yn2" name="yesno" value="adaptation"/>
 			<label for="yn2">Adaptation Solutions</label>
 		</div>
 	</div>
-	<div class="rc-introText blueFont">
-		<div>Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk.</div>
+	<!-- Floodrisk wrapper ########################################################## -->
+	<div class="rc-floodriskWrapper">
+		<div class="rc-introText blueFont">
+			<div>Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk.</div>
+		</div>
+		<h3>Please Select a Timeframe to view flooding events below:</h3>
+		<div class="rc-floodTimeframeWrapper">
+			<div id="rangeToggle" class="toggle-btn" style="width:306px; margin: auto;">
+				<input type="radio" id="dr1" name="dateRange" value="last30" checked/>
+				<label for="dr1">Last 30 days</label>
+				<br>
+				<input type="radio" id="dr2" name="dateRange" value="last6"/>
+				<label for="dr2">Last 6 months</label>
+				<br>
+				<input type="radio" id="dr3" name="dateRange" value="custom"/>
+				<label for="dr3">Custom range</label>
+			</div>
+			<div class="rc-rangeWrapper" id="last30Range">
+				30 days
+			</div>
+			<div class="rc-rangeWrapper" id="last6Range">
+				6 months
+			</div>
+			<div class="rc-rangeWrapper"  id="customRange">
+				<label class="rc-rangeLabels" for="from">Start Date: </label>
+				<input style="width: 76px;" type="text" id="from" name="from">
+				<label class="rc-rangeLabels" for="to">End Date: </label>
+				<input style="width: 76px;" type="text" id="to" name="to">
+				<button style="margin: 0 0 3px 36px;" id="dateRangeClear" class="button button-primary">Clear</button>
+			</div>
+		</div>
 	</div>
-	<h3>Please Select a Timeframe to view flooding events below:</h3>
-	<div class="rc-floodTimeframeWrapper">
-		<button class=" button button-primary rc-timeButton">Last 30 days</button>
-		<br>
-		<button class="button button-primary rc-timeButton">Last 6 Months</button>
-		<br>
-		<button class="button button-primary rc-timeButton">Custom Range</button>
+	<!-- adaptation solution wrapper ########################################### -->
+	<div class="rc-adaptationWrapper">
+		<p>adaptation wrapper</p>
 	</div>
-	
-
-	
-	<!-- <div class="toggle-btn" style="width:100px;">
-		<input type="radio" id="yn1" name="yesno" value="yes" checked/>
-		<label for="yn1">Yes</label>
-		<br>
-		<input type="radio" id="yn2" name="yesno" value="no"/>
-		<label for="yn2">No</label>
-	</div> -->
-	<ul></ul>
-	
 </div>
