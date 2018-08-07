@@ -1,6 +1,6 @@
 {
     "css": [
-		"plugins/community-rating-system/css/main.css"
+		"plugins/resilient-coastal-cities/css/main.css"
     ],
     "use": {
         "underscore": { "attach": "_" },
