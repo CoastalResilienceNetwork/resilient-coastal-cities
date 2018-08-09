@@ -3,19 +3,23 @@ Dijit ContentPane to hold all the elements. The ContentPane is assigned a dynami
 takes the ContentPane id and prepends it to every element with a declared id in this HTML before the elements are created.
 The unique ContentPane id makes all the element ids unique and prevents duplicate id errors across other apps.-->
 
+
+
+
+
 <!-- start of main app HTML -->
-<div class="rc-appWrapper" id="appWrapper">
+<div class="rc-appWrapper" id="app">
 	<div class="rc-mainToggleWrapper">
 		<div class="toggle-btn" style="width:306px; margin: auto;">
-			<input type="radio" id="yn1" name="yesno" value="floodrisk" checked/>
+			<input v-on:click="mainToggle = true" type="radio" id="yn1" name="yesno" value="floodrisk" checked/>
 			<label for="yn1">Flood Risk</label>
 			<br>
-			<input type="radio" id="yn2" name="yesno" value="adaptation"/>
+			<input v-on:click="mainToggle = false" type="radio" id="yn2" name="yesno" value="adaptation"/>
 			<label for="yn2">Adaptation Solutions</label>
 		</div>
 	</div>
 	<!-- Floodrisk wrapper ########################################################## -->
-	<div class="rc-floodriskWrapper">
+	<div v-bind:class="{ activeShow: mainToggle}" class="rc-floodriskWrapper">
 		<div class="rc-introText blueFont">
 			<div>Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk.</div>
 		</div>
@@ -31,8 +35,9 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<input type="radio" id="dr3" name="dateRange" value="custom"/>
 				<label for="dr3">Custom range</label>
 			</div>
-			<div class="rc-rangeWrapper" id="last30Range">
+			<div style="display: block;" class="rc-rangeWrapper" id="last30Range">
 				30 days
+				<div class="eventsWrapper"></div>
 			</div>
 			<div class="rc-rangeWrapper" id="last6Range">
 				6 months
@@ -45,9 +50,11 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<button style="margin: 0 0 3px 36px;" id="dateRangeClear" class="button button-primary">Clear</button>
 			</div>
 		</div>
+		<!-- <div id="vueTest">{{name}}</div> -->
 	</div>
+
 	<!-- adaptation solution wrapper ########################################### -->
-	<div class="rc-adaptationWrapper">
+	<div style="display: none;" class="rc-adaptationWrapper">
 		<p>adaptation wrapper</p>
 	</div>
 </div>

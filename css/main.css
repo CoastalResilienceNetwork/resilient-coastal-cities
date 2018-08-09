@@ -1,6 +1,15 @@
 /*  Main CSS file for the resilient coastal cities app */
 /**/
 
+/* Vue js styling*/
+
+.activeShow{
+	display: none; color: blue;
+}
+
+
+
+
 
 .rc-appWrapper{
 	padding: 5px;
@@ -20,6 +29,9 @@
 .rc-rangeWrapper{
 	display: none;
 }
+/*.rc-floodriskWrapper{
+	display: none;
+}*/
 
 
 
