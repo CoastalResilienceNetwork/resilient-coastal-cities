@@ -2,6 +2,12 @@
 /**/
 
 /* Vue js styling*/
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 
 .activeShow{
 	display: none; color: blue;
@@ -10,7 +16,9 @@
 
 
 
-
+.rc-adaptationWrapper{
+	display: none;
+}
 .rc-appWrapper{
 	padding: 5px;
 }
@@ -28,6 +36,20 @@
 }
 .rc-rangeWrapper{
 	display: none;
+}
+.rc-noFloodText{
+	color: red; display: none; margin-top: 10px; text-align: center;
+}
+.rc-eventsWrapper{
+	display: none;
+}
+.rc-event{
+	display: flex; width: 300px; border: 1pt solid #cdd5d5;padding: 5px; 
+	box-shadow: 0 1px 1px rgba(16,22,26,.2); position: relative; margin: auto; margin-top: 10px;
+
+}
+.rc-floodEventDate{
+	margin-left: 10px;
 }
 /*.rc-floodriskWrapper{
 	display: none;

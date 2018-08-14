@@ -1,42 +1,30 @@
 define([
-	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer",  "plugins/resilient-coastal-cities/js/vue",
+	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle",  "plugins/resilient-coastal-cities/js/vue",
 ],
-function ( declare, Query, QueryTask, FeatureLayer,  Vue ) {
+function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,  Vue ) {
         "use strict";
 
         return declare(null, {
         	vueCreate: function(t){
-        		t.id = "#"+t.id;
-        		new Vue({
-        			el:t.id + "app",
-        			data:{
-        				name: 'Test vue data',
-        				mainToggle: true,
+        		// t.id = "#"+t.id;
+        		// new Vue({
+        		// 	el:'#'+t.id + "app",
+        		// 	data:{
+        		// 		name: 'Test vue data',
+        		// 		mainToggle: true,
+        		// 		rangeToggle: true,
+        		// 		ok: false,
 
-        			},
-        			methods:{
-        				// mainToggle: function(){
-        				// 	console.log('main toggle')
-        				// },
-        			}
-        		})
+        		// 	},
+        		// 	methods:{
+        		// 		// mainToggle: function(){
+        		// 		// 	console.log('main toggle')
+        		// 		// },
+        		// 	}
+        		// })
         	},
 
         	getEvents: function(t){
-        		// // test Vue.js
-        		// new Vue({
-        		// 	el: "#" + t.id + "vueTest",
-        		// 	data:{
-        		// 		name: 'Test vue data'
-        		// 	}
-        		// })
-
-
-
-
-
-
-        		console.log('get events');
         		// get todays date and figure out which dates to query for each timeframe
              	// get js utm time
 	            var dateObj = new Date();
@@ -56,7 +44,10 @@ function ( declare, Query, QueryTask, FeatureLayer,  Vue ) {
 	            }
 	            var d=new Date().dayofYear();
 	            // get date function to convert todays date to a format thats understood by the api
-	            function getDate (d,time){
+	            t.obj.testFunction  = function(){
+	            	console.log('test func call')
+	            }
+	            t.obj.getDate = function(d,time){
 	                var newDay = (d - time);
 	                if (newDay >=0) {
 	                     var newDate = String(Date.fromDayofYear(newDay).toLocaleDateString())
@@ -74,8 +65,8 @@ function ( declare, Query, QueryTask, FeatureLayer,  Vue ) {
 	                }
 	            }
         		 // var lastMonth = getFloodEvents(getDate(d, 30))
-            	// call get flood events for the past year
-	            getFloodEvents(getDate(d, 365))
+            	// call get flood events for the past 10,000 days
+	            getFloodEvents(t.obj.getDate(d, 10000))
 	            function getFloodEvents(endDate){
 	                var url = 'https://api.floodtags.com/v1/events/index?until='+ todaysDate + '&since=' + endDate +'&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
 	                t.obj.eventList = []
@@ -85,7 +76,6 @@ function ( declare, Query, QueryTask, FeatureLayer,  Vue ) {
 	                    $.each(data.events, function(i,v){
 	                        if(v.location.geonameid == '1627893'){
 	                            t.obj.eventList.push(v);
-	                            // return app.eventList;
 	                        }
 	                    })
 	                })
@@ -93,58 +83,106 @@ function ( declare, Query, QueryTask, FeatureLayer,  Vue ) {
 	                filtered.done(function( value ) {
 	                   if(t.obj.eventList.length > 0){
 	                        // call create event button function
-	                        console.log(t.obj.eventList)
-	                        buildEventButtons(t.obj.eventList)
+	                        buildEventButtons(t.obj.eventList);
 	                   }
 	                });
 	            })
 	           }
 
 	           function buildEventButtons(array){
+	           		
 	                // divide up array into past 7 days, 30, 180 and 365
 	                var pastYearEvents = array;
 	                $.each(array, function(i,v){
 	                    let date = v.start.split('T')[0] + ' - ' + v.end.split('T')[0]
-	                    var html = "<div data-date='"+ date +"' class='event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div>  " 
+	                    var html = "<div data-date='"+ date +"' class='rc-event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div class='rc-floodEventDate'>  " 
 	                    + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div></div>'
 	                    // append html to events wrapper
-	                    $('.eventsWrapper').append(html);
+	                    $('.rc-eventsWrapper').append(html);
 	                    // onEventClick();
 	                })
 	           }
+	         
 
         	}, // end of get events function
 			
 			eventListeners: function(t){
-				// // on daterange clear
-				// $("#" + t.id + "dateRangeClear").on('click', function(evt){
-				// 	// clear date range inputs
-				// 	$("#" + t.id +  "from" ).val('')
-				// 	$("#" + t.id +  "to" ).val('')
-				// })
-				// // on range toggle button click
-				// $('#' + t.id + 'rangeToggle input').on('click', function(evt){
-				// 	// slide up all range wrappers on any change
-				// 	var wrappers  = $('.rc-floodTimeframeWrapper').find('.rc-rangeWrapper');
-				// 	$.each(wrappers, function(i,v){
-				// 		$(v).hide();
-				// 	})
-				// 	// slide down the correct range wrapper
-				// 	$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
-				// })
-				// // main toggle click functionality
-				// $('.rc-mainToggleWrapper input').on('click', function(evt){
-				// 	if(evt.currentTarget.value == 'floodrisk'){
-				// 		$('.rc-adaptationWrapper').slideUp();
-				// 		$('.rc-floodriskWrapper').slideDown();
-						
-				// 	}else{
-				// 		$('.rc-floodriskWrapper').slideUp();
-				// 		$('.rc-adaptationWrapper').slideDown();
-				// 	}
-				// })
+					// $("#" + t.id + "BasemapToggle").show()
+					// var toggle = new BasemapToggle({
+				 //        map: t.map,
+			  //       basemap: "osm"
+			  //     }, "#" + t.id + "BasemapToggle");
+					// console.log(toggle);
+			  //     toggle.startup();
 
-				
+
+
+			  	
+				// show the correct event boxes based on custom filter or toggle buttons
+			    function showEventButtons(val){
+			    	// slide up no flood text div
+			    	$('.rc-noFloodText').hide();
+			    	// show the events wrapper on first click
+			    	$('.rc-eventsWrapper').show();
+			    	// create new date obj for today
+			    	var d=new Date().dayofYear();
+			    	var eventWrapper = $('.rc-eventsWrapper .rc-event');
+			    	var currentStartDate;
+			    	var currentEndDate = new Date()
+			    	if (val == 'last30') {
+			    		currentStartDate = new Date(t.obj.getDate(d,30))
+			    	}else if(val == 'last6'){
+			    		currentStartDate = new Date(t.obj.getDate(d,180))
+			    	}else if(val == 'custom'){
+			    		currentStartDate = t.obj.daterangeStartCustom;
+			    		currentEndDate = t.obj.daterangeEndCustom;
+			    	}
+		    		var counter = 0;
+		    		$.each(eventWrapper, function(i,v){
+		    			var eventStart = new Date(v.dataset.date.split(' - ')[0])
+		    			var eventEnd = new Date(v.dataset.date.split(' - ')[1]);
+		    			if(currentStartDate <= eventEnd && currentEndDate >= eventEnd){
+		    				counter +=1
+		    				$(v).show();
+		    			}else{
+		    				$(v).hide();
+		    			}
+		    			if (counter == 0) {
+		    				// slide down no text element
+		    				$('.rc-noFloodText').slideDown();
+		    			}
+		    		})
+	            }
+	           
+				// on daterange clear
+				$("#" + t.id + "dateRangeGo").on('click', function(evt){
+					// extract dates from date range inputs
+					t.obj.daterangeStartCustom = new Date($("#" + t.id +  "from" ).val())
+					t.obj.daterangeEndCustom = new Date($("#" + t.id +  "to" ).val())
+					$("#" + t.id + 'dr3').trigger('click');
+				})
+				// on range toggle button click
+				$('#' + t.id + 'rangeToggle input').on('click', function(evt){
+					// slide up all range wrappers on any change
+					var wrappers  = $('.rc-floodTimeframeWrapper').find('.rc-rangeWrapper');
+					$.each(wrappers, function(i,v){
+						$(v).hide();
+					})
+					// slide down the correct range wrapper
+					$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
+		            showEventButtons(evt.currentTarget.value);
+				})
+				// main toggle click functionality
+				$('.rc-mainToggleWrapper input').on('click', function(evt){
+					if(evt.currentTarget.value == 'floodrisk'){
+						$('.rc-adaptationWrapper').slideUp();
+						$('.rc-floodriskWrapper').slideDown();
+						
+					}else{
+						$('.rc-floodriskWrapper').slideUp();
+						$('.rc-adaptationWrapper').slideDown();
+					}
+				})
 			},
 			appSetup: function(t){
 				function createDatePicker(){
