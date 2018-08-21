@@ -28,7 +28,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					getTagsFromEvents(evt.currentTarget.id, evt.currentTarget.dataset.date.split(' - ')[0], evt.currentTarget.dataset.date.split(' - ')[1])
 				}
 				// query tags endpoint with parent geoname id
-                function getTagsFromEvents(parentGeonameid, startDate, endDate){
+                function getTagsFromEvents(parentGeonameid, startDate, endDate){ 
                     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
                 	console
                 	.log(url)
