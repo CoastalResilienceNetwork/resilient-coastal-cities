@@ -1,7 +1,8 @@
 define([
-	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle","esri/graphic","esri/layers/GraphicsLayer", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/geometry/Polygon"
+	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle","esri/graphic",
+	"esri/layers/GraphicsLayer", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/geometry/Polygon",
 ],
-function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,Graphic, GraphicsLayer, SimpleFillSymbol, SimpleLineSymbol, Color, Polygon ) {
+function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,Graphic, GraphicsLayer, SimpleFillSymbol, SimpleLineSymbol, Color, Polygon, ) {
         "use strict";
 
         return declare(null, {
