@@ -16,7 +16,7 @@ function (
 	return declare(PluginBase, {
 		// The height and width are set here when an infographic is defined. When the user click Continue it rebuilds the app window with whatever you put in.
 		toolbarName:"Resilient Coastal Cities", allowIdentifyWhenActive:false, hasCustomPrint:true, usePrintModal:true, printModalSize:[600,100], 
-		rendered:false, resizable:false, size:'small', hasHelp:false, showServiceLayersInLegend:true, 
+		rendered:false, resizable:false, size:'custom', width:430, hasHelp:false, showServiceLayersInLegend:true, 
 		// First function called when the user clicks the pluging icon. 
 		initialize: function (frameworkParameters) {
 			// Access framework parameters
