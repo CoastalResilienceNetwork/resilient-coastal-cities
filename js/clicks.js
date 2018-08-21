@@ -1,29 +1,11 @@
 define([
-	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle","esri/graphic","esri/layers/GraphicsLayer", 
-	 "plugins/resilient-coastal-cities/js/vue", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/geometry/Polygon"
+	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle","esri/graphic","esri/layers/GraphicsLayer", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/geometry/Polygon"
 ],
-function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,Graphic, GraphicsLayer,  Vue, SimpleFillSymbol, SimpleLineSymbol, Color, Polygon ) {
+function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,Graphic, GraphicsLayer, SimpleFillSymbol, SimpleLineSymbol, Color, Polygon ) {
         "use strict";
 
         return declare(null, {
-        	vueCreate: function(t){
-        		// t.id = "#"+t.id;
-        		// new Vue({
-        		// 	el:'#'+t.id + "app",
-        		// 	data:{
-        		// 		name: 'Test vue data',
-        		// 		mainToggle: true,
-        		// 		rangeToggle: true,
-        		// 		ok: false,
-
-        		// 	},
-        		// 	methods:{
-        		// 		// mainToggle: function(){
-        		// 		// 	console.log('main toggle')
-        		// 		// },
-        		// 	}
-        		// })
-        	},
+        	
 
         	getEvents: function(t){
         		// get todays date and figure out which dates to query for each timeframe
