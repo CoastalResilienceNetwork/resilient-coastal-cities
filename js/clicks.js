@@ -10,7 +10,9 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	return declare(null, { 
 
 		eventListeners: function(t){
+			// on event click function //////////////////////////////////////
 			function onEventClick(t,evt){
+
 				t.obj.layer = new GraphicsLayer();
 				try{
 					console.log('remove layer')
@@ -28,10 +30,9 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					getTagsFromEvents(evt.currentTarget.id, evt.currentTarget.dataset.date.split(' - ')[0], evt.currentTarget.dataset.date.split(' - ')[1])
 				}
 				// query tags endpoint with parent geoname id
-                function getTagsFromEvents(parentGeonameid, startDate, endDate){
+                function getTagsFromEvents(parentGeonameid, startDate, endDate){ 
                     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-                	console
-                	.log(url)
+                	console.log(url)
                 	// console.log(t.obj.adminUnits);
                 	$.get(url, function(data) {
                 		// defer callback until query is complete
@@ -108,12 +109,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                         }
                 	})
                 }
-                // slide up 
-              
-                // eventClick();
-			}
-			// onEventClick();
-
+			} // end of on event click function /////////////////////////////
 
 			// show the correct event boxes based on custom filter or toggle buttons
 		    function showEventButtons(val){
@@ -154,66 +150,64 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	    				$('.rc-eventsWrapper').slideUp();
 	    			}
 	    		})
-            }
-            // on daterange go click
-			$("#" + t.id + "dateRangeGo").on('click', function(evt){
-				// extract dates from date range inputs
-				t.obj.daterangeStartCustom = new Date($("#" + t.id +  "from" ).val())
-				t.obj.daterangeEndCustom = new Date($("#" + t.id +  "to" ).val())
-				$("#" + t.id + 'dr3').trigger('click');
-			})
-			// on range toggle button click
-			$('#' + t.id + 'rangeToggle input').on('click', function(evt){
-				// slide up all range wrappers on any change
-				var wrappers  = $('.rc-floodTimeframeWrapper').find('.rc-rangeWrapper');
-				$.each(wrappers, function(i,v){
-					$(v).hide();
-				})
-				// slide down the correct range wrapper
-				$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
-	            showEventButtons(evt.currentTarget.value);
-	            // on flood event box click ////////////
-	           	$('.rc-eventsWrapperInner .rc-event').off().on('click', function(evt){
-	           		console.log('event click')
-	           		// slide down flood and adaptation wrappers
-	           		$('.rc-contentBelowIntroWrapper').slideDown()
-	           		// slide up timeframe and event boxes.
-	           		$('.rc-floodTimeframeWrapper').slideUp()
+            } // end of show event button function ///////////////////////////////
 
-	           		// on event click function populate map
-	           		onEventClick(t,evt);
-	           	});
-	           	// on all flood event box click ////////////
-	           	$('#' + t.id + 'allEventsButton').off().on('click', function(evt){
-	           		console.log('all event click')
-	           		onEventClick(t,evt);
-	           	})
+            function buildClickEvents(){
+            	console.log('built events')
+            	// on daterange go click
+				$("#" + t.id + "dateRangeGo").on('click', function(evt){
+					// extract dates from date range inputs
+					t.obj.daterangeStartCustom = new Date($("#" + t.id +  "from" ).val())
+					t.obj.daterangeEndCustom = new Date($("#" + t.id +  "to" ).val())
+					$("#" + t.id + 'dr3').trigger('click');
+				})
+				// on range toggle button click
+				$('#' + t.id + 'rangeToggle input').on('click', function(evt){
+					// slide up all range wrappers on any change
+					var wrappers  = $('.rc-floodTimeframeWrapper').find('.rc-rangeWrapper');
+					$.each(wrappers, function(i,v){
+						$(v).hide();
+					})
+					// slide down the correct range wrapper
+					$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
+		            showEventButtons(evt.currentTarget.value);
+		            // on flood event box click ////////////
+		           	$('.rc-eventsWrapperInner .rc-event').off().on('click', function(evt){
+		           		// slide down flood and adaptation wrappers
+		           		$('.rc-contentBelowIntroWrapper').slideDown()
+		           		// slide up timeframe and event boxes.
+		           		$('.rc-floodTimeframeWrapper').slideUp()
+		           		// on event click function populate map
+		           		onEventClick(t,evt);
+		           	});
+		           	// on all flood event box click ////////////
+		           	$('#' + t.id + 'allEventsButton').off().on('click', function(evt){
+		           		onEventClick(t,evt);
+		           	})
+				})
 	           	// on back to events button click
 	           	$('.rc-headingAndBackBtnWrapper button').off().on('click', function(evt){
-	           		console.log(evt);
 	           		// clear map graphics
-	           		// t.map.graphics.clear();
 	           		t.map.removeLayer(t.obj.layer);
 	           		// slide up flood and adap wrappers
 	           		$('.rc-contentBelowIntroWrapper').slideUp()
 	           		// slide down timeframe and event boxes
 	           		$('.rc-floodTimeframeWrapper').slideDown()
-
 	           	})
-
-
-			})
-			// main toggle click functionality
-			$('.rc-mainToggleWrapper input').on('click', function(evt){
-				if(evt.currentTarget.value == 'floodrisk'){
-					$('.rc-adaptationWrapper').slideUp();
-					$('.rc-floodriskWrapper').slideDown();
-					
-				}else{
-					$('.rc-floodriskWrapper').slideUp();
-					$('.rc-adaptationWrapper').slideDown();
-				}
-			})
+				// main toggle click functionality
+				$('.rc-mainToggleWrapper input').on('click', function(evt){
+					if(evt.currentTarget.value == 'floodrisk'){
+						$('.rc-adaptationWrapper').slideUp();
+						$('.rc-floodriskWrapper').slideDown();
+					}else{
+						$('.rc-floodriskWrapper').slideUp();
+						$('.rc-adaptationWrapper').slideDown();
+					}
+				})
+            }
+            console.log('before call ///////////')
+            buildClickEvents() // call function to build all the click evenst 
+            
 		},
 		appSetup: function(t){
 			// build admin units obj
@@ -357,6 +351,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                })
 	           }
 			}
+			getEvents(); // call the api and build the events obj
 			// call event listeners after init app setup
 			t.clicks.eventListeners(t)
 		},
