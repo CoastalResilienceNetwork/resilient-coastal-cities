@@ -1,14 +1,4 @@
 {
 	"visibleLayers": [-1],
-	"floodLayers": [-1],
-	"refLayers": [],
-	"refNames": [],
-	"floodLayersOn": "no",
-	"extent": "",
-	"stateSet": "no",
-	"flooding": "Daily",
-	"topVal": "",
-	"year": "Current",
-	"pools": "All",
-	"poolsToggle": true
+	
 }

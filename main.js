@@ -15,7 +15,7 @@ function (
 	lang ) {
 	return declare(PluginBase, {
 		// The height and width are set here when an infographic is defined. When the user click Continue it rebuilds the app window with whatever you put in.
-		toolbarName:"Ecosystem Effects of Sea Level Change", allowIdentifyWhenActive:false, hasCustomPrint:true, usePrintModal:true, printModalSize:[600,100], 
+		toolbarName:"Resilient Coastal Cities", allowIdentifyWhenActive:false, hasCustomPrint:true, usePrintModal:true, printModalSize:[600,100], 
 		rendered:false, resizable:false, size:'small', hasHelp:false, showServiceLayersInLegend:true, 
 		// First function called when the user clicks the pluging icon. 
 		initialize: function (frameworkParameters) {
@@ -67,80 +67,80 @@ function (
 			this.obj = state;
 		},
 		// Called when the user hits the print icon
-		prePrintModal: function(preModalDeferred, $printSandbox, $modalSandbox, mapObject) {
-			$.get('plugins/ecological-effects-slc/html/print-form.html', function(html) {
-			    $modalSandbox.append(html);
-			})
-			$.get('plugins/ecological-effects-slc/html/print-page.html', function(html) {
-			    $printSandbox.append(html);
-			}).then(preModalDeferred.resolve());
-		},	
-		postPrintModal: function(postModalDeferred, $printSandbox, $modalSandbox, mapObject) {
-			// get title
-			var ttl = $("#getSlcPrintTitle").val();
-			if (ttl.length == 0){
-				ttl = "Ecosystem Effects of Sea Level Change"
-			}	
-			$("#slcPrintTitle").html( ttl );
-			//show risk variables or solutions
-			$(".prw").css("display","none");
-			if (this.selOptGroup == "Risk Variables"){
-				$(".risVarPrintWrap").show();
-			}else{
-				$(".selSolPrintWrap").show();
-			}
-			$(".print-selTop").html(this.selTop + "<br>" + this.obj.pools + " Pools - " + this.obj.year);
-			// show flood layers if on
-			if (this.obj.floodLayersOn == "yes"){
-				var fldType = "";
-				$(".flooding input[name=flooding]:checked").each(function(i,v){
-					fldType = $(v).next().html();
-				})
-				$(".print-lf-title").html("Likelyhood of Flooding<br>" + fldType + " Flooding - " + this.obj.year);
-				$(".likeFloodPrintWrap").show();
-			}	
-			// build legend
-			var legAr = this.legendArray;
-			// Loop through checked reference layer inputs to make legend			 	
-		 	$("#" + this.id + "reference-wrap input[name=ref-lyrs]:checked").each(function(i,v){
-		 		if (i == 0){
-		 			$("#riskAndFloodLayerLegends").append("<div style='font-weight:bold; text-decoration:underline; margin-right:5mm; margin-top:5mm;'>Reference Layers</div>")
-		 		}
-		 		$.each(legAr,function(i1,v1){
-		 			// Does the checked value match a layer name?
-		 			if (v.value == v1.layerName){
-		 				// is it a single item legend
-		 				if (v1.legend.length == 1){
-		 					var leg = v1.legend[0];
-		 					var mt = "3mm"
-		 					if (i1 == 0){
-		 						mt = "0mm"
-		 					}
-		 					$("#riskAndFloodLayerLegends").append("<div style='margin-top:" + mt + "; margin-right:5mm;'><img style='vertical-align:top' src='data:image/png;base64," + leg.imageData + "'> " + v1.layerName + "<div>")					
-		 				}
-		 				// is it a multiple item legend
-		 				if (v1.legend.length > 1){
-		 					$("#riskAndFloodLayerLegends").append("<div style='margin-top:3mm; margin-right:5mm;' id='lyr" + v1.layerId + "'>" + v1.layerName + "</div>")	
-		 					$.each(v1.legend,function(i2,v2){
-		 						$("#riskAndFloodLayerLegends").append("<div style='margin-right:5mm;'><img style='vertical-align:top' src='data:image/png;base64," + v2.imageData + "'> " + v2.label + "<div>");
-		 					})
-		 				}		
-		 			}
-		 		})
-		 	})
+		// prePrintModal: function(preModalDeferred, $printSandbox, $modalSandbox, mapObject) {
+		// 	$.get('plugins/ecological-effects-slc/html/print-form.html', function(html) {
+		// 	    $modalSandbox.append(html);
+		// 	})
+		// 	$.get('plugins/ecological-effects-slc/html/print-page.html', function(html) {
+		// 	    $printSandbox.append(html);
+		// 	}).then(preModalDeferred.resolve());
+		// },	
+		// postPrintModal: function(postModalDeferred, $printSandbox, $modalSandbox, mapObject) {
+		// 	// get title
+		// 	var ttl = $("#getSlcPrintTitle").val();
+		// 	if (ttl.length == 0){
+		// 		ttl = "Ecosystem Effects of Sea Level Change"
+		// 	}	
+		// 	$("#slcPrintTitle").html( ttl );
+		// 	//show risk variables or solutions
+		// 	$(".prw").css("display","none");
+		// 	if (this.selOptGroup == "Risk Variables"){
+		// 		$(".risVarPrintWrap").show();
+		// 	}else{
+		// 		$(".selSolPrintWrap").show();
+		// 	}
+		// 	$(".print-selTop").html(this.selTop + "<br>" + this.obj.pools + " Pools - " + this.obj.year);
+		// 	// show flood layers if on
+		// 	if (this.obj.floodLayersOn == "yes"){
+		// 		var fldType = "";
+		// 		$(".flooding input[name=flooding]:checked").each(function(i,v){
+		// 			fldType = $(v).next().html();
+		// 		})
+		// 		$(".print-lf-title").html("Likelyhood of Flooding<br>" + fldType + " Flooding - " + this.obj.year);
+		// 		$(".likeFloodPrintWrap").show();
+		// 	}	
+		// 	// build legend
+		// 	var legAr = this.legendArray;
+		// 	// Loop through checked reference layer inputs to make legend			 	
+		//  	$("#" + this.id + "reference-wrap input[name=ref-lyrs]:checked").each(function(i,v){
+		//  		if (i == 0){
+		//  			$("#riskAndFloodLayerLegends").append("<div style='font-weight:bold; text-decoration:underline; margin-right:5mm; margin-top:5mm;'>Reference Layers</div>")
+		//  		}
+		//  		$.each(legAr,function(i1,v1){
+		//  			// Does the checked value match a layer name?
+		//  			if (v.value == v1.layerName){
+		//  				// is it a single item legend
+		//  				if (v1.legend.length == 1){
+		//  					var leg = v1.legend[0];
+		//  					var mt = "3mm"
+		//  					if (i1 == 0){
+		//  						mt = "0mm"
+		//  					}
+		//  					$("#riskAndFloodLayerLegends").append("<div style='margin-top:" + mt + "; margin-right:5mm;'><img style='vertical-align:top' src='data:image/png;base64," + leg.imageData + "'> " + v1.layerName + "<div>")					
+		//  				}
+		//  				// is it a multiple item legend
+		//  				if (v1.legend.length > 1){
+		//  					$("#riskAndFloodLayerLegends").append("<div style='margin-top:3mm; margin-right:5mm;' id='lyr" + v1.layerId + "'>" + v1.layerName + "</div>")	
+		//  					$.each(v1.legend,function(i2,v2){
+		//  						$("#riskAndFloodLayerLegends").append("<div style='margin-right:5mm;'><img style='vertical-align:top' src='data:image/png;base64," + v2.imageData + "'> " + v2.label + "<div>");
+		//  					})
+		//  				}		
+		//  			}
+		//  		})
+		//  	})
 
 
-			window.setTimeout(function() {
-			    if (mapObject.updating) {
-			        var delayedPrint = mapObject.on('update-end', function() {
-			        	delayedPrint.remove();
-			            postModalDeferred.resolve();
-			        });
-			    } else {
-			        postModalDeferred.resolve();
-			    }
-			}, 500);
-		},
+		// 	window.setTimeout(function() {
+		// 	    if (mapObject.updating) {
+		// 	        var delayedPrint = mapObject.on('update-end', function() {
+		// 	        	delayedPrint.remove();
+		// 	            postModalDeferred.resolve();
+		// 	        });
+		// 	    } else {
+		// 	        postModalDeferred.resolve();
+		// 	    }
+		// 	}, 500);
+		// },
 		// Called by activate and builds the plugins elements and functions
 		render: function(frameworkParameters) {
 			//this.oid = -1;
