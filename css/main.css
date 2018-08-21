@@ -1,524 +1,81 @@
-#slcModalWrapper div{
-	font-size:17px; margin-bottom:20px;
+/*  Main CSS file for the resilient coastal cities app */
+/**/
+
+/* Vue js styling*/
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
 }
-#slcModalWrapper input{
-	width:90%;
-}
-select {
-    width: 92px;
-    white-space:pre-wrap;
-}
-.top-select .chosen-container-single span{
-	font-size:14px;
-}
-.top-select .chosen-container .chosen-results li.group-result{
-	font-size:14px; color:#2F6384; background:#E3E7EA;
-}
-.tog-btn-pad .toggle-btn label{
-	padding:5px 4px;
-}
-.h3InfoIcon {
-    margin-bottom:-4px; margin-left:3px; cursor:pointer;
-}
-.hideH3InfoIcon {
-    margin-bottom:-4px; margin-left:3px; cursor:pointer; display:none;
-}
-.h3Info{
-	display:none; margin:0px 10px 10px 5px; line-height:15px; 
-}
-.vs-wrap{
-	display:none; margin-bottom:80px;
-}
-.vs-wrap input[type="radio"][disabled] + label {
-	text-decoration:line-through; background:#efefef; cursor:not-allowed;
-} 
-.vs-wrap h4{
-	margin-bottom:0.4rem;
-}
-.ptWrap{
-	margin:5px 0 0 10px;
-}
-.ptWrap .form-component{
-	margin-bottom:0;
-}
-.ptWrap label{
-    color:#101d28; font-size:14px;
-}
-.fld-cb-wrap label, .ref-cb-wrap label{
-	color:#101d28; font-size:14px;
-}
-.fld-cb-wrap{
-	margin-top:1.5rem; margin-bottom:-1rem;
-}
-.flooding-wrap{
-	display:none; position:relative;
-}
-.controls-both{
-	margin-left:5px; font-weight:normal; display:none;
-}
-.legend-flex-wrap{
-	display:flex; margin-top:-2px; box-shadow:0 1px 1px rgba(16,22,26,.2); border:1px solid #ddd; padding:2px 5px 2px 1px; margin-left:22px; width:140px;
-}
-.legend-wrap{
-	display:none;
-}	
-.legend-box{
-	height:15px; width:15px; margin-right:5px; margin-left:5px; margin-top:2px;
-}
-.box-wrap{
-	text-align:center; border-top:1px solid #ddd; height:54px; padding-top:10px; display:none;
-	position:absolute; bottom:0; left:0; width:100%; background:#fbfbfb; box-shadow:0 -1px 1px rgba(16,22,26,0.2);
-}
-.ref-cb-wrap{
-	margin-top:1.5rem;
-}
-.reference-wrap{
-	padding-left:22px; display:none; margin-bottom:64px;
-}
-.reference-wrap p{
-	text-decoration:underline; margin-bottom:0.5rem;
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
-/*bar graph stlyes*/
-.graph-header{
-	text-align:center; margin-top:1.5rem;
-}
-.barGraphWrap{
-	display:inline-block; position:relative; height:277px; margin-left:18px;
-}
-.vertandLines{
-	display:inline-block; position:relative; z-index:10;
-}
-.vertLbl{
-	text-align:right; width:30px; display:inline-block;
-}
-.dashedLines{
-	margin-left:5px; width:250px; border-top:1px dashed #777; opacity:0.3; vertical-align:middle; height:2px; display:inline-block;
-}
-.vLabelLineWrap{
-	display:block; height:19px; margin-bottom:7px; position:relative; z-index:10;
-}
-.barHolder{
-	position:absolute; height:210px; left:36px; bottom:61px;
-}
-.sumBarsWrap{
-	bottom:0; width:31px; display:inline-block;
-}
-.sumBars{
-	bottom:-3px; width:31px; -moz-box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4), 2px 1px 3px rgba(0, 0, 0, .4);
-	-webkit-box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4), 2px 1px 3px rgba(0, 0, 0, .4);
-	box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4), 0 1px 1px rgba(16,22,26,.2); position:absolute; margin-left:10px;
-}
-.smallLabels{
-	position:absolute; bottom:-46px; height:44px; text-align:center; 
-	margin:-2px; padding-top:4px; line-height:1.2;
-}
-.lastLabel{
-	border-right:1px solid rgba(0, 0, 0, 0); padding-left:2px;
-}
-.xBarGraphLabel{
-	position:relative; top:11px; text-align:center; font-weight:bold;
-}
-.yBarGraphLabel{
-	position:relative; bottom:152px; left:-104px; text-align:center; transform:rotate(-90deg); width:190px; font-weight:bold;
-}	
-.barLabel{
-	text-align:center; position:relative; top:-20px; font-weight:bold; font-size:14px;
+.activeShow{
+	display: none; color: blue;
 }
 
 
-.flex1{
-	flex:1;
+
+
+.rc-adaptationWrapper{
+	display: none;
 }
-.flexColumn{
-	display:flex; flex-direction:column;
+.rc-appWrapper{
+	padding: 5px; height: 100%;
 }
-.hide{
-	display:none;
+.rc-introText{
+	margin-top: 15px;
 }
-.explainWrap p{
-	margin-top:5px; margin-bottom:5px; padding-right:5px;
+.rc-introWrapper{
+	padding-bottom: 10px;
 }
-/* fix the accordion height issue in Safari 
-.sidebar-content{
-	height:auto !important;
+.rc-timeButton{
+	width: 200px;
+}
+.rc-floodTimeframeWrapper{
+	margin-left: 10px; padding-bottom: 10px;
+}
+.rc-rangeLabels{
+	font-size: 14px; padding-left: 5px; padding-right: 3px;
+}
+.rc-rangeWrapper{
+	display: none; margin-top: 10px;
+}
+.rc-noFloodText{
+	color: red; display: none; margin-top: 10px; text-align: center;
+}
+.rc-eventsWrapper{
+	display: none; text-align: center;
+}
+.rc-event{
+	display: flex; width: 300px; border: 1pt solid #cdd5d5;padding: 5px; 
+	box-shadow: 0 1px 1px rgba(16,22,26,.2); position: relative; margin: auto; margin-top: 10px;
+}
+.rc-event:hover{
+	cursor: pointer; background: #f3f3f3;
+}
+.rc-floodEventDate{
+	margin-left: 10px;
+}
+/*.rc-mainToggleWrapper{
+	display: none;
 }*/
-/* bring in from old app */
-
-/* OSP graph */
-.barWrapper {
-	width: 346px; height: 25px; position: relative; left:6px; margin-bottom:4px; background-color:#333; float:left;	
-	/*-moz-box-shadow: 2px 2px 3px #999; -webkit-box-shadow: 2px 2px 3px #999; box-shadow: 2px 2px 3px #999;*/
-} 
-.bars{
-	position: absolute; display: block; width: 342px; height: 20px; border: 0; left: 0px; bottom: 0%; float:left; color:black; 
-	-moz-box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4);
-	-webkit-box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4);
-	box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4);
+.rc-contentBelowIntroWrapper{
+	display: none;
 }
-.spanBar{
-	top:2px; left:2px; overflow:hidden; text-indent:-30px;
+.rc-headingAndBackBtnWrapper{
+	display: flex; align-items: center;
 }
-.emBar{
-	border-top:1px solid #424542; border-right:1px solid #424542;
-}
-/*.barLabel{
-	position:relative; z-index:2; left:1px; top:0px; color:#000;
+/*.rc-floodriskWrapper{
+	display: none;
 }*/
-.bar3{
-	background: repeating-linear-gradient(45deg, #ecefde, #ecefde 5px, #ccc 5px, #ccc 10px);
-}
-.barf{
-	background-color:#408cb4;
-}	
-.bar2{
-	background-color:#8fb440;
-}
-.bar1{
-	background-color:#c8841d;
-}
-.topPad{
-	margin-top:11px;
-}	
-.topLabel{
-	margin-left:5px; margin-bottom:-6px; 
-}
-.bottomLabel{
-	margin-left:2px; display:none;
-}
-.graphWrapper{
-	padding-bottom:5px !important; 	
-}	
-.barNumWarpper{
-	height:48px !important; margin-left:20px;
-}	
-.graphHeader{
-	font-weight: bold; margin-top: 5px; margin-bottom:5px;
-}	
-.graphLegLbl{
-	display:inline-block; margin-top:3px; margin-left:3px; 
-}
-.futureGraph{
-	height: 17px; display:none;
-}	
-.graphLegend{
-	height: 18px; width:32px; display:inline-block; margin-bottom:-5px;
-	box-shadow: inset 1px 2px 2px rgba(255, 255, 255, .4), inset -1px -1px 2px rgba(0, 0, 0, .4);
-}	
-.bar2a{
-	margin-left:7px;
-}
-.barfa{
-	margin-left:7px;
-}	
-.grLgDiv{
-	height:20px; width:100%; display:inline-block; text-align:center;
-}
 
-.checkBoxLabels{
-	margin-left:0px; display:inline-block; font-size:8pt;
-}
-label.checkBoxLabels input[type=checkbox]{
-	position: relative; vertical-align: middle; bottom: 1px; margin-right:3px;
-}
-/* Info icons */
-.infoOpen{
-	cursor:pointer; margin-left:4px; margin-bottom:-3px; display:none; font-size:8pt;
-}
-.infoA{
-	color:blue !important;	font-weight:bold;
-}
-.infoA:hover{
-	color:#7FB0F0 !important; cursor:pointer; 
-}
 
-.gExp, .gCol{
-	cursor:pointer; 	
-}
-.gCol{
-	display:none;	
-}	
-.expCol{
-	margin-right:3px !important; float:left;
-}	
-.lyrExpCol{
-	margin-left:1px !important; display:inline-block;
-}	
-.sumHeader{
-	display:inline-block; font-size:8pt;
-}	
 
-.s2Atts{
-	font-weight:bold;
-}	
-/* chosen selected item bold */
-.eeslr-app{
-	background:#fff; position:absolute; z-index:1000; width:430px;
-}
-.eeslr-app .chosen-wrap .chosen-container-single span{
-	font-weight:bold;
-}
-/* chosen data-placeholder not bold */
-.eeslr-app .chosen-wrap .chosen-default span{
-	font-weight:normal;
-}
-.eeslr-app .ui-accordion-header{
-	color:#21658c !important;
-	padding:.8em 0em !important;
-}
-.eeslr-app .ui-accordion-header-active{
-	font-weight: 600 !important;
-}
 
-.printAnchorDiv{
-	width:260px; margin-top:10px; 
-}	
-.pinPDFdiv{
-	margin-top:0px; padding:5px 10px; 
-}	
-.zoomSelected{
-	box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.6) inset; border: 1px solid #bbb; background-color:#fff;
+/* Jquery UI styling */
+.ui-datepicker.ui-datepicker-multi{
+	z-index: 1000 !important;
 }
-.pinPDFLinks, .pinZoomLinks{
-	color:blue !important;
-} 	
-.pinPDFLinks:hover, .pinZoomLinks:hover{
-	cursor:pointer;
+.ui-datepicker{
+	z-index: 1000 !important;
 }
-
-.eeslr-shosu{
-	display:flex;
-}
-.eeslr-shosu label{
-	text-align:right; flex:1; margin-top:2rem; margin-bottom:1.4rem;
-}
-.eeslr-shosu h2{
-	flex:1;
-}
-.dlwrap a {
-	color: blue !important; cursor: pointer !important;
-}
-.inputText input[type="text"]{
-	box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.6) inset; border:1px solid #bbb; background-color:#fff; width:130px; 
-	height:28px; padding-left:5px;
-}
-.inputTextQ input[type="text"]{
-	box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.6) inset; border:1px solid #bbb; background-color:#fff; width:90px; 
-	height:28px; padding-left:5px;
-}
-.ztpWrapper{
-	margin-top:14px; text-align:center; 
-}
-.qpWrapper{
-	margin-top:14px;
-}	
-.ztpWrapper button{
-	margin-bottom:4px !important;
-}
-.searchPinNone, .queryParNone{
-	display:none; color:#8c2130; margin-top:8px; font-weight:bold; text-align:center; 
-}
-.fut-at-query{
-	display:flex; align-items:center;
-}
-.fut-at-query .toggle-btn{
-	margin-bottom:0px !important;
-}
-.fut-at-query .button{
-	margin-bottom:0px !important; 
-}
-.tabBtns label:first-of-type, .tabBtns label:last-of-type{
-	border-radius:0 !important;
-}
-.tabBtns label{
-	font-size:15px; margin: 8px 5px 0px -6px !important; flex:none !important; padding:5px 10px !important; border-bottom:none !important;
-}
-.tabBtns{
-	margin-right:-6px; margin-bottom:0 !important; background:#f3f3f3; border-bottom: 1px solid #cdd5d5 !important; border-top: 1px solid #cdd5d5 !important;
-}
-.eeslr-sections > *{
-	padding:6px;
-}
-.eeslr-fut-sections{
-	margin:10px -6px;
-}
-.eeslr-right{
-	float:right;
-	padding-right:10px;
-}
-.eeslr-volume{
-	cursor:pointer; cursor:hand; margin-top:-5px; margin-left:5px;
-}
-.eeslr-infobuttonhandle{
-	cursor: pointer; cursor: hand;
-	z-index: 2000;
-	position: relative;
-}
-.eeslr-fut-sections > *{
-	padding-left:6px; padding-right:6px;
-}
-.eeslr-sections h2{
-	font-size:20px;
-}
-.elementsWrapper{
-	display:flex; flex-wrap:wrap;
-}
-.eeslr-sum-wrap{
-	width:192px; margin:3px; border:1pt solid #cdd5d5; padding:5px; box-shadow:0 1px 1px rgba(16,22,26,.2); position:relative;
-}
-.elm-title{
-	color:#5E94B6; 
-}
-.elm-results{
- 	font-weight:bold; margin-right:13px;
-}
-.tinner .tclose {
-	color:#5E94B6 !important;
-}
-.ig-icon{
-	padding:2px !important; height:28px; position:absolute; top:6px; margin-left:4px; z-index:2600;
-}
-.parcelInfo{
-	margin:0 auto; padding:0px; display:none;
-}
-.it-wrap{
-	display:flex; flex-wrap:wrap;
-}
-.infoText{
-	color:#5E94B6; border:1pt solid #cdd5d5; padding:5px; box-shadow:0 1px 1px rgba(16,22,26,.2); position:relative; width:190px; margin:3px;
-}
-.pInfoField{
-	color:#5d6165; font-weight:bold;
-}
-.infoTextBig{
-    color:#2F6384; font-size:20px; font-weight:bold; margin-left:4px; 
-}
-.pifb{
-	color:#2F6384;
-}
-.futureZoom{
-	text-align:right;
-}
-.futureZoom, .futurePDF{
-	color:blue; font-weight:bold; cursor:pointer; flex:1; 
-}
-.fut-link-wrap{
-	display:flex; margin:5px 34px 0 8px;
-}
-.fut-toggle label:first-of-type, .fut-toggle label:last-of-type {
-    border-radius:0 !important;
-}
-.fut-toggle label {
-    margin: 8px 5px 0px -6px !important; flex:none !important; padding:5px 10px !important; border-bottom:none !important;
-} 
-.fut-toggle {
-    margin-right:-6px; margin-left:-6px; margin-bottom:0 !important; background:#f3f3f3; border-bottom:1px solid #cdd5d5 !important; border-top:1px solid #cdd5d5 !important;
-}
-.toggleFutSort{
-	margin-left:4px; margin-bottom:0 !important;
-}
-.hideFutSort{
-	margin-left:4px; margin-bottom:0 !important; height:31px; margin-top:5px;
-}
-.futSortWrapper{
-	display:flex; margin-top:6px; 
-}
-.fsWrapper{
-	display:none;
-}
-.futureTop50{
-	margin-bottom:0 !important; width:92px; padding:6px 2px !important; margin-left:4px;
-}
-.fParSelWrapper{
-	display:none; 
-}
-.eeright {
-	float: right;
-	background-color:#0096d6 !important;
-	color: white !important;
-}
-.eeChooserBox {
-	background-color:#0096d6;
-	color: white;
-	padding: 10px;
-	border-radius: 5px;
-	margin-bottom: 5px;
-	width: 450px;
-}
-.eeChooserBoxUnSelect {
-	background-color:#ccc;
-	color: #888;
-	padding: 10px;
-	border-radius: 5px;
-	margin-bottom: 5px;
-	width: 450px;
-	cursor: pointer; cursor: hand;
-}
-.d3Area {
-	height: 500px;	
-}
-
-.bar--positive {
-  fill: #33cc33;
-}
-
-.bar--current {
-  fill: white;
-}
-
-.label {
-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 15px;
-}
-
-.bar--negative {
-  fill: red;
-}
-.axis text {
-  font: 10px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.chart rect {
-  fill: steelblue;
-}
-
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
-
-.y text {
-    font-family: sans-serif;
-    font-size: 12px;
-	font-weight: bold;
-}
-
-.d3Title {
-	height: 18px;
-	text-align: center;
-	font: 18px sans-serif;
-	font-weight: bold;
-}
-
-.d3Title sup { vertical-align: top; font-size: 0.6em; }
-
-.eeLoss {color: red}
-.eeGain {color: #33cc33}
-
-.eesliderWrap {
-	height:90px;
-	padding-left: 20px;
-}
-
- @media only screen and (max-width: 800px) {
- 	.box-wrap {
- 		display:none !important;
- 	}
-
