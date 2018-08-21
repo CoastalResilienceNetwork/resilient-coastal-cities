@@ -6,52 +6,76 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 <!-- start of main app HTML -->
 <div class="rc-appWrapper" id="app">
 	<!-- <div style="display: none; position: absolute;" id="BasemapToggle"></div> -->
-	<div class="rc-mainToggleWrapper">
-		<div class="toggle-btn" style="width:306px; margin: auto;">
-			<input v-on:click="mainToggle = true" type="radio" id="yn1" name="yesno" value="floodrisk" checked/>
-			<label for="yn1">Flood Risk</label>
-			<br>
-			<input v-on:click="mainToggle = false" type="radio" id="yn2" name="yesno" value="adaptation"/>
-			<label for="yn2">Adaptation Solutions</label>
+	<div class="rc-introWrapper">
+		<div class="rc-introText blueFont">
+			<div>Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk.</div>
 		</div>
-	</div>
-	<!-- Floodrisk wrapper ########################################################## -->
-	<transition v-if='mainToggle' name="fade" mode="out-in">
-		<div  class="rc-floodriskWrapper">
-			<div class="rc-introText blueFont">
-				<div>Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk.</div>
-			</div>
+		
+		<div class="rc-floodTimeframeWrapper">
 			<h3>Please Select a Timeframe to view flooding events below:</h3>
-			<div class="rc-floodTimeframeWrapper">
-				<div id="rangeToggle" class="toggle-btn" style="width:306px; margin: auto;">
-					<input type="radio" id="dr1" name="dateRange" value="last30"/>
-					<label for="dr1">Last 30 days</label>
-					<br>
-					<input type="radio" id="dr2" name="dateRange" value="last6"/>
-					<label for="dr2">Last 6 months</label>
-					<br>
-					<input type="radio" id="dr3" name="dateRange" value="custom"/>
-					<label for="dr3">Custom range</label>
-				</div>
-				<div class="rc-rangeWrapper"  id="customRange">
-					<label class="rc-rangeLabels" for="from">Start Date: </label>
-					<input style="width: 76px;" type="text" id="from" name="from">
-					<label class="rc-rangeLabels" for="to">End Date: </label>
-					<input style="width: 76px;" type="text" id="to" name="to">
-					<button style="margin: 0 0 3px 36px;" id="dateRangeGo" class="button button-primary">Go</button>
-				</div>
-				<div class="rc-eventsWrapper"></div>
-				<div class="rc-noFloodText">No flood events have occured during the selected time frame.</div>
+			<div id="rangeToggle" class="toggle-btn" style="width:306px; margin: auto;">
+				<input type="radio" id="dr1" name="dateRange" value="last30"/>
+				<label for="dr1">Last 30 days</label>
+				<br>
+				<input type="radio" id="dr2" name="dateRange" value="last6"/>
+				<label for="dr2">Last 6 months</label>
+				<br>
+				<input type="radio" id="dr3" name="dateRange" value="custom"/>
+				<label for="dr3">Custom range</label>
+			</div>
+			<div class="rc-rangeWrapper"  id="customRange">
+				<label class="rc-rangeLabels" for="from">Start Date: </label>
+				<input style="width: 76px;" type="text" id="from" name="from">
+				<label class="rc-rangeLabels" for="to">End Date: </label>
+				<input style="width: 76px;" type="text" id="to" name="to">
+				<button style="margin: 0 0 3px 36px;" id="dateRangeGo" class="button button-primary">Go</button>
+			</div>
+			<div class="rc-eventsWrapper">
+				<h4>Click on a box below to view that flood event</h4>
+				<div class="rc-eventsWrapperInner"></div>
+				<div id="allEventsButton" class="rc-event">View all events on map</div>
+			</div>
+			<div class="rc-noFloodText">No flood events have occured during the selected time frame.</div>
+		</div>
+
+	</div>
+	
+	<div class="rc-contentBelowIntroWrapper">
+		<!-- choose another event wrapper -->
+		<!-- <div class="rc-chooseAnotherEvtWrapper">
+			<button class="button button-primary">Choose a new flood event</button>
+		</div> -->
+		<!-- <hr style="margin-top: 20px;"> -->
+		<div class="rc-mainToggleWrapper">
+			<div class="rc-headingAndBackBtnWrapper">
+				<h3>View floodrisk or adaptation solutions:</h3>
+				<button style="padding: 2px; height: 28px; margin: auto; margin-left: 60px;" class="button button-primary">Back to events</button>
+			</div>
+			
+			<div class="toggle-btn" style="width:306px; margin: auto;">
+				<input v-on:click="mainToggle = true" type="radio" id="yn1" name="yesno" value="floodrisk" checked/>
+				<label for="yn1">Flood Risk</label>
+				<br>
+				<input v-on:click="mainToggle = false" type="radio" id="yn2" name="yesno" value="adaptation"/>
+				<label for="yn2">Adaptation Solutions</label>
 			</div>
 		</div>
-	</transition>
-	
-
-	<!-- adaptation solution wrapper ########################################### -->
-	<transition v-else name="fade" mode="out-in">
+		<!-- Floodrisk wrapper ########################################################## -->
+		<div  class="rc-floodriskWrapper">
+			flood wrapper
+		</div>
+		<!-- adaptation solution wrapper ########################################### -->
 		<div  class="rc-adaptationWrapper">
 			<p>adaptation wrapper</p>
 		</div>
-	</transition>
+	</div>
+	
+		
+	
+
+	
+
+	
+
 	
 </div>

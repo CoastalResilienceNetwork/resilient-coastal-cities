@@ -1,9 +1,9 @@
 // Bring in dojo and javascript api classes as well as varObject.json, js files, and content.html
 define([
 	"dojo/_base/declare", "framework/PluginBase", "dijit/layout/ContentPane", "dojo/dom", "dojo/dom-style", "dojo/dom-geometry", "dojo/text!./obj.json", 
-	"dojo/text!./html/content.html", './js/esriapi', './js/clicks', './js/future', './js/parcels', 'dojo/_base/lang'	
+	"dojo/text!./html/content.html", './js/esriapi', './js/clicks','./js/adminUnits', './js/future', './js/parcels', 'dojo/_base/lang'	
 ],
-function ( 	declare, PluginBase, ContentPane, dom, domStyle, domGeom, obj, content, esriapi, clicks, future, parcels, lang ) {
+function ( 	declare, PluginBase, ContentPane, dom, domStyle, domGeom, obj, content, esriapi, clicks,adminUnits, future, parcels, lang ) {
 	return declare(PluginBase, {
 		// The height and width are set here when an infographic is defined. When the user click Continue it rebuilds the app window with whatever you put in.
 		toolbarName: "Resilient Coastal Cities", showServiceLayersInLegend: true, allowIdentifyWhenActive: false, rendered: false, resizable: false,
@@ -77,11 +77,12 @@ function ( 	declare, PluginBase, ContentPane, dom, domStyle, domGeom, obj, conte
 		render: function() {
 			this.mapScale  = this.map.getScale();
 			// BRING IN OTHER JS FILES
+			this.adminUnits = new adminUnits();
 			this.esriapi = new esriapi();
 			this.clicks = new clicks();
 
 			// Define Content Pane as HTML parent		
-			this.appDiv = new ContentPane({style:'padding:0; min-height:500px;}'});
+			this.appDiv = new ContentPane({style:'padding:0; min-height:500px; height:100%;}'});
 			this.id = this.appDiv.id
 			dom.byId(this.container).appendChild(this.appDiv.domNode);		
 			// Get html from content.html, prepend appDiv.id to html element id's, and add to appDiv
@@ -89,7 +90,7 @@ function ( 	declare, PluginBase, ContentPane, dom, domStyle, domGeom, obj, conte
 			var idUpdate = idUpdate0.replace(/id="/g, 'id="' + this.id);
 			$('#' + this.id).html(idUpdate);
 			// Set up app and listeners
-			
+			this.adminUnits.build(this)
 			this.clicks.appSetup(this);
 			this.clicks.getEvents(this);
 			this.clicks.eventListeners(this);
