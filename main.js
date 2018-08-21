@@ -94,7 +94,6 @@ function ( 	declare, PluginBase, ContentPane, dom, domStyle, domGeom, obj, conte
 			this.clicks.appSetup(this);
 			this.clicks.getEvents(this);
 			this.clicks.eventListeners(this);
-			this.clicks.vueCreate(this);
 			this.rendered = true;	
 		},
 	});

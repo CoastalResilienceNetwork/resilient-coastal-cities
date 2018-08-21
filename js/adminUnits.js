@@ -2,9 +2,9 @@
 
 
 define([
-  "dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle",  "plugins/resilient-coastal-cities/js/vue",
+  "dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle",  
 ],
-function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,  Vue ) {
+function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle ) {
         "use strict";
 
         return declare(null, {
