@@ -1,25 +1,73 @@
 /*  Main CSS file for the resilient coastal cities app */
 /**/
 
+/* Vue js styling*/
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 
+.activeShow{
+	display: none; color: blue;
+}
+
+
+
+
+.rc-adaptationWrapper{
+	display: none;
+}
 .rc-appWrapper{
-	padding: 5px;
+	padding: 5px; height: 100%;
 }
 .rc-introText{
 	margin-top: 15px;
+}
+.rc-introWrapper{
+	padding-bottom: 10px;
 }
 .rc-timeButton{
 	width: 200px;
 }
 .rc-floodTimeframeWrapper{
-	margin-left: 10px;
+	margin-left: 10px; padding-bottom: 10px;
 }
 .rc-rangeLabels{
 	font-size: 14px; padding-left: 5px; padding-right: 3px;
 }
 .rc-rangeWrapper{
+	display: none; margin-top: 10px;
+}
+.rc-noFloodText{
+	color: red; display: none; margin-top: 10px; text-align: center;
+}
+.rc-eventsWrapper{
+	display: none; text-align: center;
+}
+.rc-event{
+	display: flex; width: 300px; border: 1pt solid #cdd5d5;padding: 5px; 
+	box-shadow: 0 1px 1px rgba(16,22,26,.2); position: relative; margin: auto; margin-top: 10px;
+}
+.rc-event:hover{
+	cursor: pointer; background: #f3f3f3;
+}
+.rc-floodEventDate{
+	margin-left: 10px;
+}
+/*.rc-mainToggleWrapper{
+	display: none;
+}*/
+.rc-contentBelowIntroWrapper{
 	display: none;
 }
+.rc-headingAndBackBtnWrapper{
+	display: flex; align-items: center;
+}
+/*.rc-floodriskWrapper{
+	display: none;
+}*/
 
 
 
