@@ -171,6 +171,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					// slide down the correct range wrapper
 					$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
 		            showEventButtons(evt.currentTarget.value);
+		            
 		            // on flood event box click ////////////
 		           	$('.rc-eventsWrapperInner .rc-event').off().on('click', function(evt){
 		           		// slide down flood and adaptation wrappers
