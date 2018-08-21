@@ -1,383 +1,372 @@
 define([
-	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle","esri/graphic",
-	"esri/layers/GraphicsLayer", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/geometry/Polygon",
+	"dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer",
+	"esri/layers/ArcGISDynamicMapServiceLayer"
 ],
-function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle,Graphic, GraphicsLayer, SimpleFillSymbol, SimpleLineSymbol, Color, Polygon, ) {
-        "use strict";
+function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer) {
+	"use strict";
 
-        return declare(null, {
-        	
-
-        	getEvents: function(t){
-        		// get todays date and figure out which dates to query for each timeframe
-             	// get js utm time
-	            var dateObj = new Date();
-	            var month = dateObj.getUTCMonth() + 1; //months from 1-12
-	            var day = dateObj.getUTCDate();
-	            var year = dateObj.getUTCFullYear();
-	            var todaysDate = year + "-" + month + "-" + day;
-	            // format = 2018-02-01 year, month, day
-	            Date.fromDayofYear= function(n, y){
-	                if(!y) y= new Date().getFullYear();
-	                var d= new Date(y, 0, 1);
-	                return new Date(d.setMonth(0, n));
-	            }
-	            Date.prototype.dayofYear= function(){
-	                var d= new Date(this.getFullYear(), 0, 0);
-	                return Math.floor((this-d)/8.64e+7);
-	            }
-	            var d=new Date().dayofYear();
-	            // get date function to convert todays date to a format thats understood by the api
-	            t.obj.testFunction  = function(){
-	            	console.log('test func call')
-	            }
-	            t.obj.getDate = function(d,time){
-	                var newDay = (d - time);
-	                if (newDay >=0) {
-	                     var newDate = String(Date.fromDayofYear(newDay).toLocaleDateString())
-	                     newDate = newDate.split('/');
-	                     newDate = newDate[2] + '-' + newDate[0] + '-' + newDate[1]
-	                     return newDate
-	                }else{
-	                    var newDate = newDay + 365;
-	                    var newDate = Date.fromDayofYear(newDate).toLocaleDateString()
-	                    var newYear = (newDate.substring(newDate.length-1,newDate.length) - 1)
-	                    newDate = newDate.slice(0,-1) + newYear
-	                    newDate = newDate.split('/');
-	                    newDate = newDate[2] + '-' + newDate[0] + '-' + newDate[1]
-	                    return String(newDate)
-	                }
-	            }
-        		 // var lastMonth = getFloodEvents(getDate(d, 30))
-            	// call get flood events for the past 10,000 days
-	            getFloodEvents(t.obj.getDate(d, 10000))
-	            function getFloodEvents(endDate){
-	                var url = 'https://api.floodtags.com/v1/events/index?until='+ todaysDate + '&since=' + endDate +'&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-	                t.obj.eventList = []
-	                $.get( url, function( data ) {
-	                     var defer = $.Deferred(),
-	                        filtered = defer.then(function() {
-	                    $.each(data.events, function(i,v){
-	                        if(v.location.geonameid == '1627893'){
-	                            t.obj.eventList.push(v);
-	                        }
-	                    })
-	                })
-	                defer.resolve();
-	                filtered.done(function( value ) {
-	                   if(t.obj.eventList.length > 0){
-	                        // call create event button function
-	                        buildEventButtons(t.obj.eventList);
-	                   }
-	                });
-	            })
-	           }
-
-	           function buildEventButtons(array){
-	           		
-	                // divide up array into past 7 days, 30, 180 and 365
-	                var pastYearEvents = array;
-	                $.each(array, function(i,v){
-	                    let date = v.start.split('T')[0] + ' - ' + v.end.split('T')[0]
-	                    var html = "<div data-date='"+ date +"' class='rc-event' id='" +v.location.geonameid +"'><span class='floodEventText'>Flood event: </span><div class='rc-floodEventDate'>  " 
-	                    + v.start.split('T')[0] + " - " + v.end.split('T')[0] + '</div></div>'
-	                    // append html to events wrapper
-	                    $('.rc-eventsWrapperInner').append(html);
-	                    // onEventClick();
-	                })
-	           }
-	         
-
-        	}, // end of get events function
-			
-			eventListeners: function(t){
-					// $("#" + t.id + "BasemapToggle").show()
-					// var toggle = new BasemapToggle({
-				 //        map: t.map,
-			  //       basemap: "osm"
-			  //     }, "#" + t.id + "BasemapToggle");
-					// console.log(toggle);
-			  //     toggle.startup();
-
-
-
-
-				// show the correct event boxes based on custom filter or toggle buttons
-			    function showEventButtons(val){
-			    	// slide up no flood text div
-			    	$('.rc-noFloodText').hide();
-			    	// show the events wrapper on first click
-			    	$('.rc-eventsWrapper').show();
-			    	// create new date obj for today
-			    	var d=new Date().dayofYear();
-			    	var eventWrapper = $('.rc-eventsWrapperInner .rc-event');
-			    	var currentStartDate;
-			    	var currentEndDate = new Date()
-			    	if (val == 'last30') {
-			    		currentStartDate = new Date(t.obj.getDate(d,30))
-			    	}else if(val == 'last6'){
-			    		currentStartDate = new Date(t.obj.getDate(d,180))
-			    	}else if(val == 'custom'){
-			    		currentStartDate = t.obj.daterangeStartCustom;
-			    		currentEndDate = t.obj.daterangeEndCustom;
-			    	}
-		    		var counter = 0;
-		    		$.each(eventWrapper, function(i,v){
-		    			var eventStart = new Date(v.dataset.date.split(' - ')[0])
-		    			var eventEnd = new Date(v.dataset.date.split(' - ')[1]);
-		    			console.log(v);
-		    			if(currentStartDate <= eventEnd && currentEndDate >= eventEnd){
-		    				counter +=1
-		    				$(v).show();
-		    			}else{
-		    				$(v).hide();
-		    			}
-		    			if (counter > 1) {
-		    				console.log('more than one')
-		    			}
-		    			if (counter == 0) {
-		    				// slide down no text element
-		    				$('.rc-noFloodText').slideDown();
-		    				$('.rc-eventsWrapper').slideUp();
-		    			}
-		    		})
-	            }
-
-				// on daterange go click
-				$("#" + t.id + "dateRangeGo").on('click', function(evt){
-					// extract dates from date range inputs
-					t.obj.daterangeStartCustom = new Date($("#" + t.id +  "from" ).val())
-					t.obj.daterangeEndCustom = new Date($("#" + t.id +  "to" ).val())
-					$("#" + t.id + 'dr3').trigger('click');
-				})
-				// on range toggle button click
-				$('#' + t.id + 'rangeToggle input').on('click', function(evt){
-					// slide up all range wrappers on any change
-					var wrappers  = $('.rc-floodTimeframeWrapper').find('.rc-rangeWrapper');
-					$.each(wrappers, function(i,v){
-						$(v).hide();
-					})
-					// slide down the correct range wrapper
-					$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
-		            showEventButtons(evt.currentTarget.value);
-		            // on flood event box click ////////////
-		           	$('.rc-eventsWrapperInner .rc-event').off().on('click', function(evt){
-		           		console.log('event click')
-		           		// slide down flood and adaptation wrappers
-		           		$('.rc-contentBelowIntroWrapper').slideDown()
-		           		// slide up timeframe and event boxes.
-		           		$('.rc-floodTimeframeWrapper').slideUp()
-
-		           		// on event click function populate map
-		           		t.clicks.onEventClick(t,evt);
-		           	});
-		           	// on all flood event box click ////////////
-		           	$('#' + t.id + 'allEventsButton').off().on('click', function(evt){
-		           		console.log('all event click')
-		           		t.clicks.onEventClick(t,evt);
-		           	})
-		           	// on back to events button click
-		           	$('.rc-headingAndBackBtnWrapper button').off().on('click', function(evt){
-		           		console.log(evt);
-		           		// clear map graphics
-		           		// t.map.graphics.clear();
-		           		t.map.removeLayer(t.obj.layer);
-		           		// slide up flood and adap wrappers
-		           		$('.rc-contentBelowIntroWrapper').slideUp()
-		           		// slide down timeframe and event boxes
-		           		$('.rc-floodTimeframeWrapper').slideDown()
-
-		           	})
-
-
-				})
-				// main toggle click functionality
-				$('.rc-mainToggleWrapper input').on('click', function(evt){
-					if(evt.currentTarget.value == 'floodrisk'){
-						$('.rc-adaptationWrapper').slideUp();
-						$('.rc-floodriskWrapper').slideDown();
-						
-					}else{
-						$('.rc-floodriskWrapper').slideUp();
-						$('.rc-adaptationWrapper').slideDown();
+	return declare(null, { 
+		appSetup: function(t){
+			t.url = "http://services.coastalresilience.org/arcgis/rest/services/Hawaii/EESLR/MapServer"
+			t.dynamicLayer = new ArcGISDynamicMapServiceLayer(t.url);
+			t.map.addLayer(t.dynamicLayer);
+			t.dynamicLayer.setVisibleLayers(t.obj.visibleLayers);
+			t.dynamicLayer.on("load", function () {
+				t.layersArray = t.dynamicLayer.layerInfos;
+				$("#" + t.id + t.obj.flooding).prop('checked',true);
+				$("#" + t.id + t.obj.year).prop('checked',true);
+				$("#" + t.id + t.obj.pools).prop('checked',true);
+				// create and add ref layers
+				t.refLayer = new ArcGISDynamicMapServiceLayer(t.url, {opacity:0.6});
+				t.map.addLayer(t.refLayer);
+				t.refLayer.setVisibleLayers([-1]);
+				t.refLayer.on("update",function() {
+					if ( t.obj.refLayers.length == 0 ){
+						setTimeout(function () { $("#legend-container-0").hide() }, 250);
 					}
 				})
-				
-			},
-			onEventClick: function(t,evt){
-				t.obj.layer = new GraphicsLayer();
-				try{
-					console.log('remove layer')
-            		// t.map.removeLayer(t.obj.layer)
-            		// t.obj.layer.remove(t.graphic2)
-            		t.obj.layer.clear()
-            	}catch(err){
-            		
-            	}
-            	// test to see if the user is clicking a single event or the all events button
-				if(evt.currentTarget.id === t.id + 'allEventsButton'){
-					getTagsFromEvents(1627893, '2018-03-23','2018-05-24' )
-
+				t.refLayer.on("load",function() {
+					t.clicks.eventListeners(t);
+					// Save and Share Handler					
+					if (t.obj.stateSet == "yes"){
+						$("#" + t.id + "topSelect").val(t.obj.topVal).trigger("chosen:updated").trigger("change");
+						// pools visible
+						if (!t.obj.poolsToggle){
+							$("#" + t.id + "poolsToggle").trigger("click")
+						}
+						if ( t.obj.floodLayersOn == "yes" ){
+							$("#" + t.id + "flooding-cb").trigger("click");
+						}
+						if ( t.obj.refNames.length > 0 ){
+							$("#" + t.id + "reference-cb").trigger("click");
+							t.obj.refLayers = [];
+							$.each(t.obj.refNames,function(i,v){
+								$("#" + t.id + "reference-wrap input[value='" + v +"']").trigger("click");
+							})
+						}
+						//extent
+						var extent = new Extent(t.obj.extent.xmin, t.obj.extent.ymin, t.obj.extent.xmax, t.obj.extent.ymax, new SpatialReference({ wkid:4326 }))
+						t.map.setExtent(extent, true);
+						t.obj.stateSet = "no";
+					}else{
+						$("#show-single-plugin-mode-help").trigger("click")
+					}
+				});		
+			});	
+			// hide legend if reference layers are not on
+			t.dynamicLayer.on("update",function() {
+				if (t.obj.refLayers.length == 0){
+					setTimeout(function () { $("#legend-container-0").hide() }, 250);
+				}
+			})
+			// Grab reference layer legend for print
+			var url = t.url + "/legend";  
+			var requestHandle = esri.request({  
+				"url": url,  
+			    "content": {  
+			    	"f": "json"  
+				},  
+			  	"callbackParamName": "callback"  
+			 });  
+			 requestHandle.then(function(legendArray){
+			 	t.legendArray = legendArray.layers;
+			 }, function(x){console.log("legend query failed")});			
+		},
+		eventListeners: function(t){
+			// top chosen menu
+			$("#" + t.id + "topSelect").chosen({disable_search: true, allow_single_deselect:false, width:"90%"})
+				.change(function(c){
+					// create and add flood layer
+					t.floodLayer = new ArcGISDynamicMapServiceLayer(t.url, {opacity:0.6});
+					t.map.addLayer(t.floodLayer);
+					t.floodLayer.setVisibleLayers(t.obj.floodLayers);
+					var v = c.target.value;
+					t.selTop =  $("#" + t.id + "topSelect option:selected").text() 
+					t.selOptGroup = $(c.currentTarget.options[c.currentTarget.selectedIndex]).closest('optgroup').prop('label');
+					$(".vs-wrap").slideDown();
+					$(".box-wrap").show();
+					t.clicks.getValues(t);
+					t.map.on("extent-change",function(){
+						t.clicks.getValues(t);
+						var scale = t.map.getScale();
+						if ( scale < 17000 ){
+							$("#" + t.exPoolID).show();
+						}else{
+							$("#" + t.exPoolID).hide();
+						}
+					})
+				});
+			// Show Pools
+			$("#" + t.id + "poolsToggle").click(function(c){
+				if (c.currentTarget.checked){
+					t.dynamicLayer.setVisibleLayers(t.obj.visibleLayers);
+					t.obj.poolsToggle = true;
 				}else{
-					getTagsFromEvents(evt.currentTarget.id, evt.currentTarget.dataset.date.split(' - ')[0], evt.currentTarget.dataset.date.split(' - ')[1])
+					t.dynamicLayer.setVisibleLayers([-1]);
+					t.obj.poolsToggle = false;
 				}
-				// query tags endpoint with parent geoname id
-                function getTagsFromEvents(parentGeonameid, startDate, endDate){
-                    var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-                	console
-                	.log(url)
-                	// console.log(t.obj.adminUnits);
-                	$.get(url, function(data) {
-                		// defer callback until query is complete
-                		var defer = $.Deferred(),
-	                        filtered = defer.then(function(){
-	                            return data;
-	                        })
-                        defer.resolve();
-                        // when filtered done
-                        filtered.done(function(data){
-                        	console.log(2, data)
-                        	// call event click function
-                        	// eventClick();
-                        	// loop through tags geojson and match to our admin unit ID's
-                            $.each(data.features, function(i,v){
-                                var id = v.properties.geonameid;
-                                var index = t.obj.adminUnitId.indexOf(id);
-                                if(index > 0){
-                                    pos = t.obj.adminUnit.map(function(e) { return e.attributes.id1; }).indexOf(id);
-                                    if(pos > -1){
-                                    	console.log(v);
-                                        t.obj.totalTweets += v.properties.total;
-                                        var geom = t.obj.adminUnit[pos].geometry
-                                        var atts = t.obj.adminUnit[pos].attributes
-                                        var total = v.properties.total
-                                        buildGraphic(geom,atts, total);
-                                        // buildStats(atts);
-                                        // console.log(atts.POP_TOTAL)
-                                    }else{
-                                    	console.log(v)
-                                        ''
-                                         pos = t.obj.adminUnit.map(function(e) { return e.attributes.id2; }).indexOf(id);
-                                         if (pos > -1) {
-                                            var geom = t.obj.adminUnit[pos].geometry
-                                            var atts = t.obj.adminUnit[pos].attributes
-                                            var total = v.properties.total
-                                            buildGraphic(geom,atts, total);
-                                            // buildStats(atts);
-                                         }
-                                    }
-                                }else{
-                                    // there was no match
-                                }
-                            })
-
-                        }) // end of filtered done function
-                        function buildGraphic(geom,atts, total){
-                        	atts.total = total;
-		                    var color;
-		                    var color1 = [115, 255, 222,0.6]
-		                    var color2 = [82, 227, 217,0.6]
-		                    var color3 = [54, 182, 199,0.6]
-		                    var color4 = [13, 80, 143,0.6]
-		                    if(total <= 2){
-		                        color = color1
-		                    }else if(total > 2 && total <= 5){
-		                        color = color2
-		                    }else if(total > 5 && total <= 10){
-		                        color = color3
-		                    }else if(total > 10){
-		                        color = color4
-		                    }
-		                    
-		                    var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-							    new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
-							    new Color([255,0,0]), 2),new Color(color)
-							);
-		                    // // Create a symbol for rendering the graphic
-		                    var poly = new Polygon(geom)
-		                    t.graphic2 = new Graphic(poly, sfs, atts);
-		                     t.obj.layer.add(t.graphic2);
-		                    // // add graphics to map
-		                    t.map.addLayer(t.obj.layer);
-                        }
-                	})
-                }
-                // slide up 
-                function eventClick(){
-                	console.log('event click')
-                }
-                eventClick();
-			},
-
-			buildAdminUnits: function(t){
-				t.obj.adminUnitId = [];
-		        t.obj.adminUnit = [];
-		        $.each(t.obj.adminUnits, function(i,v){
-		            let id = String(v.attributes.geonameid.split(':')[1].split(')')[0])
-		            // let n = id.includes(",");
-		            let n = id.indexOf(',')
-		            if(n> -1){
-		                id = id.split(',')
-		                v.attributes.id1 = id[0]
-		                v.attributes.id2 = id[1]
-		                t.obj.adminUnit.push(v);
-		                $.each(id, function(i,v){
-		                    id =v;
-		                    t.obj.adminUnitId.push(String(id));
-		                })
-		            }else{
-		                t.obj.adminUnitId.push(id)
-		                v.attributes.id1 = String(v.attributes.geonameid.split(':')[1].split(')')[0])
-		                t.obj.adminUnit.push(v);
-		            }
-		        })
-			},
-			appSetup: function(t){
-				// build admin units data object
-				t.clicks.buildAdminUnits(t);
-				// create date picker
-				function createDatePicker(){
-					$( function() {
-				    var dateFormat = "mm/dd/yy",
-				      from = $("#" + t.id +  "from" )
-				        .datepicker({
-				          defaultDate: "+1w",
-				          changeMonth: true,
-				          changeYear: true,
-				          yearRange: "-1:+2", // next ten years
-				          numberOfMonths: 1
-				        })
-				        .on( "change", function() {
-				          to.datepicker( "option", "minDate", getDate( this ) );
-				        }),
-				      to = $("#" + t.id + "to" ).datepicker({
-				        defaultDate: "+1w",
-				        changeMonth: true,
-				        changeYear: true,
-				        yearRange: "-1:+2", // next ten years
-				        numberOfMonths: 1
-				      })
-				      .on( "change", function() {
-				        from.datepicker( "option", "maxDate", getDate( this ) );
-				      });
-				 
-				    function getDate( element ) {
-				    	console.log(element.value)
-				     	 var date;
-				     	 try {
-				        	date = $.datepicker.parseDate( dateFormat, element.value );
-				      	} catch( error ) {
-				        	date = null;
-				     	 }
-				      	return date;
-				    	}
-				  } );
+			})
+			// Bar chart
+			// symbolize x-axis
+			var l = $('.vertAndLines').find('.dashedLines');  
+			$.each(l, function(i,v){
+				if (i == l.length - 1){
+					$(v).css({'opacity': '1', 'border-top': '2px solid #3d3d3d'})
 				}
-				createDatePicker();
-			},
-			numberWithCommas: function(x){
-				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			})
+			// calculate width of bars
+			var bars = $('.barHolder').find('.sumBarsWrap');
+			var lw = $('.dashedLines').css('width').slice(0,-2)
+			var sLw = lw/bars.length;
+			var bWw = sLw - 4;
+			$('.smallLabels').css('width', sLw + 'px')
+			$('.sumBarsWrap').css('width', bWw + 'px')
+			$('.sumBars').css('width', bWw-20 + 'px')	
+			
+			// info clicks	
+			$(".h3InfoIcon").click(function(c){
+				$(c.currentTarget).hide();
+				$(c.currentTarget).parent().find(".hideH3InfoIcon").css("display","inline-block")
+				$(c.currentTarget).parent().next().slideDown();
+			});	
+			$(".hideH3InfoIcon").click(function(c){
+				$(c.currentTarget).hide();
+				$(c.currentTarget).parent().find(".h3InfoIcon").css("display","inline-block")
+				$(c.currentTarget).parent().next().slideUp();
+			});				
+
+			// Toggle button clicks
+			$(".vs-wrap .toggle-btn input").click(function(c){
+				t.clicks.getValues(t);
+			})
+
+			// Show Flooding Layer Checkbox
+			$("#" + t.id + "flooding-cb").click(function(c){
+				if ( c.currentTarget.checked ){
+					$("#" + t.id + "flooding-wrap").slideDown();
+					$("#" + t.id + "legend-wrap").show();
+					$("#" + t.id + "controls-both").css("display","inline");
+					t.obj.floodLayersOn = "yes";
+					t.clicks.getValues(t);
+				}else{
+					$("#" + t.id + "flooding-wrap").slideUp();
+					$("#" + t.id + "legend-wrap").hide();
+					$("#" + t.id + "controls-both").hide();
+					t.obj.floodLayersOn = "no";
+					t.obj.floodLayers = [];
+					t.floodLayer.setVisibleLayers(t.obj.floodLayers);
+				}
+			})
+
+			// summary and methods buttons
+			$("#" + t.id + "summary").click(function(){
+				window.open("http://media.coastalresilience.org/HI/EESLC_Summary.pdf")
+			})
+			$("#" + t.id + "methods").click(function(){
+				window.open("http://media.coastalresilience.org/HI/EESLC_Methods.pdf")
+			})	
+
+			// Set up audio portion
+			t.clicks.startAudio(t);
+
+			// show/hide reference layers
+			$("#" + t.id + "reference-cb").click(function(c){
+				if ( c.currentTarget.checked ){
+					$("#" + t.id + "reference-wrap").slideDown();
+				}else{
+					$("#" + t.id + "reference-wrap").slideUp();
+					$("#" + t.id + "reference-wrap input").each(function(i,v){
+						if ( $("#" + v.id).is(":checked") ){
+							$("#" + v.id).trigger("click")
+						}
+					})
+				}
+			})
+			$("#" + t.id + "reference-wrap input").click(function(c){
+				var lid = -1;
+				$.each(t.layersArray,function(i,v){
+					if ( v.name == c.currentTarget.value){
+						lid = v.id;
+					}
+				})
+				var i1 = t.obj.refNames.indexOf(c.currentTarget.value)
+				if ( c.currentTarget.checked ){
+					t.obj.refLayers.push(lid)
+					if (i1 == -1){
+						t.obj.refNames.push(c.currentTarget.value)
+					}
+				}else{
+					var index = t.obj.refLayers.indexOf(lid)
+					if ( index > -1 ){
+						t.obj.refLayers.splice(index,1)
+					}
+					if (i1 > -1){
+						t.obj.refNames.splice(i1,1)
+					}
+				}
+				t.refLayer.setVisibleLayers(t.obj.refLayers);
+			})
+		},
+		getValues: function(t){
+			// get chosen menu value
+			t.obj.topVal = $("#" + t.id + "topSelect").chosen().val()
+			// find selected radio in each toggle button group - the array is of class names of each tb wrapper div
+			var tb = ["flooding", "year", "pools"]
+			$.each(tb,function(x,y){
+				$(".vs-wrap ." + y + " input").each(function(i,v){
+					$(v).prop("disabled", false);
+					if ( $(v).is(':checked') ) {
+						t.obj[y] = v.value;
+					}
+				})
+			})
+			if (t.obj.pools == "Future"){
+				$("#" + t.id + "Current").prop("disabled", true);
 			}
-        });
-    }
-);
+			if (t.obj.year == "Current"){
+				$("#" + t.id + "Future").prop("disabled", true);
+			}
+			// use value to determine which pool and flood layers to show
+			t.obj.visibleLayers = [];
+			t.obj.floodLayers = [];
+			var lyrNm = "_" + t.obj.year + "_" + t.obj.topVal;
+			var fldNm = "_" + t.obj.year + "_" + t.obj.flooding;
+			$.each(t.layersArray,function(i,v){
+				if ( v.name.startsWith(lyrNm) ){
+					t.obj.visibleLayers.push(v.id)
+				}
+				if ( v.name.startsWith(fldNm) ){
+					t.obj.floodLayers.push(v.id)
+				}
+			})
+			$.each(t.layersArray,function(i,v){
+				if ( v.name == "Data Removed by Landowner Request"){
+					t.obj.visibleLayers.push(v.id)
+				}
+			})
+			// set where clause for layer definition and query for graph
+			var w = "EXISTING > -1";
+			if ( t.obj.pools == "Existing" ){
+				w = "EXISTING = 1";
+			}
+			if ( t.obj.pools == "Future" ){
+				w = "EXISTING = 0"
+			}
+			t.layerDefs = [];
+			t.layerDefs[t.obj.visibleLayers[0]] = w;
+			t.layerDefs[t.obj.visibleLayers[1]] = w;
+			t.dynamicLayer.setLayerDefinitions(t.layerDefs);
+			// handle poolsToggle checkbox status
+			if (t.obj.poolsToggle){
+				t.dynamicLayer.setVisibleLayers(t.obj.visibleLayers);
+			}else{
+				t.dynamicLayer.setVisibleLayers([-1])
+			}
+			if (t.obj.floodLayersOn == "no"){
+				t.obj.floodLayers = [];
+			}
+			t.floodLayer.setVisibleLayers(t.obj.floodLayers);
+			// run query to update graph
+			var q = new Query();
+			var qt = new QueryTask(t.url + "/" + t.obj.visibleLayers[0]);
+			q.where = w;
+			q.geometry = t.map.extent;
+			q.returnGeometry = false;
+			q.outFields = ["*"];
+			// field name and bar graph colors if Restore or Protect is selected
+			var field = t.obj.topVal
+			var colors = ['#fff74c','#b7ca79','#677e52','#b2b2b2']
+			$("#" + t.id + "xLabel").html("Solution Potential")
+			// field name and bar graph colors if Risk Variables are selected
+			if (t.obj.topVal.indexOf("_") > -1){
+				field = t.obj.topVal.split(/_(.+)/)[1]
+				colors = ['#fff74c','#ed9a50','#e74949','#b2b2b2']
+				$("#" + t.id + "xLabel").html("Risk Potential")
+			} 
+			qt.execute(q, function(e){
+				// get graph values
+				var low = 0;
+				var med = 0;
+				var hig = 0;
+				var und = 0;
+				$.each(e.features, function(i,v){
+					if ( v.attributes[field] == 0 ){
+						low = low + 1;
+					}
+					if ( v.attributes[field] == 20 ){
+						med = med + 1;
+					}
+					if ( v.attributes[field] == 40 ){
+						hig = hig + 1;
+					}
+					if ( v.attributes[field] == 255 ){
+						und = und + 1;
+					}
+				})
+				var a = [low, med, hig, und]
+				// update bar graph
+				$('.barHolder').find('.sumBars').each(function(i,v){
+					$(v).css("background-color", colors[i]);
+					var h = Math.round(a[i]/1200*100)
+					$(v).animate({ height: h + '%'});
+					$(v).find(".barLabel").html( t.clicks.numberWithCommas(a[i]) )
+				});	
+			});
+		},
+		startAudio: function(t){
+			// setup sounds      
+			var audio1 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_1/1.mp3");
+			var audio2 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_1/2.mp3");
+			var audio3 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_1/3.mp3");
+			
+			var audio4 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_2/4.mp3");
+			var audio5 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_2/5.mp3");
+			var audio6 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_2/6.mp3");
+			var audio7 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_2/7.mp3");
+			
+			var audio8 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_3/8.mp3");
+			var audio9 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_3/9.mp3");
+			var audio10 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_3/10.mp3");
+			var audio11 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_3/11.mp3");
+			var audio12 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_3/12.mp3");
+			var audio13 = new Audio("http://media.coastalresilience.org/HI/EESLC_Narration/Audio_Icon_3/13.mp3");
+			
+			t.audios = new Array(audio1,audio2,audio3,audio4,audio5,audio6,audio7,audio8,audio9,audio10,audio11,audio12,audio13);
+			
+			t.audios[0].addEventListener("ended", function() {t.audios[1].play()});
+			t.audios[1].addEventListener("ended", function() {t.audios[2].play()});
+			t.audios[2].addEventListener("ended", function() {t.clicks.resetAudios(t)});
+			
+			t.audios[4].addEventListener("ended", function() {t.audios[3].play();});
+			t.audios[3].addEventListener("ended", function() {t.audios[5].play();});
+			t.audios[5].addEventListener("ended", function() {t.audios[6].play();});
+			t.audios[6].addEventListener("ended", function() {t.audios[10].play();});
+			
+			t.audios[10].addEventListener("ended", function() {t.audios[11].play();});
+			t.audios[11].addEventListener("ended", function() {t.audios[12].play();});
+			t.audios[12].addEventListener("ended", function() {t.clicks.resetAudios(t);});
+			
+			t.audios[8].addEventListener("ended", function() {t.audios[9].play()});
+			t.audios[9].addEventListener("ended", function() {t.clicks.resetAudios(t)});
+			
+			var resetAudios = function() {
+				$.each(t.audios, function(i,v) {var temps = v.src;v.pause();v.currentTime = 0; v.src = "temp";v.src = temps });
+			}
+			// Sound section clicks
+			$('.eeslr-volume').on('click',function(c){
+				var tid = c.target.id.replace(t.id,"");
+				if (tid == "sound1") {if (t.audios[0].duration > 0 && !t.audios[0].paused) {t.clicks.resetAudios(t)} else {t.clicks.resetAudios(t); t.audios[0].play(); $(c.target).removeClass("fa-volume-off");$(c.target).addClass("fa-volume-up");}}
+				if (tid == "sound2") { if (t.audios[0].duration > 0 && !t.audios[4].paused) { t.clicks.resetAudios(t) }else { t.clicks.resetAudios(t); t.audios[4].play(); $(c.target).removeClass("fa-volume-off"); $(c.target).addClass("fa-volume-up");}}
+				if (tid == "sound4") {if (t.audios[0].duration > 0 && !t.audios[8].paused) {t.clicks.resetAudios(t)} else {t.clicks.resetAudios(t); t.audios[8].play(); $(c.target).removeClass("fa-volume-off");$(c.target).addClass("fa-volume-up");}}
+				t.lastAudio = tid;
+			});
+		},
+		resetAudios: function(t) {
+			$.each(t.audios, function(i,v) {var temps = v.src;v.pause();v.currentTime = 0; v.src = "temp";v.src = temps });
+			$('.volumneicons').removeClass("fa-volume-up").addClass("fa-volume-off");
+		},
+		numberWithCommas: function(x){
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+    });
+});
