@@ -64,7 +64,96 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 		</div>
 		<!-- Floodrisk wrapper ########################################################## -->
 		<div  class="rc-floodriskWrapper">
-			flood wrapper
+			<h4 class="blueFont">Click on the Flooded Areas on the Map to View More Details</h4>
+			<div class="numOfTweetsLegendWrapper">
+				<!-- <h3 class="floodWrapperHeaders" style="margin-top: 3px; margin-bottom: 3px;"><span id="mainDate"></span>  </h3> -->
+				<h3 class="floodWrapperHeaders" style="margin-top: 3px;"><span id="numOfTweetsInAdmin">25</span> Flood Related Tweets <!-- for event: <span>date</span> --></h3>
+					
+				<div class="rc-legendWrapper">
+					<div class="rc-legendItemsWrapper">
+						<div class="rc-itemPatch" style="background-color: rgba(115, 255, 222,0.6)">1-2</div>
+						<!-- <div class="itemLabel">1-2 Tweets</div> -->
+					</div>
+					<div class="rc-legendItemsWrapper">
+						<div class="rc-itemPatch" style="background-color: rgba(82, 227, 217,0.6)">3-5</div>
+						<!-- <div class="itemLabel">3-5 Tweets</div> -->
+					</div>
+					<div class="rc-legendItemsWrapper">
+						<div class="rc-itemPatch" style="background-color: rgba(54, 182, 199,0.6)">5-10</div>
+						<!-- <div class="itemLabel">5-10 Tweets</div> -->
+					</div>
+					<div class="rc-legendItemsWrapper">
+						<div class="rc-itemPatch" style="background-color: rgba(13, 80, 143,0.6)">10+</div>
+						<!-- <div class="itemLabel">10+ Tweets</div> -->
+					</div>
+				</div>
+			</div> <!-- end of num of tweets legend wrapper -->
+
+			<hr>
+			<div class="rc-popWrapper">
+				<h3><span id="popWrapperTotal">200</span> People Affected</h3>
+				<div class="rc-barWrapper">
+					<div class="rc-femaleBar"></div>
+					<div class="rc-maleBar"></div>
+					<div class="rc-popLabel">
+						<div style="left: 10px;"><span class="rc-menPopNum">100,000</span> Men</div>
+						<div style="right: 10px;"><span class="rc-womenPopNum">100,000</span> Women</div>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="rc-placesAffectedWrapper">
+				<h3><span id="placeTotal">56</span> Places Affected</h3>
+				<!-- <canvas class="Chart3" id="Chart3" width="425" height="150"></canvas> -->
+				<div class="rc-placesText">
+					<div class="rc-textItems"><span>12 </span> Educational Facilities</div>
+					<div class="rc-textItems"><span>256 </span> Hospitals</div>
+					<div class="rc-textItems"><span>175 </span> Places of Worship</div>
+				</div>
+			</div>
+			<hr>
+			<div class="rc-liveAffectedWrapper">
+				<h3>Livelihoods Affected</h3>
+				<div class="rc-placesText">
+					<div class="rc-textItems"><span>12 </span> Tourism & Cultural Sites</div>
+					<div class="rc-textItems"><span>256 km </span> of Roads</div>
+					<div class="rc-textItems"><span>175 ha </span> of Agricultural Land</div>
+					<div class="rc-textItems"><span>129 ha </span> of Rice Fields</div>
+				</div>
+			</div>
+			<hr>
+			<div>
+				<h3>Critical Infrastructure</h3>
+				<div class="rc-infraCBWrapper">
+					<div style="flex: .5">
+						<label class="form-component" for="hospitals-38">
+							<input type="checkbox" id="hospitals-38" name="food">
+							<div class="check"></div>
+							<span class="form-text">Hospitals</span>
+						</label>
+						<br>
+						<label class="form-component disabled" for="schools-36">
+							<input type="checkbox" id="schools-36" name="food">
+							<div class="check"></div>
+							<span class="form-text">Schools</span>
+						</label>
+						<br>
+					</div>
+					<div>
+						<label class="form-component" for="buildings-37">
+							<input type="checkbox" id="buildings-37" name="food">
+							<div class="check"></div>
+							<span class="form-text">Government Buildings</span>
+						</label>
+						<br>
+						<label class="form-component" for="worship-53">
+							<input type="checkbox" id="worship-53" name="food">
+							<div class="check"></div>
+							<span class="form-text">Places of Worship</span>
+						</label>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- adaptation solution wrapper ########################################### -->
 		<div  class="rc-adaptationWrapper">

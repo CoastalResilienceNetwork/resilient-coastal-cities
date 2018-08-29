@@ -10,9 +10,27 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	return declare(null, { 
 
 		eventListeners: function(t){
-
+			t.url = 'http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer'
+			t.obj.visibleLayers = [73]
+			t.dynamicLayer = new ArcGISDynamicMapServiceLayer(t.url, {opacity: 1 - t.obj.sliderVal/10});
+			t.map.addLayer(t.dynamicLayer);
+			t.dynamicLayer.setVisibleLayers(t.obj.visibleLayers);
 			// on event click function //////////////////////////////////////
 			function onEventClick(t,evt){
+				t.popWomen =0;
+                t.popMen =0;
+                t.popTotal =0;
+                t.hospTotal =0;
+                t.worshipTotal =0;
+                // app.cultToltal +=atts.;
+                t.eduTotal =0;
+                t.roadsTotal =0;
+                t.agTotal =0;
+                t.riceTotal =0;
+                t.tourTotal =0;
+                t.tagTotal =0;
+
+
 				t.obj.customFilter = false;
 				t.doneLooping = false;
 				t.obj.finalEventFloods = [];
@@ -70,6 +88,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	            		// build graphics for the final filtered floods here
 	            		$.each(t.obj.finalFilteredFloods, function(i,v){
 	            			buildGraphic(v.geom,v.atts,v.total);
+	            			buildStats(v.atts)
 	            		})
 	            		t.obj.finalFilteredFloods = []
 	            	}
@@ -85,6 +104,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 						}
 						if(i+1 == t.obj.eventList.length){
 							t.doneLooping = true;
+							console.log('look here lllllllllllllllllllllllllllllllllll')
 							// console.log(t.filteredEventList)
 							t.loopTotal = t.filteredEventList.length;
 							$.each(t.filteredEventList, function(i,v){
@@ -127,6 +147,49 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                      t.obj.layer.add(t.graphic2);
                     // // add graphics to map
                     t.map.addLayer(t.obj.layer);
+                }
+                function populateData(){
+                	// update num of tweets in event
+                	$('#' + t.id +'numOfTweetsInAdmin').html(t.clicks.numberWithCommas(t.tagTotal));
+                	// update num of people affcted
+                	$('#' + t.id +'popWrapperTotal').html(t.clicks.numberWithCommas(t.popTotal));
+                	// update people affcetd labels and chart
+                	$('.rc-menPopNum').html(t.clicks.numberWithCommas(t.popMen))
+                	$('.rc-womenPopNum').html(t.clicks.numberWithCommas(t.popWomen))
+                	// chnage male bar width 
+                	var percentOfMale = (t.popMen/t.popTotal)*100;
+                	$('.rc-maleBar').css('width', percentOfMale + '%')
+                	// update places affcted text
+                	$('#' + t.id + 'placeTotal').html(t.placeTotal);
+                	console.log()
+                	$($('.rc-placesText').find('span')[0]).html(t.eduTotal)
+                	$($('.rc-placesText').find('span')[1]).html(t.hospTotal)
+                	$($('.rc-placesText').find('span')[2]).html(t.worshipTotal)
+                	// update livelihoods affected
+                	$($('.rc-placesText').find('span')[3]).html(t.tourTotal)
+                	$($('.rc-placesText').find('span')[4]).html(t.roadsTotal + ' km')
+                	$($('.rc-placesText').find('span')[5]).html(t.agTotal + ' ha')
+                	$($('.rc-placesText').find('span')[6]).html(t.riceTotal + ' ha')
+
+
+                }
+                function buildStats(atts){
+                	 // calculate stats for all the matched admin units
+                    t.popWomen +=atts.POP_WOMEN;
+                    t.popMen +=atts.POP_MEN;
+                    t.popTotal +=atts.POP_TOTAL;
+                    t.hospTotal +=atts.PLACE_HOSP;
+                    t.worshipTotal +=atts.PLACE_WSHP;
+                    // app.cultToltal +=atts.;
+                    t.eduTotal +=atts.PLACE_EDU;
+                    t.roadsTotal +=atts.LIVE_RDS_KM;
+                    t.agTotal +=atts.LIVE_AG_HA;
+                    t.riceTotal +=atts.LIVE_RICE_HA;
+                    t.tourTotal +=atts.LIVE_TOUR;
+                    t.tagTotal += atts.total
+                    t.placeTotal = t.hospTotal + t.worshipTotal + t.eduTotal;
+                    populateData();
+
                 }
 				// query tags endpoint with parent geoname id
                 function getTagsFromEvents(parentGeonameid, startDate, endDate){
@@ -179,6 +242,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                             if(!t.obj.customFilter){
                             	$.each(t.obj.finalEventFloods, function(i,v){
                             		buildGraphic(v.geom,v.atts,v.total);
+                            		buildStats(v.atts)
                             	})
                             }
                             t.obj.handleIfNoTags(); // call this function after custom go button push. to determine html visible.
@@ -313,6 +377,25 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		           		// on event click function populate map
 		           		onEventClick(t,evt);
 		           	});
+				})
+				// on flood section check box click
+				// show and display various layers based on the id to get the index number from the map service
+				$('.rc-infraCBWrapper input').off().on('click', function(evt){
+					console.log(evt);
+					var id = evt.currentTarget.id.split('-')[1]
+					var checked = evt.currentTarget.checked;
+					console.log(id, checked);
+					//if is checked add layer to viz layers list
+					if(checked){
+						t.obj.visibleLayers.push(id);
+					}else{ // if checked == false remove layer from viz layers array
+						var index =  t.obj.visibleLayers.indexOf(id)
+						if(index > -1){
+							t.obj.visibleLayers.splice(index, 1);
+						}
+					}
+					// set viz layers
+					t.dynamicLayer.setVisibleLayers(t.obj.visibleLayers);
 				})
 	           	// on back to events button click
 	           	$('.rc-headingAndBackBtnWrapper button').off().on('click', function(evt){
