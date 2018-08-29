@@ -1,6 +1,4 @@
-
-
-
+// json data from the admin unit feature class.
 define([
   "dojo/_base/declare", "esri/tasks/query", "esri/tasks/QueryTask", "esri/layers/FeatureLayer","esri/dijit/BasemapToggle",  
 ],
@@ -9,7 +7,6 @@ function ( declare, Query, QueryTask, FeatureLayer,BasemapToggle ) {
 
         return declare(null, {
           build: function(t){
-            console.log('build')
             t.obj.adminUnits = [
   {
     "geometry": {

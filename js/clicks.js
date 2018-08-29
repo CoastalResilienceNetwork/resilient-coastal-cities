@@ -10,30 +10,127 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	return declare(null, { 
 
 		eventListeners: function(t){
+
 			// on event click function //////////////////////////////////////
 			function onEventClick(t,evt){
-
+				t.obj.customFilter = false;
+				t.doneLooping = false;
+				t.obj.finalEventFloods = [];
+				t.obj.finalFilteredFloods = []
+				// create graphics layer
 				t.obj.layer = new GraphicsLayer();
-				try{
-					console.log('remove layer')
-            		// t.map.removeLayer(t.obj.layer)
-            		// t.obj.layer.remove(t.graphic2)
+				// on click on graphics layer 
+				t.obj.layer.on('click', function(evt){
+					console.log(evt);
+				})
+				try{ // try to clear graphics layer if there are graphics pushed into it
             		t.obj.layer.clear()
             	}catch(err){
-            		
+            		'catch for the try'
             	}
             	// test to see if the user is clicking a single event or the all events button
-				if(evt.currentTarget.id === t.id + 'allEventsButton'){
-					getTagsFromEvents(1627893, '2018-03-23','2018-05-24' )
+				if(evt.currentTarget.id === t.id + 'dateRangeGo'){
+					 t.obj.customFilter = true;
+					 t.obj.filterCustomDateData = function(){
+	            		let dupes = []
+	            		t.obj.finalFilteredFloods.forEach((item,index) => {
+						   dupes[item.atts.name] = dupes[item.atts.name] || [];
+						   dupes[item.atts.name].push(index);
+						});
+	            		let duplicateArray = []
+						t.obj.finalFilteredFloods.forEach((item,index) => {
+						   if(dupes[item.atts.name].length > 1){
+						   	duplicateArray.push(item.atts.name)
+						   }
+						 });   
+						function onlyUnique(value, index, self) { 
+						    return self.indexOf(value) === index;
+						}
+						duplicateArray = duplicateArray.filter( onlyUnique );
+						// loop through final flood array and use the duplicate array 
+						// to add the total together 
+						var j = 0
+						duplicateArray.forEach((v, i) => {
+							var newObj;
+							t.obj.finalFilteredFloods.forEach((item,index) => {
+							   if(v == item.atts.name){
+								   	if(j==0){
+								   		newObj = item
+								   		t.obj.finalFilteredFloods.splice(index,1);
+								   	}else{
+								   		newObj.total =newObj.total + item.total;
+								   		t.obj.finalFilteredFloods.splice(index,1);
+								   	}
+							   	    j++
+							     }
+							 });
+							// add back newly updated object
+							t.obj.finalFilteredFloods.push(newObj);
+						})
+	            		// build graphics for the final filtered floods here
+	            		$.each(t.obj.finalFilteredFloods, function(i,v){
+	            			buildGraphic(v.geom,v.atts,v.total);
+	            		})
+	            		t.obj.finalFilteredFloods = []
+	            	}
+	            	// set loop counter to 0, this counter is used below in the get tags function
+	            	t.loopCounter = 0;
+					// this is if selecting a custom date filter
+					t.filteredEventList = []
+					$.each(t.obj.eventList, function(i,v){
+						var newStart = v.start.split('T')[0]
+						var newEnd = v.end.split('T')[0]
+						if(t.obj.daterangeStartCustom < newEnd && t.obj.daterangeEndCustom > newStart){
+							t.filteredEventList.push(v);
+						}
+						if(i+1 == t.obj.eventList.length){
+							t.doneLooping = true;
+							// console.log(t.filteredEventList)
+							t.loopTotal = t.filteredEventList.length;
+							$.each(t.filteredEventList, function(i,v){
+								var newStart = v.start.split('T')[0]
+								var newEnd = v.end.split('T')[0]
+								getTagsFromEvents(1627893, newStart,newEnd);				
+							})
+						}
+						
+						
+					})
 
 				}else{
 					getTagsFromEvents(evt.currentTarget.id, evt.currentTarget.dataset.date.split(' - ')[0], evt.currentTarget.dataset.date.split(' - ')[1])
 				}
+				function buildGraphic(geom,atts, total){
+                	atts.total = total;
+                    var color;
+                    var color1 = [115, 255, 222,0.6]
+                    var color2 = [82, 227, 217,0.6]
+                    var color3 = [54, 182, 199,0.6]
+                    var color4 = [13, 80, 143,0.6]
+                    if(total <= 2){
+                        color = color1
+                    }else if(total > 2 && total <= 5){
+                        color = color2
+                    }else if(total > 5 && total <= 10){
+                        color = color3
+                    }else if(total > 10){
+                        color = color4
+                    }
+                    
+                    var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
+					    new Color([255,0,0]), 2),new Color(color)
+					);
+                    // // Create a symbol for rendering the graphic
+                    var poly = new Polygon(geom)
+                    t.graphic2 = new Graphic(poly, sfs, atts);
+                     t.obj.layer.add(t.graphic2);
+                    // // add graphics to map
+                    t.map.addLayer(t.obj.layer);
+                }
 				// query tags endpoint with parent geoname id
-                function getTagsFromEvents(parentGeonameid, startDate, endDate){ 
+                function getTagsFromEvents(parentGeonameid, startDate, endDate){
                     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-                	console.log(url)
-                	// console.log(t.obj.adminUnits);
                 	$.get(url, function(data) {
                 		// defer callback until query is complete
                 		var defer = $.Deferred(),
@@ -43,9 +140,8 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                         defer.resolve();
                         // when filtered done
                         filtered.done(function(data){
-                        	console.log(2, data)
-                        	// call event click function
-                        	// eventClick();
+                        	t.obj.dataOnMap = false;
+                            // call event click function
                         	// loop through tags geojson and match to our admin unit ID's
                             $.each(data.features, function(i,v){
                                 var id = v.properties.geonameid;
@@ -53,60 +149,41 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                                 if(index > 0){
                                     pos = t.obj.adminUnit.map(function(e) { return e.attributes.id1; }).indexOf(id);
                                     if(pos > -1){
-                                    	console.log(v);
+                                    	t.obj.dataOnMap = true;
                                         t.obj.totalTweets += v.properties.total;
                                         var geom = t.obj.adminUnit[pos].geometry
                                         var atts = t.obj.adminUnit[pos].attributes
                                         var total = v.properties.total
-                                        buildGraphic(geom,atts, total);
-                                        // buildStats(atts);
-                                        // console.log(atts.POP_TOTAL)
+                                        t.obj.finalFilteredFloods.push({geom, atts, total})
+                                        t.obj.finalEventFloods.push({geom, atts, total})
                                     }else{
-                                    	console.log(v)
-                                        ''
                                          pos = t.obj.adminUnit.map(function(e) { return e.attributes.id2; }).indexOf(id);
                                          if (pos > -1) {
+                                         	t.obj.dataOnMap = true;
                                             var geom = t.obj.adminUnit[pos].geometry
                                             var atts = t.obj.adminUnit[pos].attributes
                                             var total = v.properties.total
-                                            buildGraphic(geom,atts, total);
-                                            // buildStats(atts);
+                                            t.obj.finalFilteredFloods.push({geom, atts, total})
+                                            t.obj.finalEventFloods.push({geom, atts, total})
                                          }
                                     }
                                 }else{
                                     // there was no match
                                 }
                             })
-
+                            t.loopCounter++
+                            // console.log(t.loopCounter, t.loopTotal);
+                            if(t.loopCounter == t.loopTotal){
+                            	t.obj.filterCustomDateData();
+                            }
+                            if(!t.obj.customFilter){
+                            	$.each(t.obj.finalEventFloods, function(i,v){
+                            		buildGraphic(v.geom,v.atts,v.total);
+                            	})
+                            }
+                            t.obj.handleIfNoTags(); // call this function after custom go button push. to determine html visible.
+                            t.obj.changeDate(startDate, endDate);
                         }) // end of filtered done function
-                        function buildGraphic(geom,atts, total){
-                        	atts.total = total;
-		                    var color;
-		                    var color1 = [115, 255, 222,0.6]
-		                    var color2 = [82, 227, 217,0.6]
-		                    var color3 = [54, 182, 199,0.6]
-		                    var color4 = [13, 80, 143,0.6]
-		                    if(total <= 2){
-		                        color = color1
-		                    }else if(total > 2 && total <= 5){
-		                        color = color2
-		                    }else if(total > 5 && total <= 10){
-		                        color = color3
-		                    }else if(total > 10){
-		                        color = color4
-		                    }
-		                    
-		                    var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-							    new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
-							    new Color([255,0,0]), 2),new Color(color)
-							);
-		                    // // Create a symbol for rendering the graphic
-		                    var poly = new Polygon(geom)
-		                    t.graphic2 = new Graphic(poly, sfs, atts);
-		                     t.obj.layer.add(t.graphic2);
-		                    // // add graphics to map
-		                    t.map.addLayer(t.obj.layer);
-                        }
                 	})
                 }
 			} // end of on event click function /////////////////////////////
@@ -126,15 +203,11 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		    		currentStartDate = new Date(t.obj.getDate(d,30))
 		    	}else if(val == 'last6'){
 		    		currentStartDate = new Date(t.obj.getDate(d,180))
-		    	}else if(val == 'custom'){
-		    		currentStartDate = t.obj.daterangeStartCustom;
-		    		currentEndDate = t.obj.daterangeEndCustom;
 		    	}
 	    		var counter = 0;
 	    		$.each(eventWrapper, function(i,v){
 	    			var eventStart = new Date(v.dataset.date.split(' - ')[0])
 	    			var eventEnd = new Date(v.dataset.date.split(' - ')[1]);
-	    			console.log(v);
 	    			if(currentStartDate <= eventEnd && currentEndDate >= eventEnd){
 	    				counter +=1
 	    				$(v).show();
@@ -146,20 +219,80 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	    			}
 	    			if (counter == 0) {
 	    				// slide down no text element
-	    				$('.rc-noFloodText').slideDown();
-	    				$('.rc-eventsWrapper').slideUp();
+	    				if(val == 'custom'){
+	    					$('.rc-noFloodText').slideUp();
+	    					$('.rc-eventsWrapper').slideUp();
+	    				}else{
+	    					$('.rc-noFloodText').slideDown();
+	    					$('.rc-eventsWrapper').slideUp();
+	    				}
 	    			}
 	    		})
             } // end of show event button function ///////////////////////////////
 
             function buildClickEvents(){
-            	console.log('built events')
+       //      	// click event for the testing of the Peta Bencana api
+       //      	$('#' + t.id + 'testPetaData').on('click', function(evt){
+       //      		console.log('test peta data')
+       //      		// var petaUrl = 'https://data.petabencana.id/floods/archive?city=srg&format=json&geoformat=geojson&start=2018-07-21T00:00:00-0400&end=2018-07-25T24:00:00-0400'
+       //      		// var petaUrl = 'https://data.petabencana.id/reports/archive?city=srg&format=json&geoformat=geojson&start=2018-07-20T00:00:00-0400&end=2018-07-25T24:00:00-0400'
+       //      		var petaUrl = 'https://data.petabencana.id/reports/archive?city=srg&format=json&geoformat=geojson&start=2018-08-10T00:00:00-0400&end=2018-08-11T24:00:00-0400'
+       //      		// var petaUrl = 'https://data.petabencana.id/reports'
+       //      		$.get(petaUrl, function(data) {
+       //          		// defer callback until query is complete
+       //          		var defer = $.Deferred(),
+	      //                   filtered = defer.then(function(){
+	      //                       return data;
+	      //                   })
+       //                  defer.resolve();
+       //                  // when filtered done
+       //                  filtered.done(function(data){
+       //                  	console.log(data);
+       //                  	t.data2 = data;
+						 //    // add graphic to map function call
+						 //    //  t.clicks.addGeoJson(t);
+					  //   	// console.log(t.data2);
+					  //   	t.countiesGraphicsLayer = new GraphicsLayer({ id: "dataGraphic" });
+							// $.each(t.data2.result.features, function(i,v){
+							// 	let coordinates = v["geometry"]["coordinates"];
+							// 	let attributes = v["properties"]
+							// 	let point = {"geometry":{"points":[coordinates],"spatialReference":4326},
+							//     "symbol":{"color":[255,208,100,255],"size":20,"angle":0,"xoffset":0,"yoffset":0,"type":"esriSMS","style":"esriSMSCircle", 
+							//     "outline":{"color":[176,35,105,255],"width":1,"type":"esriSLS","style":"esriSLSSolid"}}, "attributes":attributes};
+							//     var gra = new Graphic(point);
+							//   	t.countiesGraphicsLayer.add(gra);
+							// })
+							//  t.map.addLayer(t.countiesGraphicsLayer);
+							//  t.countiesGraphicsLayer.on("click",function (evt) {
+							// 	$('#' + t.id + 'petaImage').attr('src', evt.graphic.attributes.image_url)
+							// })
+       //                  })
+       //              }) // end of get request
+       //      	})
+       			// create a function to handle the DOM if no tags were returned in a custom query
+				t.obj.handleIfNoTags = function(){
+					$('.rc-noTagText').hide();
+					if(!t.obj.dataOnMap){
+						// slide down text saying there are no flood events during the selevcetcd time frame
+						$('.rc-noTagText').slideDown();
+					}else{
+						// slide down flood and adaptation wrappers
+		           		$('.rc-contentBelowIntroWrapper').slideDown()
+		           		// slide up timeframe and event boxes.
+		           		$('.rc-floodTimeframeWrapper').slideUp()
+					}
+				}
+				t.obj.changeDate = function(startDate, endDate){
+					$('.rc-timeframeText span').html(startDate + ' - ' + endDate)
+				}
             	// on daterange go click
 				$("#" + t.id + "dateRangeGo").on('click', function(evt){
 					// extract dates from date range inputs
-					t.obj.daterangeStartCustom = new Date($("#" + t.id +  "from" ).val())
-					t.obj.daterangeEndCustom = new Date($("#" + t.id +  "to" ).val())
-					$("#" + t.id + 'dr3').trigger('click');
+					t.obj.daterangeStartCustom = $("#" + t.id +  "from" ).val().split('/')[2] + '-' + $("#" + t.id +  "from" ).val().split('/')[0] + '-' + $("#" + t.id +  "from" ).val().split('/')[1]
+					t.obj.daterangeEndCustom = $("#" + t.id +  "to" ).val().split('/')[2] + '-' + $("#" + t.id +  "to" ).val().split('/')[0] + '-' + $("#" + t.id +  "to" ).val().split('/')[1]
+					if($("#" + t.id +  "from" ).val() && $("#" + t.id +  "to" ).val()){
+						onEventClick(t,evt)
+					}
 				})
 				// on range toggle button click
 				$('#' + t.id + 'rangeToggle input').on('click', function(evt){
@@ -170,8 +303,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					})
 					// slide down the correct range wrapper
 					$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
-		            showEventButtons(evt.currentTarget.value);
-		            
+					showEventButtons(evt.currentTarget.value);
 		            // on flood event box click ////////////
 		           	$('.rc-eventsWrapperInner .rc-event').off().on('click', function(evt){
 		           		// slide down flood and adaptation wrappers
@@ -181,10 +313,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		           		// on event click function populate map
 		           		onEventClick(t,evt);
 		           	});
-		           	// on all flood event box click ////////////
-		           	$('#' + t.id + 'allEventsButton').off().on('click', function(evt){
-		           		onEventClick(t,evt);
-		           	})
 				})
 	           	// on back to events button click
 	           	$('.rc-headingAndBackBtnWrapper button').off().on('click', function(evt){
@@ -206,11 +334,12 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					}
 				})
             }
-            console.log('before call ///////////')
+            // console.log('before call ///////////')
             buildClickEvents() // call function to build all the click evenst 
             
 		},
 		appSetup: function(t){
+
 			// build admin units obj
 			function buildAdminUnits(){
 				t.obj.adminUnitId = [];
@@ -263,7 +392,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 			      });
 			 
 			    function getDate( element ) {
-			    	console.log(element.value)
 			     	 var date;
 			     	 try {
 			        	date = $.datepicker.parseDate( dateFormat, element.value );
@@ -296,9 +424,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	            }
 	            var d=new Date().dayofYear();
 	            // get date function to convert todays date to a format thats understood by the api
-	            t.obj.testFunction  = function(){
-	            	console.log('test func call')
-	            }
 	            t.obj.getDate = function(d,time){
 	                var newDay = (d - time);
 	                if (newDay >=0) {

@@ -23,6 +23,7 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<input type="radio" id="dr3" name="dateRange" value="custom"/>
 				<label for="dr3">Custom range</label>
 			</div>
+
 			<div class="rc-rangeWrapper"  id="customRange">
 				<label class="rc-rangeLabels" for="from">Start Date: </label>
 				<input style="width: 76px;" type="text" id="from" name="from">
@@ -33,19 +34,18 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 			<div class="rc-eventsWrapper">
 				<h4>Click on a box below to view that flood event</h4>
 				<div class="rc-eventsWrapperInner" id="eventsWrapperInner"></div>
-				<div id="allEventsButton" class="rc-event">View all events on map</div>
+				<!-- <div id="allEventsButton" class="rc-event">View all events on map</div> -->
+
+				<!-- <button style="padding: 2px; height: 28px; position: absolute; right: 150px; margin-top: 30px" id="testPetaData" class="button button-primary">Test Peta Bencana</button>
+				<img id="petaImage" style="margin-top: 100px;" src="https://images.petabencana.id/086106ff-870e-4e42-88f2-d08a2977e6b5.jpg"> -->
 			</div>
 			<div class="rc-noFloodText">No flood events have occured during the selected time frame.</div>
+			<div class="rc-noTagText">There have been no flood tags during the selected timeframe.</div>
 		</div>
 
 	</div>
 	
 	<div class="rc-contentBelowIntroWrapper">
-		<!-- choose another event wrapper -->
-		<!-- <div class="rc-chooseAnotherEvtWrapper">
-			<button class="button button-primary">Choose a new flood event</button>
-		</div> -->
-		<!-- <hr style="margin-top: 20px;"> -->
 		<div class="rc-mainToggleWrapper">
 			<div class="rc-headingAndBackBtnWrapper">
 				<h3>View floodrisk or adaptation solutions:</h3>
@@ -59,6 +59,8 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<input v-on:click="mainToggle = false" type="radio" id="yn2" name="yesno" value="adaptation"/>
 				<label for="yn2">Adaptation Solutions</label>
 			</div>
+			<div class="rc-timeframeText">Selected Timeframe: <span></span></div>
+			<hr>
 		</div>
 		<!-- Floodrisk wrapper ########################################################## -->
 		<div  class="rc-floodriskWrapper">

@@ -43,6 +43,9 @@
 .rc-noFloodText{
 	color: red; display: none; margin-top: 10px; text-align: center;
 }
+.rc-noTagText{
+	color: red; display: none; margin-top: 10px; text-align: center;
+}
 .rc-eventsWrapper{
 	display: none; text-align: center;
 }
@@ -55,6 +58,12 @@
 }
 .rc-floodEventDate{
 	margin-left: 10px;
+}
+.rc-timeframeText{
+	font-size: 16px; text-align: center; margin-top: 10px;
+}
+.rc-timeframeText span{
+	font-weight: bold;
 }
 /*.rc-mainToggleWrapper{
 	display: none;
