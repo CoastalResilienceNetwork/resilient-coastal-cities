@@ -123,6 +123,22 @@ h3{
 .rc-infraCBWrapper{
 	display: flex; margin-left: 20px; margin-bottom: 20px;
 }
+
+/* adaptaion solution styling */
+.rc-manResPotenWrapper h3, .rc-manResPotenWrapper h2{
+	text-align: center; color: rgb(53, 150, 104)
+}
+.rc-ricePotenWrapper h3, .rc-ricePotenWrapper h2{
+	text-align: center; color: rgb(168, 212, 11)
+}
+.rc-lowRicePotenWrapper h3, .rc-lowRicePotenWrapper h2{
+	text-align: center; color: rgb(170, 255, 0)
+}
+.rc-restMangAndRice h3, .rc-restMangAndRice h2{
+	text-align: center; color: rgb(0, 89, 89)
+}
+
+
 /* Jquery UI styling */
 .ui-datepicker.ui-datepicker-multi{
 	z-index: 1000 !important;

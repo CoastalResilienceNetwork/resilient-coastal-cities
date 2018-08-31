@@ -28,6 +28,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 t.agTotal =0;
                 t.riceTotal =0;
                 t.tourTotal =0;
+                t.mangTotal = 0;
+                t.mangAndRiceTotal = 0;
+                t.lowRiceTotal = 0;
+                t.convRiceTotal = 0;
                 t.tagTotal =0;
 
 
@@ -37,6 +41,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 				t.obj.finalFilteredFloods = []
 				// create graphics layer
 				t.obj.layer = new GraphicsLayer();
+				t.obj.layer2 = new GraphicsLayer();
 				// on click on graphics layer 
 				t.obj.layer.on('click', function(evt){
 					console.log(evt);
@@ -138,8 +143,8 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     }
                     
                     var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
-					    new Color([255,0,0]), 2),new Color(color)
+					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+					    new Color([0,0,0]), .5),new Color(color)
 					);
                     // // Create a symbol for rendering the graphic
                     var poly = new Polygon(geom)
@@ -147,6 +152,36 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                      t.obj.layer.add(t.graphic2);
                     // // add graphics to map
                     t.map.addLayer(t.obj.layer);
+
+
+                    // build the graphics layer for adaptation solutions //////////////////////////
+                    var dontAdd =  false;
+                    if(atts.MNG_LOWRICEPROD > 0){
+                    	console.log('yes');
+                    	var color = [170, 255, 0, 255]
+                    }else if(atts.MNG_POTENTIAL > 0){
+                    	var color = [53, 150, 104, 255]
+                    }else if(atts.MNG_RICECONVERT > 0){
+                    	var color = [168, 212, 11, 255]
+                    }else if(atts.MNG_RICECONVERT > 0 &&  atts.MNG_POTENTIAL > 0){
+                    	var color = [0, 89, 89, 255]
+                    }else{
+                    	dontAdd = true;
+                    }
+                    var adapSym = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+					    new Color([0,0,0]), .5),new Color(color)
+					 );
+                     // // Create a symbol for rendering the graphic
+                    var poly2 = new Polygon(geom)
+
+                    t.graphic3 = new Graphic(poly2,adapSym, atts);
+                    if(!dontAdd){
+                    	 t.obj.layer2.add(t.graphic3);
+                    }
+                    // // add graphics to map
+                    // t.map.addLayer(t.obj.layer2);
+
                 }
                 function populateData(){
                 	// update num of tweets in event
@@ -167,11 +202,15 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 	$($('.rc-placesText').find('span')[2]).html(t.worshipTotal)
                 	// update livelihoods affected
                 	$($('.rc-placesText').find('span')[3]).html(t.tourTotal)
-                	$($('.rc-placesText').find('span')[4]).html(t.roadsTotal + ' km')
-                	$($('.rc-placesText').find('span')[5]).html(t.agTotal + ' ha')
-                	$($('.rc-placesText').find('span')[6]).html(t.riceTotal + ' ha')
+                	$($('.rc-placesText').find('span')[4]).html(t.clicks.numberWithCommas(t.roadsTotal) + ' km')
+                	$($('.rc-placesText').find('span')[5]).html(t.clicks.numberWithCommas(t.agTotal) + ' ha')
+                	$($('.rc-placesText').find('span')[6]).html(t.clicks.numberWithCommas(t.riceTotal) + ' ha')
 
-
+                	// update adaptation solutions text
+                	$('.rc-manResPotenWrapper h2').html(t.clicks.numberWithCommas(t.mangTotal) + ' Hectares')
+                	$('.rc-ricePotenWrapper h2').html(t.clicks.numberWithCommas(t.convRiceTotal) + ' Hectares')
+                	$('.rc-lowRicePotenWrapper h2').html(t.clicks.numberWithCommas(t.lowRiceTotal) + ' Field(s)')
+                	$('.rc-restMangAndRice h2').html(t.clicks.numberWithCommas(t.mangAndRiceTotal) + ' Hectares')
                 }
                 function buildStats(atts){
                 	 // calculate stats for all the matched admin units
@@ -188,8 +227,12 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     t.tourTotal +=atts.LIVE_TOUR;
                     t.tagTotal += atts.total
                     t.placeTotal = t.hospTotal + t.worshipTotal + t.eduTotal;
-                    populateData();
 
+                    t.mangTotal += atts.MNG_POTENTIAL;
+	                t.mangAndRiceTotal += (atts.MNG_POTENTIAL + atts.MNG_RICECONVERT);
+	                t.lowRiceTotal += atts.MNG_LOWRICEPROD;
+	                t.convRiceTotal += atts.MNG_RICECONVERT;
+                    populateData();
                 }
 				// query tags endpoint with parent geoname id
                 function getTagsFromEvents(parentGeonameid, startDate, endDate){
@@ -381,10 +424,8 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 				// on flood section check box click
 				// show and display various layers based on the id to get the index number from the map service
 				$('.rc-infraCBWrapper input').off().on('click', function(evt){
-					console.log(evt);
 					var id = evt.currentTarget.id.split('-')[1]
 					var checked = evt.currentTarget.checked;
-					console.log(id, checked);
 					//if is checked add layer to viz layers list
 					if(checked){
 						t.obj.visibleLayers.push(id);
@@ -411,9 +452,13 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					if(evt.currentTarget.value == 'floodrisk'){
 						$('.rc-adaptationWrapper').slideUp();
 						$('.rc-floodriskWrapper').slideDown();
+						 t.map.addLayer(t.obj.layer);
+						 t.map.removeLayer(t.obj.layer2);
 					}else{
 						$('.rc-floodriskWrapper').slideUp();
 						$('.rc-adaptationWrapper').slideDown();
+						 t.map.addLayer(t.obj.layer2);
+						 t.map.removeLayer(t.obj.layer);
 					}
 				})
             }
