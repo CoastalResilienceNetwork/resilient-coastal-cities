@@ -224,7 +224,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     t.roadsTotal +=atts.LIVE_RDS_KM;
                     t.agTotal +=atts.LIVE_AG_HA;
                     t.riceTotal +=atts.LIVE_RICE_HA; 
-                    t.tourTotal +=atts.LIVE_TOUR; 
+                    t.tourTotal +=atts.LIVE_TOUR;  
                     t.tagTotal += atts.total
                     t.placeTotal = t.hospTotal + t.worshipTotal + t.eduTotal;
 
