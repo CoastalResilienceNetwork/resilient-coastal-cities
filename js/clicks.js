@@ -18,7 +18,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 			// on event click function //////////////////////////////////////
 			function onEventClick(t,evt){
 				t.popWomen =0;
-                t.popMen =0;
+                t.popMen =0; 
                 t.popTotal =0;
                 t.hospTotal =0;
                 t.worshipTotal =0;
