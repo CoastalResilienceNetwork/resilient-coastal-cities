@@ -65,6 +65,12 @@ h3{
 .rc-timeframeText span{
 	font-weight: bold;
 }
+.rc-adminNameText{
+	font-size: 16px; text-align: center; margin-top: 10px;
+}
+.rc-adminNameText span{
+	font-weight: bold;
+}
 /*.rc-mainToggleWrapper{
 	display: none;
 }*/
