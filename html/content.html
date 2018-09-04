@@ -29,7 +29,7 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<input style="width: 76px;" type="text" id="from" name="from">
 				<label class="rc-rangeLabels" for="to">End Date: </label>
 				<input style="width: 76px;" type="text" id="to" name="to">
-				<button style="margin: 0 0 3px 36px;" id="dateRangeGo" class="button button-primary">Go</button>
+				<button style="margin: 0 0 3px 15px;" id="dateRangeGo" class="button button-primary">Go</button>
 			</div>
 			<div class="rc-eventsWrapper">
 				<h4>Click on a box below to view that flood event</h4>
@@ -60,6 +60,7 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<label for="yn2">Adaptation Solutions</label>
 			</div>
 			<div class="rc-timeframeText">Selected Timeframe: <span></span></div>
+			<div style="display: none;" class="rc-adminNameText">In: <span></span></div>
 			<hr>
 		</div>
 		<!-- Floodrisk wrapper ########################################################## -->
@@ -126,17 +127,18 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<h3>Critical Infrastructure</h3>
 				<div class="rc-infraCBWrapper">
 					<div style="flex: .5">
-						<label class="form-component" for="hospitals-38">
-							<input type="checkbox" id="hospitals-38" name="food">
+						<label class="form-component" for="buildings-37">
+							<input type="checkbox" id="buildings-37" name="food">
 							<div class="check"></div>
-							<span class="form-text">Hospitals</span>
+							<span class="form-text">Government Buildings</span>
 						</label>
 						<br>
-						<label class="form-component disabled" for="schools-36">
-							<input type="checkbox" id="schools-36" name="food">
+						<label class="form-component" for="worship-53">
+							<input type="checkbox" id="worship-53" name="food">
 							<div class="check"></div>
-							<span class="form-text">Schools</span>
+							<span class="form-text">Places of Worship</span>
 						</label>
+						
 						<br>
 					</div>
 					<div>
@@ -152,6 +154,7 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 							<span class="form-text">Places of Worship</span>
 						</label>
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -178,7 +181,37 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<h3>Mangrove Restoration Potential and Convertible Rice Fields</h3>
 			</div>
 			<hr>
-			<button class="button button-primary" style="">View Mangrove Restoration Simlulation</button>
+			<div class="rc-infraCBWrapper">
+				<div>
+					<label class="form-component" for="mang-4">
+						<input type="checkbox" id="mang-4" name="food">
+						<div class="check"></div>
+						<span class="form-text">Potentially restorable mangroves</span>
+					</label>
+					<br>
+					<label class="form-component disabled" for="riceField-65">
+						<input type="checkbox" id="riceField-65" name="food">
+						<div class="check"></div>
+						<span class="form-text">Low production rice fields</span>
+					</label>
+				</div>
+				<div>
+					<label class="form-component" for="buildings-66">
+						<input type="checkbox" id="buildings-66" name="food">
+						<div class="check"></div>
+						<span class="form-text">Convertible rice fields</span>
+					</label>
+					<!-- <br>
+					<label class="form-component" for="worship-53">
+						<input type="checkbox" id="worship-53" name="food">
+						<div class="check"></div>
+						<span class="form-text">Places of Worship</span>
+					</label> -->
+				</div>
+			</div>
+			
+			<hr>
+			<button class="button button-primary" style="margin-left: 59px;">View Mangrove Restoration Simlulation</button>
 		</div>
 	</div>
 </div>
