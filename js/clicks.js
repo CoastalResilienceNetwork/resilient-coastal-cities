@@ -15,8 +15,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 			t.dynamicLayer = new ArcGISDynamicMapServiceLayer(t.url, {opacity: 1 - t.obj.sliderVal/10});
 			t.map.addLayer(t.dynamicLayer);
 			t.dynamicLayer.setVisibleLayers(t.obj.visibleLayers);
+			t.toggleType = 'flood'
 			// on event click function //////////////////////////////////////
 			function onEventClick(t,evt){
+				// build vars
 				t.popWomen =0;
                 t.popMen =0; 
                 t.popTotal =0;
@@ -33,8 +35,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 t.lowRiceTotal = 0;
                 t.convRiceTotal = 0;
                 t.tagTotal =0;
-
-
 				t.obj.customFilter = false;
 				t.doneLooping = false;
 				t.obj.finalEventFloods = [];
@@ -44,6 +44,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 				t.obj.layer2 = new GraphicsLayer();
 				// on click on graphics layer 
 				t.obj.layer.on('click', function(evt){
+					console.log(evt);
+				})
+				// on graphics layer 2 click
+				t.obj.layer2.on('click', function(evt){
 					console.log(evt);
 				})
 				try{ // try to clear graphics layer if there are graphics pushed into it
@@ -121,6 +125,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 						
 						
 					})
+					t.obj.changeDate(t.obj.daterangeStartCustom, t.obj.daterangeEndCustom);
 
 				}else{
 					getTagsFromEvents(evt.currentTarget.id, evt.currentTarget.dataset.date.split(' - ')[0], evt.currentTarget.dataset.date.split(' - ')[1])
@@ -151,7 +156,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     t.graphic2 = new Graphic(poly, sfs, atts);
                      t.obj.layer.add(t.graphic2);
                     // // add graphics to map
-                    t.map.addLayer(t.obj.layer);
+                    // t.map.addLayer(t.obj.layer);
 
 
                     // build the graphics layer for adaptation solutions //////////////////////////
@@ -181,6 +186,12 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     }
                     // // add graphics to map
                     // t.map.addLayer(t.obj.layer2);
+                    // figure out which layer to add based on what toggle has been checked
+                    if(t.toggleType == 'flood'){
+                    	t.map.addLayer(t.obj.layer);
+                    }else{
+                    	t.map.addLayer(t.obj.layer2);
+                    }
 
                 }
                 function populateData(){
@@ -287,9 +298,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                             		buildGraphic(v.geom,v.atts,v.total);
                             		buildStats(v.atts)
                             	})
+                            	t.obj.changeDate(startDate, endDate);
                             }
                             t.obj.handleIfNoTags(); // call this function after custom go button push. to determine html visible.
-                            t.obj.changeDate(startDate, endDate);
+                            
                         }) // end of filtered done function
                 	})
                 }
@@ -442,6 +454,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	           	$('.rc-headingAndBackBtnWrapper button').off().on('click', function(evt){
 	           		// clear map graphics
 	           		t.map.removeLayer(t.obj.layer);
+	           		t.map.removeLayer(t.obj.layer2);
 	           		// slide up flood and adap wrappers
 	           		$('.rc-contentBelowIntroWrapper').slideUp()
 	           		// slide down timeframe and event boxes
@@ -450,11 +463,13 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 				// main toggle click functionality
 				$('.rc-mainToggleWrapper input').on('click', function(evt){
 					if(evt.currentTarget.value == 'floodrisk'){
+						t.toggleType = 'flood'
 						$('.rc-adaptationWrapper').slideUp();
 						$('.rc-floodriskWrapper').slideDown();
 						 t.map.addLayer(t.obj.layer);
 						 t.map.removeLayer(t.obj.layer2);
 					}else{
+						t.toggleType = 'adaptation'
 						$('.rc-floodriskWrapper').slideUp();
 						$('.rc-adaptationWrapper').slideDown();
 						 t.map.addLayer(t.obj.layer2);
