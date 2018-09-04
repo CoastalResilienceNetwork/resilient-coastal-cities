@@ -32,7 +32,7 @@ h3{
 	width: 200px;
 }
 .rc-floodTimeframeWrapper{
-	margin-left: 10px; padding-bottom: 10px;
+	margin-left: 10px; padding-bottom: 10px; display: none;
 }
 .rc-rangeLabels{
 	font-size: 14px; padding-left: 5px; padding-right: 3px;

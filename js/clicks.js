@@ -687,6 +687,8 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                    // append html to events wrapper
 	                    $('.rc-eventsWrapperInner').append(html);
 	                })
+	                // slide down toggle buttons only after everything is done loading
+	                $('.rc-floodTimeframeWrapper').slideDown();
 	           }
 			}
 			getEvents(); // call the api and build the events obj
