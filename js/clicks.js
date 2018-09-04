@@ -578,9 +578,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 			          changeMonth: true,
 			          changeYear: true,
 			          yearRange: "-1:+2", // next ten years
-			          numberOfMonths: 1
+			          numberOfMonths: 1,
 			        })
 			        .on( "change", function() {
+			        	console.log('chnage')
 			          to.datepicker( "option", "minDate", getDate( this ) );
 			        }),
 			      to = $("#" + t.id + "to" ).datepicker({
