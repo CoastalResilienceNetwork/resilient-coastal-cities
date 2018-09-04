@@ -44,12 +44,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 
 				// on click on graphics layer 
 				// t.obj.layer.on('click', function(evt){
-				// 	console.log(evt);
 				// 	t.graphicsClick(evt);
 				// })
 				// // on graphics layer 2 click
 				// t.obj.layer2.on('click', function(evt){
-				// 	console.log(evt);
 				// 	t.graphicsClick(evt);
 				// })
 				t.obj.layer.on('mouse-over', function(evt){
@@ -70,7 +68,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 						// add selection graphic
 						t.map.graphics.add(new Graphic(evt.graphic.geometry, symbol));
 						var atts = evt.graphic.attributes;
-						console.log(atts);
 						$('.rc-adminNameText').show();
 						$('.rc-adminNameText span').html(atts.name)
 						// update stats for both flood and adaptation
@@ -98,7 +95,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                	// update adaptation solutions text
 	                	if(atts.MNG_POTENTIAL > 0 && atts.MNG_RICECONVERT >0){
 	                		atts.mangAndRiceTotal = atts.MNG_POTENTIAL + atts.MNG_RICECONVERT
-	                		console.log('look here')
 	                		atts.MNG_POTENTIAL = 0;
 	                		atts.MNG_RICECONVERT = 0;
 	                	}else{
@@ -180,8 +176,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 						}
 						if(i+1 == t.obj.eventList.length){
 							t.doneLooping = true;
-							console.log('look here lllllllllllllllllllllllllllllllllll')
-							// console.log(t.filteredEventList)
 							t.loopTotal = t.filteredEventList.length;
 							$.each(t.filteredEventList, function(i,v){
 								var newStart = v.start.split('T')[0]
@@ -231,7 +225,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     if(atts.MNG_LOWRICEPROD > 0){
                     	var color = [170, 255, 0, 0.6]
                     }else if(atts.MNG_RICECONVERT > 0 &&  atts.MNG_POTENTIAL > 0){
-                    	console.log(atts)
                     	var color = [0, 89, 89, 0.6]
                     }else if(atts.MNG_POTENTIAL > 0){
                     	var color = [53, 150, 104, 0.6]
@@ -240,8 +233,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     }else{
                     	dontAdd = true;
                     }
-                    console.log(atts.name)
-                    console.log(color)
                     var adapSym = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
 					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
 					    new Color([0,0,0]), .5),new Color(color)
@@ -276,7 +267,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 	$('.rc-maleBar').css('width', percentOfMale + '%')
                 	// update places affcted text
                 	$('#' + t.id + 'placeTotal').html(t.placeTotal);
-                	console.log()
                 	$($('.rc-placesText').find('span')[0]).html(t.eduTotal)
                 	$($('.rc-placesText').find('span')[1]).html(t.hospTotal)
                 	$($('.rc-placesText').find('span')[2]).html(t.worshipTotal)
@@ -317,14 +307,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     }
 	                t.lowRiceTotal += atts.MNG_LOWRICEPROD;
                     populateData();
-                }
-                t.graphicsClick = function (evt){
-                	console.log(evt, 'g click')
-                	if(type == 'flood'){
-                		// if there are features returned
-                	}else{
-
-                	}
                 }
 				// query tags endpoint with parent geoname id
                 function getTagsFromEvents(parentGeonameid, startDate, endDate){
@@ -370,7 +352,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                                 }
                             })
                             t.loopCounter++
-                            // console.log(t.loopCounter, t.loopTotal);
                             if(t.loopCounter == t.loopTotal){
                             	t.obj.filterCustomDateData();
                             }
@@ -415,7 +396,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	    				$(v).hide();
 	    			}
 	    			if (counter > 1) {
-	    				console.log('more than one')
 	    			}
 	    			if (counter == 0) {
 	    				// slide down no text element
@@ -559,9 +539,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					}
 				})
             }
-            // console.log('before call ///////////')
             buildClickEvents() // call function to build all the click evenst 
-            
 		},
 		appSetup: function(t){
 			$('#show-single-plugin-mode-help').hide();
