@@ -98,6 +98,9 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                	// update adaptation solutions text
 	                	if(atts.MNG_POTENTIAL > 0 && atts.MNG_RICECONVERT >0){
 	                		atts.mangAndRiceTotal = atts.MNG_POTENTIAL + atts.MNG_RICECONVERT
+	                		console.log('look here')
+	                		atts.MNG_POTENTIAL = 0;
+	                		atts.MNG_RICECONVERT = 0;
 	                	}else{
 	                		atts.mangAndRiceTotal = 0;
 	                	}
@@ -304,11 +307,15 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                     t.tourTotal +=atts.LIVE_TOUR;  
                     t.tagTotal += atts.total
                     t.placeTotal = t.hospTotal + t.worshipTotal + t.eduTotal;
-
-                    t.mangTotal += atts.MNG_POTENTIAL;
-	                t.mangAndRiceTotal += (atts.MNG_POTENTIAL + atts.MNG_RICECONVERT);
+                    if(atts.MNG_POTENTIAL > 0 && atts.MNG_RICECONVERT > 0){
+                    	t.mangAndRiceTotal += (atts.MNG_POTENTIAL + atts.MNG_RICECONVERT);
+                    	t.mangTotal +=0
+                    	t.convRiceTotal +=0;
+                    }else{
+                    	t.mangTotal += atts.MNG_POTENTIAL;
+                    	t.convRiceTotal += atts.MNG_RICECONVERT;
+                    }
 	                t.lowRiceTotal += atts.MNG_LOWRICEPROD;
-	                t.convRiceTotal += atts.MNG_RICECONVERT;
                     populateData();
                 }
                 t.graphicsClick = function (evt){
