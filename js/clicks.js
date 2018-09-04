@@ -96,7 +96,12 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                	$($('.rc-placesText').find('span')[5]).html(t.clicks.numberWithCommas(atts.LIVE_AG_HA) + ' ha')
 	                	$($('.rc-placesText').find('span')[6]).html(t.clicks.numberWithCommas(atts.LIVE_RICE_HA) + ' ha')
 	                	// update adaptation solutions text
-	                	atts.mangAndRiceTotal = atts.MNG_POTENTIAL + atts.MNG_RICECONVERT
+	                	if(atts.MNG_POTENTIAL > 0 && atts.MNG_RICECONVERT >0){
+	                		atts.mangAndRiceTotal = atts.MNG_POTENTIAL + atts.MNG_RICECONVERT
+	                	}else{
+	                		atts.mangAndRiceTotal = 0;
+	                	}
+	                	
 	                	$('.rc-manResPotenWrapper h2').html(t.clicks.numberWithCommas(atts.MNG_POTENTIAL) + ' Hectares')
 	                	$('.rc-ricePotenWrapper h2').html(t.clicks.numberWithCommas(atts.MNG_RICECONVERT) + ' Hectares')
 	                	$('.rc-lowRicePotenWrapper h2').html(t.clicks.numberWithCommas(atts.MNG_LOWRICEPROD) + ' Field(s)')
