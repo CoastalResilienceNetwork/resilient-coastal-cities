@@ -147,8 +147,8 @@ h3{
 
 /* Jquery UI styling */
 .ui-datepicker.ui-datepicker-multi{
-	z-index: 1000 !important;
+	z-index: 10000 !important;
 }
 .ui-datepicker{
-	z-index: 1000 !important;
+	z-index: 10000 !important;
 }
