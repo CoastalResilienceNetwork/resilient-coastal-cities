@@ -101,7 +101,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                	}else{
 	                		atts.mangAndRiceTotal = 0;
 	                	}
-	                	
 	                	$('.rc-manResPotenWrapper h2').html(t.clicks.numberWithCommas(atts.MNG_POTENTIAL) + ' Hectares')
 	                	$('.rc-ricePotenWrapper h2').html(t.clicks.numberWithCommas(atts.MNG_RICECONVERT) + ' Hectares')
 	                	$('.rc-lowRicePotenWrapper h2').html(t.clicks.numberWithCommas(atts.MNG_LOWRICEPROD) + ' Field(s)')
@@ -226,19 +225,19 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 
                     // build the graphics layer for adaptation solutions //////////////////////////
                     var dontAdd =  false;
-                    console.log(atts)
                     if(atts.MNG_LOWRICEPROD > 0){
-                    	console.log('yes');
                     	var color = [170, 255, 0, 0.6]
+                    }else if(atts.MNG_RICECONVERT > 0 &&  atts.MNG_POTENTIAL > 0){
+                    	console.log(atts)
+                    	var color = [0, 89, 89, 0.6]
                     }else if(atts.MNG_POTENTIAL > 0){
                     	var color = [53, 150, 104, 0.6]
                     }else if(atts.MNG_RICECONVERT > 0){
                     	var color = [168, 212, 11, 0.6]
-                    }else if(atts.MNG_RICECONVERT > 0 &&  atts.MNG_POTENTIAL > 0){
-                    	var color = [0, 89, 89, 0.6]
                     }else{
                     	dontAdd = true;
                     }
+                    console.log(atts.name)
                     console.log(color)
                     var adapSym = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
 					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
