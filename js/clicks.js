@@ -9,6 +9,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 
 	return declare(null, { 
 		eventListeners: function(t){
+			console.log('look here')
 			t.url = 'http://tncmaps.eastus.cloudapp.azure.com/arcgis/rest/services/Indonesia/Resilient_Coastal_Cities/MapServer'
 			t.obj.visibleLayers = [73]
 			t.dynamicLayer = new ArcGISDynamicMapServiceLayer(t.url, {opacity: 1 - t.obj.sliderVal/10});
@@ -137,18 +138,23 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 						    return self.indexOf(value) === index;
 						}
 						duplicateArray = duplicateArray.filter( onlyUnique );
+						console.log(duplicateArray)
 						// loop through final flood array and use the duplicate array 
 						// to add the total together 
-						var j = 0
+						
 						duplicateArray.forEach((v, i) => {
+							var j = 0
 							var newObj;
 							t.obj.finalFilteredFloods.forEach((item,index) => {
+								console.log(item.atts.name, v)
 							   if(v == item.atts.name){
 								   	if(j==0){
 								   		newObj = item
 								   		t.obj.finalFilteredFloods.splice(index,1);
 								   	}else{
+								   		console.log()
 								   		newObj.total =newObj.total + item.total;
+								   		console.log(newObj)
 								   		t.obj.finalFilteredFloods.splice(index,1);
 								   	}
 							   	    j++
@@ -189,6 +195,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					t.obj.changeDate(t.obj.daterangeStartCustom, t.obj.daterangeEndCustom);
 
 				}else{
+					console.log('look here')
 					getTagsFromEvents(evt.currentTarget.id, evt.currentTarget.dataset.date.split(' - ')[0], evt.currentTarget.dataset.date.split(' - ')[1])
 				}
 				function buildGraphic(geom,atts, total){
@@ -310,6 +317,9 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 }
 				// query tags endpoint with parent geoname id
                 function getTagsFromEvents(parentGeonameid, startDate, endDate){
+                	console.log(parentGeonameid)
+                	parentGeonameid = 'g-' + parentGeonameid;
+                	console.log(parentGeonameid)
                     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
                 	$.get(url, function(data) {
                 		// defer callback until query is complete
@@ -324,10 +334,17 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                             // call event click function
                         	// loop through tags geojson and match to our admin unit ID's
                             $.each(data.features, function(i,v){
-                                var id = v.properties.geonameid;
+                                var id = v.properties.geonameid.split('g-')[1];
                                 var index = t.obj.adminUnitId.indexOf(id);
+                                id = v.properties.geonameid
                                 if(index > 0){
-                                    pos = t.obj.adminUnit.map(function(e) { return e.attributes.id1; }).indexOf(id);
+                                	console.log('before pos')
+                                    pos = t.obj.adminUnit.map(function(e) {
+                                    	var val = 'g-' + e.attributes.id1
+	                                    return val
+
+	                                }).indexOf(id);
+	                                console.log(pos)
                                     if(pos > -1){
                                     	t.obj.dataOnMap = true;
                                         t.obj.totalTweets += v.properties.total;
@@ -337,7 +354,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                                         t.obj.finalFilteredFloods.push({geom, atts, total})
                                         t.obj.finalEventFloods.push({geom, atts, total})
                                     }else{
-                                         pos = t.obj.adminUnit.map(function(e) { return e.attributes.id2; }).indexOf(id);
+                                         pos = t.obj.adminUnit.map(function(e) {
+                                         	var val = 'g-' + e.attributes.id2
+	                                    	return val 
+                                         }).indexOf(id);
                                          if (pos > -1) {
                                          	t.obj.dataOnMap = true;
                                             var geom = t.obj.adminUnit[pos].geometry
@@ -545,6 +565,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 			$('#show-single-plugin-mode-help').hide();
 			// build admin units obj
 			function buildAdminUnits(){
+				console.log('build admin')
 				t.obj.adminUnitId = [];
 		        t.obj.adminUnit = [];
 		        $.each(t.obj.adminUnits, function(i,v){
@@ -609,6 +630,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 			createDatePicker();
 			// get events and build event buttons
 			function getEvents(){
+				console.log('get evenst')
 				// get todays date and figure out which dates to query for each timeframe
              	// get js utm time
 	            var dateObj = new Date();
@@ -649,11 +671,14 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
             	// call get flood events for the past 10,000 days
 	            getFloodEvents(t.obj.getDate(d, 10000))
 	            function getFloodEvents(endDate){
+	            	console.log('at start of flood events')
+	            	console.log(endDate, todaysDate)
 	                var url = 'https://api.floodtags.com/v1/events/index?until='+ todaysDate + '&since=' + endDate +'&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
 	                t.obj.eventList = []
 	                $.get( url, function( data ) {
 	                     var defer = $.Deferred(),
 	                        filtered = defer.then(function() {
+	                        	console.log(data)
 	                    $.each(data.events, function(i,v){
 	                        if(v.location.geonameid == '1627893'){
 	                            t.obj.eventList.push(v);
@@ -670,6 +695,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	            })
 	           }
 	           function buildEventButtons(array){
+	           		console.log('at start of buttons')
 	                // divide up array into past 7 days, 30, 180 and 365
 	                var pastYearEvents = array;
 	                $.each(array, function(i,v){
@@ -679,6 +705,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                    // append html to events wrapper
 	                    $('.rc-eventsWrapperInner').append(html);
 	                })
+	                console.log('before slide down')
 	                // slide down toggle buttons only after everything is done loading
 	                $('.rc-floodTimeframeWrapper').slideDown();
 	           }
