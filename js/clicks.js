@@ -393,7 +393,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		    	var currentEndDate = new Date()
 		    	console.log(t.obj.getDate(d,30))
 		    	console.log(new Date('2018-9-20'))
-		    	console.log(new Date('9-20-2018'))
+		    	console.log(new Date('9/20/2018'))
 		    	if (val == 'last30') {
 		    		currentStartDate = new Date(t.obj.getDate(d,30))
 		    	}else if(val == 'last6'){
