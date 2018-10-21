@@ -391,13 +391,17 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		    	console.log(eventWrapper)
 		    	var currentStartDate;
 		    	var currentEndDate = new Date()
+		    	var dateReformat30 = t.obj.getDate(d,30).split('-');
+		    	dateReformat30 = dateReformat30[1] + '/' + dateReformat30[2] + '/' + dateReformat30[0]
+		    	var dateReformat180 = t.obj.getDate(d,180).split('-');
+		    	dateReformat180 = dateReformat180[1] + '/' + dateReformat180[2] + '/' + dateReformat180[0]
 		    	console.log(t.obj.getDate(d,30))
 		    	console.log(new Date('2018-9-20'))
 		    	console.log(new Date('9/20/2018'))
 		    	if (val == 'last30') {
-		    		currentStartDate = new Date(t.obj.getDate(d,30))
+		    		currentStartDate = new Date(dateReformat30)
 		    	}else if(val == 'last6'){
-		    		currentStartDate = new Date(t.obj.getDate(d,180))
+		    		currentStartDate = new Date(dateReformat180)
 		    	}
 	    		var counter = 0;
 	    		$.each(eventWrapper, function(i,v){
