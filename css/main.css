@@ -143,7 +143,9 @@ h3{
 .rc-restMangAndRice h3, .rc-restMangAndRice h2{
 	text-align: center; color: rgb(0, 89, 89)
 }
-
+.rc-introLogo{
+	display: flex; justify-content: center;
+}
 
 /* Jquery UI styling */
 .ui-datepicker.ui-datepicker-multi{
@@ -151,4 +153,40 @@ h3{
 }
 .ui-datepicker{
 	z-index: 10000 !important;
+}
+
+
+/* media queries ///////////////*/
+/* screen size 600px or below */
+@media screen and (max-width: 700px) {
+	.rc-rangeWrapper input{
+		width: 60px !important;
+	}
+	.rc-headingAndBackBtnWrapper button{
+		position: relative !important;
+		height: 40px !important;
+		margin-left: 10px;
+	}
+	#dijit_layout_ContentPane_0rangeToggle{
+		width: 300px !important;
+	}
+	.rc-introLogo{
+		display: flex !important; justify-content: center;
+	}
+	.rc-introMobileHidden{
+		display: none;
+	}
+}
+@media screen and (max-width: 369px) {
+	.rc-rangeLabels{
+		font-size: 12px;
+	}
+}
+@media screen and (max-width: 340px) {
+	.rc-rangeLabels{
+		font-size: 10px;
+	}
+	.rc-rangeWrapper input{
+		width: 50px !important;
+	}
 }

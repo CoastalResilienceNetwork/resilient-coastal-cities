@@ -7,8 +7,12 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 <div class="rc-appWrapper" id="app">
 	<!-- <div style="display: none; position: absolute;" id="BasemapToggle"></div> -->
 	<div class="rc-introWrapper">
+		<div class="rc-introLogo">
+			<img style="height: 40px;" src="plugins/resilient-coastal-cities/images/nature.png">
+			<img style="height: 40px;" src="plugins/resilient-coastal-cities/images/redCrossLogo.png">
+		</div>
 		<div class="rc-introText blueFont" style="font-size: 14px;">
-			<div>Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy. An objective of the project is to identify nature-based adaptation solutions for reducing flood risk. <a target="_blank" href="http://coastalresilience.org/project/resilient-coastal-cities-explorer/">Click to learn more.</a></div>
+			<div><span class="rc-introMobileHidden">Resilient Coastal Cities is a partnership project between the Red Cross and The Nature Conservancy.</span> An objective of the project is to identify nature-based adaptation solutions for reducing flood risk. <a target="_blank" href="http://coastalresilience.org/project/resilient-coastal-cities-explorer/">Click to learn more.</a></div>
 		</div>
 		
 		<div class="rc-floodTimeframeWrapper">
@@ -65,7 +69,7 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 		</div>
 		<!-- Floodrisk wrapper ########################################################## -->
 		<div  class="rc-floodriskWrapper">
-			<h4 class="blueFont">Click on an affected polygon on the map to view more details.</h4>
+			<h4 style="text-align: center;" class="blueFont">Click on an affected polygon on the map to view more details.</h4>
 			<div class="numOfTweetsLegendWrapper">
 				<!-- <h3 class="floodWrapperHeaders" style="margin-top: 3px; margin-bottom: 3px;"><span id="mainDate"></span>  </h3> -->
 				<h3 class="floodWrapperHeaders" style="margin-top: 3px;"><span id="numOfTweetsInAdmin">25</span> Flood Related Tweets <!-- for event: <span>date</span> --></h3>
@@ -159,7 +163,12 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 		</div>
 		<!-- adaptation solution wrapper ########################################### -->
 		<div  class="rc-adaptationWrapper">
-			
+			<h4 style="text-align: center;" class="blueFont">Click on an affected polygon on the map to view more details.</h4>
+			<div class="rc-restMangAndRice">
+				<h2>6 Hectares</h2>
+				<h3>Mangrove Restoration Potential and Convertible Rice Fields</h3>
+			</div>
+			<hr>
 			<div class="rc-manResPotenWrapper">
 				<h2>2,381 Hectares</h2>
 				<h3>Mangrove Restoration Potential</h3>
@@ -175,11 +184,11 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 				<h3>Low Production Rice Fields</h3>
 			</div>
 			<hr>
-			<div class="rc-restMangAndRice">
+			<!-- <div class="rc-restMangAndRice">
 				<h2>6 Hectares</h2>
 				<h3>Mangrove Restoration Potential and Convertible Rice Fields</h3>
 			</div>
-			<hr>
+			<hr> -->
 			<div class="rc-infraCBWrapper">
 				<div>
 					<label class="form-component" for="mang-3">
@@ -208,8 +217,8 @@ The unique ContentPane id makes all the element ids unique and prevents duplicat
 					</label>
 				</div>
 			</div>
-			<hr>
-			<button class="button button-primary" style="margin-left: 59px;">View Mangrove Restoration Simlulation</button>
+			<!-- <hr>
+			<button class="button button-primary" style="margin-left: 59px;">View Mangrove Restoration Simlulation</button> -->
 		</div>
 	</div>
 </div>
