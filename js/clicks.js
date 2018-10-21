@@ -399,8 +399,10 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	    		var counter = 0;
 	    		$.each(eventWrapper, function(i,v){
 	    			console.log('in event wrapper')
-	    			var eventStart = new Date(v.dataset.date.split(' - ')[0])
+	    			var eventStart = new Date(v.dataset.date.split(' - ')[0]);
 	    			var eventEnd = new Date(v.dataset.date.split(' - ')[1]);
+	    			console.log(currentStartDate, currentEndDate, eventEnd )
+	    			console.log(currentStartDate <= eventEnd && currentEndDate >= eventEnd)
 	    			if(currentStartDate <= eventEnd && currentEndDate >= eventEnd){
 	    				counter +=1
 	    				console.log('show', $(v))
