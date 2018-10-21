@@ -388,6 +388,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		    	// create new date obj for today
 		    	var d=new Date().dayofYear();
 		    	var eventWrapper = $('.rc-eventsWrapperInner .rc-event');
+		    	console.log(eventWrapper)
 		    	var currentStartDate;
 		    	var currentEndDate = new Date()
 		    	if (val == 'last30') {
@@ -397,10 +398,12 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		    	}
 	    		var counter = 0;
 	    		$.each(eventWrapper, function(i,v){
+	    			console.log('in event wrapper')
 	    			var eventStart = new Date(v.dataset.date.split(' - ')[0])
 	    			var eventEnd = new Date(v.dataset.date.split(' - ')[1]);
 	    			if(currentStartDate <= eventEnd && currentEndDate >= eventEnd){
 	    				counter +=1
+	    				console.log('show', $(v))
 	    				$(v).show();
 	    			}else{
 	    				$(v).hide();
@@ -483,6 +486,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 				})
 				// on range toggle button click
 				$('#' + t.id + 'rangeToggle input').on('click', function(evt){
+					console.log('range slider')
 					// slide up all range wrappers on any change
 					var wrappers  = $('.rc-floodTimeframeWrapper').find('.rc-rangeWrapper');
 					$.each(wrappers, function(i,v){
@@ -490,6 +494,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 					})
 					// slide down the correct range wrapper
 					$('#' + t.id + evt.currentTarget.value + "Range").slideDown();
+					console.log(evt.currentTarget.value);
 					showEventButtons(evt.currentTarget.value);
 		            // on flood event box click ////////////
 		           	$('.rc-eventsWrapperInner .rc-event').off().on('click', function(evt){
