@@ -391,6 +391,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 		    	console.log(eventWrapper)
 		    	var currentStartDate;
 		    	var currentEndDate = new Date()
+		    	console.log(t.obj.getDate(d,30))
 		    	if (val == 'last30') {
 		    		currentStartDate = new Date(t.obj.getDate(d,30))
 		    	}else if(val == 'last6'){
