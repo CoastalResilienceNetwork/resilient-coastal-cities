@@ -181,7 +181,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 							$.each(t.filteredEventList, function(i,v){
 								var newStart = v.start.split('T')[0]
 								var newEnd = v.end.split('T')[0]
-								getTagsFromEvents(1627893, newStart,newEnd);				
+								getTagsFromEvents('g-1627893', newStart,newEnd);				
 							})
 						}
 						
@@ -311,7 +311,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 }
 				// query tags endpoint with parent geoname id
                 function getTagsFromEvents(parentGeonameid, startDate, endDate){
-                	parentGeonameid = 'g-' + parentGeonameid;
+                	// parentGeonameid = 'g-' + parentGeonameid;
                     var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
                 	$.get(url, function(data) {
                 		// defer callback until query is complete
@@ -333,7 +333,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                                     pos = t.obj.adminUnit.map(function(e) {
                                     	var val = 'g-' + e.attributes.id1
 	                                    return val
-
 	                                }).indexOf(id);
                                     if(pos > -1){
                                     	t.obj.dataOnMap = true;
@@ -342,6 +341,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                                         var atts = t.obj.adminUnit[pos].attributes
                                         var total = v.properties.total
                                         t.obj.finalFilteredFloods.push({geom, atts, total})
+
                                         t.obj.finalEventFloods.push({geom, atts, total})
                                     }else{
                                          pos = t.obj.adminUnit.map(function(e) {
@@ -665,7 +665,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                     var defer = $.Deferred(),
 	                        filtered = defer.then(function() {
 	                    $.each(data.events, function(i,v){
-	                        if(v.location.geonameid == '1627893'){
+	                        if(v.location.geonameid == 'g-1627893'){
 	                            t.obj.eventList.push(v);
 	                        }
 	                    })
