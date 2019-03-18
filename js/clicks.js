@@ -311,71 +311,67 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                 }
 				// query tags endpoint with parent geoname id
                 function getTagsFromEvents(parentGeonameid, startDate, endDate){
-                	// parentGeonameid = 'g-' + parentGeonameid;
-                    var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=' + parentGeonameid+ '&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
-                	$.get(url, function(data) {
-                		// defer callback until query is complete
-                		var defer = $.Deferred(),
-	                        filtered = defer.then(function(){
-	                            return data;
-	                        })
-                        defer.resolve();
-                        // when filtered done
-                        filtered.done(function(data){
-                        	t.obj.dataOnMap = false;
-                            // call event click function
-                        	// loop through tags geojson and match to our admin unit ID's
-                            $.each(data.features, function(i,v){
-                                var id = v.properties.geonameid.split('g-')[1];
-                                var index = t.obj.adminUnitId.indexOf(id);
-                                id = v.properties.geonameid
-                                if(index > 0){
-                                    pos = t.obj.adminUnit.map(function(e) {
-                                    	var val = 'g-' + e.attributes.id1
-	                                    return val
-	                                }).indexOf(id);
-                                    if(pos > -1){
-                                    	t.obj.dataOnMap = true;
-                                        t.obj.totalTweets += v.properties.total;
-                                        var geom = t.obj.adminUnit[pos].geometry
-                                        var atts = t.obj.adminUnit[pos].attributes
-                                        var total = v.properties.total
-                                        t.obj.finalFilteredFloods.push({geom, atts, total})
-
-                                        t.obj.finalEventFloods.push({geom, atts, total})
-                                    }else{
-                                         pos = t.obj.adminUnit.map(function(e) {
-                                         	var val = 'g-' + e.attributes.id2
-	                                    	return val 
-                                         }).indexOf(id);
-                                         if (pos > -1) {
-                                         	t.obj.dataOnMap = true;
-                                            var geom = t.obj.adminUnit[pos].geometry
-                                            var atts = t.obj.adminUnit[pos].attributes
-                                            var total = v.properties.total
-                                            t.obj.finalFilteredFloods.push({geom, atts, total})
-                                            t.obj.finalEventFloods.push({geom, atts, total})
-                                         }
-                                    }
-                                }else{
-                                    // there was no match
-                                }
-                            })
-                            t.loopCounter++
-                            if(t.loopCounter == t.loopTotal){
-                            	t.obj.filterCustomDateData();
-                            }
-                            if(!t.obj.customFilter){
-                            	$.each(t.obj.finalEventFloods, function(i,v){
-                            		buildGraphic(v.geom,v.atts,v.total);
-                            		buildStats(v.atts)
-                            	})
-                            	t.obj.changeDate(startDate, endDate);
-                            }
-                            t.obj.handleIfNoTags(); // call this function after custom go button push. to determine html visible.
-                            
-                        }) // end of filtered done function
+                	let date = startDate + ' - ' + endDate
+                	let data;
+                	$.each(t.obj.filteredTags, function(i,v){
+                		if(v.date == date){
+                			data = v.data;
+                		}
                 	})
+                	t.obj.dataOnMap = false;
+                    // call event click function
+                	// loop through tags geojson and match to our admin unit ID's
+                    $.each(data.features, function(i,v){
+                        var id = v.properties.geonameid.split('g-')[1];
+                        var index = t.obj.adminUnitId.indexOf(id);
+                        id = v.properties.geonameid
+                        if(index > 0){
+                            pos = t.obj.adminUnit.map(function(e) {
+                            	var val = 'g-' + e.attributes.id1
+                                return val
+                            }).indexOf(id);
+                            if(pos > -1){
+                            	t.obj.dataOnMap = true;
+                                t.obj.totalTweets += v.properties.total;
+                                var geom = t.obj.adminUnit[pos].geometry
+                                var atts = t.obj.adminUnit[pos].attributes
+                                var total = v.properties.total
+                                t.obj.finalFilteredFloods.push({geom, atts, total})
+
+                                t.obj.finalEventFloods.push({geom, atts, total})
+                            }else{
+                                 pos = t.obj.adminUnit.map(function(e) {
+                                 	var val = 'g-' + e.attributes.id2
+                                	return val 
+                                 }).indexOf(id);
+                                 if (pos > -1) {
+                                 	t.obj.dataOnMap = true;
+                                    var geom = t.obj.adminUnit[pos].geometry
+                                    var atts = t.obj.adminUnit[pos].attributes
+                                    var total = v.properties.total
+                                    t.obj.finalFilteredFloods.push({geom, atts, total})
+                                    t.obj.finalEventFloods.push({geom, atts, total})
+                                 }
+                            }
+                        }else{
+                            // there was no match
+                        }
+                    })
+                    t.loopCounter++
+                    if(t.loopCounter == t.loopTotal){
+                    	t.obj.filterCustomDateData();
+                    }
+                    if(!t.obj.customFilter){
+                    	$.each(t.obj.finalEventFloods, function(i,v){
+                    		buildGraphic(v.geom,v.atts,v.total);
+                    		buildStats(v.atts)
+                    	})
+                    	t.obj.changeDate(startDate, endDate);
+                    }
+                    t.obj.handleIfNoTags(); // call this function after custom go button push. to determine html visible.
+
+                	
+                 
                 }
 			} // end of on event click function /////////////////////////////
 
@@ -425,41 +421,6 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
             } // end of show event button function ///////////////////////////////
 
             function buildClickEvents(){
-       //      	// click event for the testing of the Peta Bencana api
-       //      	$('#' + t.id + 'testPetaData').on('click', function(evt){
-       //      		// var petaUrl = 'https://data.petabencana.id/floods/archive?city=srg&format=json&geoformat=geojson&start=2018-07-21T00:00:00-0400&end=2018-07-25T24:00:00-0400'
-       //      		// var petaUrl = 'https://data.petabencana.id/reports/archive?city=srg&format=json&geoformat=geojson&start=2018-07-20T00:00:00-0400&end=2018-07-25T24:00:00-0400'
-       //      		var petaUrl = 'https://data.petabencana.id/reports/archive?city=srg&format=json&geoformat=geojson&start=2018-08-10T00:00:00-0400&end=2018-08-11T24:00:00-0400'
-       //      		// var petaUrl = 'https://data.petabencana.id/reports'
-       //      		$.get(petaUrl, function(data) {
-       //          		// defer callback until query is complete
-       //          		var defer = $.Deferred(),
-	      //                   filtered = defer.then(function(){
-	      //                       return data;
-	      //                   })
-       //                  defer.resolve();
-       //                  // when filtered done
-       //                  filtered.done(function(data){
-       //                  	t.data2 = data;
-						 //    // add graphic to map function call
-						 //    //  t.clicks.addGeoJson(t);
-					  //   	t.countiesGraphicsLayer = new GraphicsLayer({ id: "dataGraphic" });
-							// $.each(t.data2.result.features, function(i,v){
-							// 	let coordinates = v["geometry"]["coordinates"];
-							// 	let attributes = v["properties"]
-							// 	let point = {"geometry":{"points":[coordinates],"spatialReference":4326},
-							//     "symbol":{"color":[255,208,100,255],"size":20,"angle":0,"xoffset":0,"yoffset":0,"type":"esriSMS","style":"esriSMSCircle", 
-							//     "outline":{"color":[176,35,105,255],"width":1,"type":"esriSLS","style":"esriSLSSolid"}}, "attributes":attributes};
-							//     var gra = new Graphic(point);
-							//   	t.countiesGraphicsLayer.add(gra);
-							// })
-							//  t.map.addLayer(t.countiesGraphicsLayer);
-							//  t.countiesGraphicsLayer.on("click",function (evt) {
-							// 	$('#' + t.id + 'petaImage').attr('src', evt.graphic.attributes.image_url)
-							// })
-       //                  })
-       //              }) // end of get request
-       //      	})
        			// create a function to handle the DOM if no tags were returned in a custom query
 				t.obj.handleIfNoTags = function(){
 					$('.rc-noTagText').hide();
@@ -658,12 +619,13 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
         		 // var lastMonth = getFloodEvents(getDate(d, 30))
             	// call get flood events for the past 10,000 days
 	            getFloodEvents(t.obj.getDate(d, 10000))
+
 	            function getFloodEvents(endDate){
 	                var url = 'https://api.floodtags.com/v1/events/index?until='+ todaysDate + '&since=' + endDate +'&upperLimit=10000&filterSource=northern-java&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
 	                t.obj.eventList = []
 	                $.get( url, function( data ) {
 	                     var defer = $.Deferred(),
-	                        filtered = defer.then(function() {
+	                        filtered = defer.then(function() { 
 	                    $.each(data.events, function(i,v){
 	                        if(v.location.geonameid == 'g-1627893'){
 	                            t.obj.eventList.push(v);
@@ -674,13 +636,57 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                filtered.done(function( value ) {
 	                   if(t.obj.eventList.length > 0){
 	                        // call create event button function
-	                        buildEventButtons(t.obj.eventList);
+	                        filterEvents(t.obj.eventList);
 	                   }
 	                });
 	            })
 	           }
+
+	           // filter events to not show flood events that can only be georefed to semarang as a whole, we do not have the way to map that
+	           function filterEvents(array){
+	           		t.obj.filteredEventList = []
+	           		t.obj.filteredTags = []
+	           		$.each(array, function(i,v){
+	           			let startDate = v.start.split('T')[0]
+	           			let endDate = v.end.split('T')[0]
+	           			let date = v.start.split('T')[0] + ' - ' + v.end.split('T')[0]
+	           			var url = 'https://api.floodtags.com/v1/tags/northern-java/geojson.json?since=' + startDate + 'T00:00:00.000Z&until=' + endDate + 'T23:59:59.000Z&parentGeonameid=g-1627893&apiKey=e0692cae-eb63-4160-8850-52be0d7ef7fe'
+	                    $.get( url, function( data ) {
+	                    	// console.log(data, i)
+	                    	var defer = $.Deferred(),
+	                        filtered = defer.then(function() {
+	                        	if(data.features.length == 1){
+	                        		if(data.features[0].properties.name != 'Semarang'){
+	                        			t.obj.filteredEventList.push(v)
+	                        			t.obj.filteredTags.push({data, date})
+	                        		}
+	                        	}else{
+	                        		t.obj.filteredEventList.push(v)
+	                        		t.obj.filteredTags.push({data, date})
+	                        	}
+	                        })
+	                        defer.resolve();
+			                filtered.done(function( value ) {
+			                   if(i+1 == array.length){
+				                   	function compare(a,b) {
+									  if (a.end < b.start)
+									    return 1;
+									  if (a.end > b.start)
+									    return -1;
+									  return 0;
+									}
+									t.obj.filteredEventList.sort(compare);
+				           			// call create event button function
+				                	buildEventButtons(t.obj.filteredEventList);
+				           		}
+			                });
+	                    })
+	                    
+	           		})
+	           }
+
 	           function buildEventButtons(array){
-	                // divide up array into past 7 days, 30, 180 and 365
+	           		// divide up array into past 7 days, 30, 180 and 365
 	                var pastYearEvents = array;
 	                $.each(array, function(i,v){
 	                    let date = v.start.split('T')[0] + ' - ' + v.end.split('T')[0]
@@ -691,6 +697,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 	                })
 	                // slide down toggle buttons only after everything is done loading
 	                $('.rc-floodTimeframeWrapper').slideDown();
+
 	           }
 			}
 			getEvents(); // call the api and build the events obj
