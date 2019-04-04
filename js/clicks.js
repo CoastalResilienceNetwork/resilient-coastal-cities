@@ -325,6 +325,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
                         var id = v.properties.geonameid.split('g-')[1];
                         var index = t.obj.adminUnitId.indexOf(id);
                         id = v.properties.geonameid
+			let pos;
                         if(index > 0){
                             pos = t.obj.adminUnit.map(function(e) {
                             	var val = 'g-' + e.attributes.id1
