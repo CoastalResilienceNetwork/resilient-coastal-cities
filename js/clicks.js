@@ -9,6 +9,7 @@ function ( declare, Query, QueryTask, FeatureLayer, ArcGISDynamicMapServiceLayer
 
 	return declare(null, { 
 		eventListeners: function(t){
+			console.log('test')
 			t.url = 'http://services2.coastalresilience.org/arcgis/rest/services/Resilient_Coastal_Cities/Indonesia/MapServer'
 			t.obj.visibleLayers = [73]
 			t.dynamicLayer = new ArcGISDynamicMapServiceLayer(t.url, {opacity: 1 - t.obj.sliderVal/10});
